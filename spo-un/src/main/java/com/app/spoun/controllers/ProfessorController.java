@@ -1,8 +1,7 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.dao.StudentDAO;
-import com.app.spoun.dto.StudentDTO;
-import com.app.spoun.services.StudentService;
+import com.app.spoun.dto.ProfessorDTO;
+import com.app.spoun.services.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,21 +9,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.TreeMap;
 
-
 @RestController
-@RequestMapping("/student")
-public class StudentController {
+@RequestMapping("/professor")
+public class ProfessorController {
 
     @Autowired
-    private StudentService studentService;
+    private ProfessorService professorService;
 
     @GetMapping
-    public ResponseEntity<?> getAllStudent (
+    public ResponseEntity<?> getAllProfessor (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.getAllStudent(page, size);
+            answer = professorService.getAllProfessor(page, size);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -32,10 +30,10 @@ public class StudentController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findStudentById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findProfessorById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = studentService.findStudentById(id);
+            answer = professorService.findProfessorById(id);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -43,10 +41,10 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveStudent(@RequestBody StudentDTO studentDTO){
+    public ResponseEntity<?> saveProfessor(@RequestBody ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = studentService.saveStudent(studentDTO);
+            answer = professorService.saveProfessor(professorDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -54,10 +52,10 @@ public class StudentController {
     }
 
     @PutMapping
-    public ResponseEntity<?> editStudent(@RequestBody StudentDTO studentDTO){
+    public ResponseEntity<?> editProfessor(@RequestBody ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = studentService.editStudent(studentDTO);
+            answer = professorService.editProfessor(professorDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -65,14 +63,13 @@ public class StudentController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteStudent(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteProfessor(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = studentService.deleteStudent(id);
+            answer = professorService.deleteProfessor(id);
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
-
 }

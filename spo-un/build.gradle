@@ -5,12 +5,19 @@ plugins {
 	id 'war'
 }
 
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+
 group = 'com.app'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '18'
 
-repositories {
-	mavenCentral()
+ext {
+	mapstructVersion = "1.5.2.Final"
+	lombokVersion = "1.18.20"
+	lombokMapstructBindingVersion = "0.2.0"
 }
 
 dependencies {
@@ -20,15 +27,19 @@ dependencies {
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	compileOnly 'org.projectlombok:lombok:1.18.24'
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
-
-	testCompileOnly 'org.projectlombok:lombok:1.18.24'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
+	testImplementation 'junit:junit:4.13.1'
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.11'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+tasks.withType(JavaCompile) {
+	options.compilerArgs = [
+			'-Amapstruct.suppressGeneratorTimestamp=true'
+	]
+}
+
+test {
+	useTestNG()
 }

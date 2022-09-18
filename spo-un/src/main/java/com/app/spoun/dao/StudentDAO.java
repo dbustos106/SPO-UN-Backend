@@ -1,15 +1,14 @@
-package com.app.spoun.models;
+package com.app.spoun.dao;
 
 import javax.persistence.*;
-
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "student", schema = "spo-un")
-public class Student {
+public class StudentDAO {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) @Column(name = "id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
     private Integer id;
 
     @Column(name = "username")
@@ -27,9 +26,8 @@ public class Student {
     @Column(name = "document_number")
     private String document_number;
 
+    @JoinColumn(name = "professor_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ProfessorDAO professor;
 
-    /*
-    @Column(name = "professor_id")
-    private Integer professor_id;
-    */
 }
