@@ -1,9 +1,7 @@
 package com.app.spoun.controllers;
 
-
-/*
+import com.app.spoun.dao.Student_AppointmentPK;
 import com.app.spoun.dto.Student_AppointmentDTO;
-import com.app.spoun.dto.Student_AppointmentDTO_PK;
 import com.app.spoun.services.Student_AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,17 +30,6 @@ public class Student_AppointmentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findStudent_AppointmentByPrimaryKey(@PathVariable("id") Student_AppointmentDTO_PK primaryKey){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = student_AppointmentService.findStudent_AppointmentByPrimaryKey(primaryKey);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @PostMapping
     public ResponseEntity<?> saveStudent_Appointment(@RequestBody Student_AppointmentDTO student_AppointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
@@ -54,28 +41,4 @@ public class Student_AppointmentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping
-    public ResponseEntity<?> editStudent_Appointment(@RequestBody Student_AppointmentDTO student_AppointmentDTO){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = student_AppointmentService.editStudent_Appointment(student_AppointmentDTO);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteStudent_Appointment(@PathVariable("id") Student_AppointmentDTO_PK primaryKey){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = student_AppointmentService.deleteStudent_Appointment(primaryKey);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
 }
-
- */

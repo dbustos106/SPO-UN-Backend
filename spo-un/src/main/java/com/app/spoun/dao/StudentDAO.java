@@ -32,7 +32,7 @@ public class StudentDAO {
     @ManyToOne(fetch = FetchType.LAZY)
     private ProfessorDAO professor;
 
-    //@OneToMany(mappedBy = "student")
-    //private List<Student_AppointmentDAO> appointments;
+    @OneToMany(mappedBy = "student")
+    private List<Student_AppointmentDAO> appointments;
 
 }

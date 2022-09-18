@@ -37,17 +37,17 @@ public class AppointmentDAO {
 
     @JoinColumn(name = "room_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private ProfessorDAO room;
+    private RoomDAO room;
 
     @JoinColumn(name = "patient_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private ProfessorDAO patient;
+    private PatientDAO patient;
 
     @JoinColumn(name = "professor_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private ProfessorDAO professor;
 
-    //@OneToMany(mappedBy = "appointment")
-    //private List<Student_AppointmentDAO> students;
+    @OneToMany(mappedBy = "appointment")
+    private List<Student_AppointmentDAO> students;
 
 }
