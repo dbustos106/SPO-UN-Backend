@@ -27,7 +27,6 @@ public class Student {
     @Column(name = "document_number")
     private String document_number;
 
-
     /*
     @Column(name = "professor_id")
     private Integer professor_id;
