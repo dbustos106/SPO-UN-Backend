@@ -1,15 +1,14 @@
-package com.app.spoun.models;
+package com.app.spoun.dao;
 
 import javax.persistence.*;
-
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "admin", schema = "spo-un")
-public class Admin {
+public class AdminDAO {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) @Column(name = "id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
     private Integer id;
 
     @Column(name = "username")

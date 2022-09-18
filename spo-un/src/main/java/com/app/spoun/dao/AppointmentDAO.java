@@ -1,8 +1,9 @@
 package com.app.spoun.dao;
 
+import javax.persistence.*;
 import lombok.Data;
 
-import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -45,5 +46,8 @@ public class AppointmentDAO {
     @JoinColumn(name = "professor_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private ProfessorDAO professor;
+
+    //@OneToMany(mappedBy = "appointment")
+    //private List<Student_AppointmentDAO> students;
 
 }

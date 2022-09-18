@@ -17,4 +17,5 @@ public interface AppointmentMapper {
     @Mapping(source = "patient_id", target = "patient.id")
     @Mapping(source = "professor_id", target = "professor.id")
     public AppointmentDAO appointmentDTOToAppointmentDAO(AppointmentDTO appointmentDTO);
+
 }

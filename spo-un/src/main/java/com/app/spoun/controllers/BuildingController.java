@@ -1,15 +1,12 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.models.Building;
+import com.app.spoun.dto.BuildingDTO;
 import com.app.spoun.services.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 
 
@@ -45,10 +42,10 @@ public class BuildingController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveBuilding(@RequestBody Building building){
+    public ResponseEntity<?> saveBuilding(@RequestBody BuildingDTO buildingDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = buildingService.saveBuilding(building);
+            answer = buildingService.saveBuilding(buildingDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -56,10 +53,10 @@ public class BuildingController {
     }
 
     @PutMapping
-    public ResponseEntity<?> editBuilding(@RequestBody Building building){
+    public ResponseEntity<?> editBuilding(@RequestBody BuildingDTO buildingDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = buildingService.editBuilding(building);
+            answer = buildingService.editBuilding(buildingDTO);
         }catch(Exception e){
             answer.put("error", e);
         }

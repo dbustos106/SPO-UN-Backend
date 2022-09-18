@@ -1,16 +1,15 @@
-package com.app.spoun.models;
-
-import lombok.Data;
+package com.app.spoun.dao;
 
 import javax.persistence.*;
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "antecedent", schema = "spo-un")
-public class Antecedent {
+public class AntecedentDAO {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
     private Integer id;
 
     @Column(name = "type")
@@ -21,5 +20,6 @@ public class Antecedent {
 
     @JoinColumn(name = "patient_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Patient patient;
+    private PatientDAO patient;
+
 }

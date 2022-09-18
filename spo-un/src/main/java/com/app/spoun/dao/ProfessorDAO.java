@@ -1,9 +1,8 @@
 package com.app.spoun.dao;
 
 import javax.persistence.*;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 @Entity
@@ -30,6 +29,9 @@ public class ProfessorDAO {
     private String document_number;
 
     @OneToMany(mappedBy = "professor")
-    private List<StudentDAO> studentDAO;
+    private List<StudentDAO> students;
+
+    @OneToMany(mappedBy = "professor")
+    private List<AppointmentDAO> appointments;
 
 }

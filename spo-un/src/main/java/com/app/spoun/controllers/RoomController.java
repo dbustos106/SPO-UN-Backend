@@ -1,17 +1,13 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.models.Room;
+import com.app.spoun.dto.RoomDTO;
 import com.app.spoun.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
-
 
 @RestController
 @RequestMapping("/room")
@@ -45,10 +41,10 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveRoom(@RequestBody Room room){
+    public ResponseEntity<?> saveRoom(@RequestBody RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roomService.saveRoom(room);
+            answer = roomService.saveRoom(roomDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -56,10 +52,10 @@ public class RoomController {
     }
 
     @PutMapping
-    public ResponseEntity<?> editRoom(@RequestBody Room room){
+    public ResponseEntity<?> editRoom(@RequestBody RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roomService.editRoom(room);
+            answer = roomService.editRoom(roomDTO);
         }catch(Exception e){
             answer.put("error", e);
         }

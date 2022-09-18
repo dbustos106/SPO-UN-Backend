@@ -1,17 +1,13 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.models.Admin;
+import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
-
 
 @RestController
 @RequestMapping("/admin")
@@ -45,10 +41,10 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveAdmin(@RequestBody Admin admin){
+    public ResponseEntity<?> saveAdmin(@RequestBody AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = adminService.saveAdmin(admin);
+            answer = adminService.saveAdmin(adminDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -56,10 +52,10 @@ public class AdminController {
     }
 
     @PutMapping
-    public ResponseEntity<?> editAdmin(@RequestBody Admin admin){
+    public ResponseEntity<?> editAdmin(@RequestBody AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = adminService.editAdmin(admin);
+            answer = adminService.editAdmin(adminDTO);
         }catch(Exception e){
             answer.put("error", e);
         }

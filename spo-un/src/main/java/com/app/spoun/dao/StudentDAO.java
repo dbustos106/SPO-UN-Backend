@@ -3,6 +3,8 @@ package com.app.spoun.dao;
 import javax.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "student", schema = "spo-un")
@@ -29,5 +31,8 @@ public class StudentDAO {
     @JoinColumn(name = "professor_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private ProfessorDAO professor;
+
+    //@OneToMany(mappedBy = "student")
+    //private List<Student_AppointmentDAO> appointments;
 
 }

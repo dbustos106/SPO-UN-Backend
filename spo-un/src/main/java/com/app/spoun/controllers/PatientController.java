@@ -1,6 +1,6 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.models.Patient;
+import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,10 +41,10 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<?> savePatient(@RequestBody Patient patient){
+    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = patientService.savePatient(patient);
+            answer = patientService.savePatient(patientDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -52,10 +52,10 @@ public class PatientController {
     }
 
     @PutMapping
-    public ResponseEntity<?> editPatient(@RequestBody Patient patient){
+    public ResponseEntity<?> editPatient(@RequestBody PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = patientService.editPatient(patient);
+            answer = patientService.editPatient(patientDTO);
         }catch(Exception e){
             answer.put("error", e);
         }

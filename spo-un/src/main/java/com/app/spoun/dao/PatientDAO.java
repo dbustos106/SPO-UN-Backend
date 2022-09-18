@@ -1,17 +1,16 @@
-package com.app.spoun.models;
-
-import lombok.Data;
+package com.app.spoun.dao;
 
 import javax.persistence.*;
 import java.util.List;
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "patient", schema = "spo-un")
-public class Patient {
+public class PatientDAO {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
     private Integer id;
 
     @Column(name = "username")
@@ -23,6 +22,9 @@ public class Patient {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "document_type")
     private String document_type;
 
@@ -30,7 +32,7 @@ public class Patient {
     private String document_number;
 
     @Column(name = "age")
-    private String age;
+    private Integer age;
 
     @Column(name = "gender")
     private String gender;
@@ -38,6 +40,10 @@ public class Patient {
     @Column(name = "blood_type")
     private String blood_type;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Antecedent> antecedents;
+    @OneToMany(mappedBy = "patient")
+    private List<AntecedentDAO> antecedents;
+
+    @OneToMany(mappedBy = "patient")
+    private List<AppointmentDAO> appointments;
+
 }

@@ -1,7 +1,10 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.dto.AntecedentDTO;
-import com.app.spoun.services.AntecedentService;
+
+/*
+import com.app.spoun.dto.Student_AppointmentDTO;
+import com.app.spoun.dto.Student_AppointmentDTO_PK;
+import com.app.spoun.services.Student_AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,19 +13,19 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @RestController
-@RequestMapping("/antecedent")
-public class AntecedentController {
+@RequestMapping("/student_appointment")
+public class Student_AppointmentController {
 
     @Autowired
-    private AntecedentService antecedentService;
+    private Student_AppointmentService student_AppointmentService;
 
     @GetMapping
-    public ResponseEntity<?> getAllAntecedent (
+    public ResponseEntity<?> getAllStudent_Appointment (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.getAllAntecedent(page, size);
+            answer = student_AppointmentService.getAllStudent_Appointment(page, size);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -30,10 +33,10 @@ public class AntecedentController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findAntecedentById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findStudent_AppointmentByPrimaryKey(@PathVariable("id") Student_AppointmentDTO_PK primaryKey){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.findById(id);
+            answer = student_AppointmentService.findStudent_AppointmentByPrimaryKey(primaryKey);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -41,10 +44,10 @@ public class AntecedentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveAntecedent(@RequestBody AntecedentDTO antecedentDTO){
+    public ResponseEntity<?> saveStudent_Appointment(@RequestBody Student_AppointmentDTO student_AppointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.saveAntecedent(antecedentDTO);
+            answer = student_AppointmentService.saveStudent_Appointment(student_AppointmentDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -52,10 +55,10 @@ public class AntecedentController {
     }
 
     @PutMapping
-    public ResponseEntity<?> editAntecedent(@RequestBody AntecedentDTO antecedentDTO){
+    public ResponseEntity<?> editStudent_Appointment(@RequestBody Student_AppointmentDTO student_AppointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.editAntecedent(antecedentDTO);
+            answer = student_AppointmentService.editStudent_Appointment(student_AppointmentDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -63,13 +66,16 @@ public class AntecedentController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteAntecedent(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteStudent_Appointment(@PathVariable("id") Student_AppointmentDTO_PK primaryKey){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.deleteAntecedent(id);
+            answer = student_AppointmentService.deleteStudent_Appointment(primaryKey);
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
+
 }
+
+ */
