@@ -1,6 +1,6 @@
 package com.app.spoun.services;
 
-import com.app.spoun.dao.AdminDAO;
+import com.app.spoun.domain.Admin;
 import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.mappers.AdminMapper;
 import com.app.spoun.mappers.AdminMapperImpl;
@@ -28,11 +28,11 @@ public class AdminService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<AdminDAO> adminsDAO = iAdminRepository.findAll(page);
+        Page<Admin> adminsDAO = iAdminRepository.findAll(page);
 
         List<AdminDTO> listAdminsDTO = new ArrayList<>();
-        for(AdminDAO adminDAO: adminsDAO){
-            AdminDTO adminDTO = adminMapper.adminDAOToAdminDTO(adminDAO);
+        for(Admin admin : adminsDAO){
+            AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
             listAdminsDTO.add(adminDTO);
         }
         Page<AdminDTO> adminsDTO = new PageImpl<>(listAdminsDTO);
@@ -47,8 +47,8 @@ public class AdminService {
 
     public Map<String,Object> findById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        AdminDAO adminDAO = iAdminRepository.findById(id).orElse(null);
-        AdminDTO adminDTO = adminMapper.adminDAOToAdminDTO(adminDAO);
+        Admin admin = iAdminRepository.findById(id).orElse(null);
+        AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
         if(adminDTO != null){
             answer.put("admin", adminDTO);
         }else{
@@ -60,8 +60,8 @@ public class AdminService {
     public Map<String,Object> saveAdmin(AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(adminDTO != null){
-            AdminDAO adminDAO = adminMapper.adminDTOToAdminDAO(adminDTO);
-            iAdminRepository.save(adminDAO);
+            Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
+            iAdminRepository.save(admin);
             answer.put("message", "Admin saved successfully");
         }else{
             answer.put("error", "Not successful");
@@ -72,8 +72,8 @@ public class AdminService {
     public Map<String,Object> editAdmin(AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(adminDTO.getId() != null && iAdminRepository.existsById(adminDTO.getId())){
-            AdminDAO adminDAO = adminMapper.adminDTOToAdminDAO(adminDTO);
-            iAdminRepository.save(adminDAO);
+            Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
+            iAdminRepository.save(admin);
             answer.put("message", "Student updated successfully");
         }else{
             answer.put("error", "Admin not found");

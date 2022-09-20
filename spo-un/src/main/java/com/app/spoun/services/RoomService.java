@@ -1,7 +1,7 @@
 package com.app.spoun.services;
 
-import com.app.spoun.dao.BuildingDAO;
-import com.app.spoun.dao.RoomDAO;
+import com.app.spoun.domain.Building;
+import com.app.spoun.domain.Room;
 import com.app.spoun.dto.RoomDTO;
 import com.app.spoun.mappers.RoomMapper;
 import com.app.spoun.mappers.RoomMapperImpl;
@@ -33,11 +33,11 @@ public class RoomService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<RoomDAO> roomsDAO = iRoomRepository.findAll(page);
+        Page<Room> roomsDAO = iRoomRepository.findAll(page);
 
         List<RoomDTO> listRoomsDTO = new ArrayList<>();
-        for(RoomDAO roomDAO: roomsDAO){
-            RoomDTO roomDTO = roomMapper.roomDAOToRoomDTO(roomDAO);
+        for(Room room : roomsDAO){
+            RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
             listRoomsDTO.add(roomDTO);
         }
         Page<RoomDTO> roomsDTO = new PageImpl<>(listRoomsDTO);
@@ -52,8 +52,8 @@ public class RoomService {
 
     public Map<String,Object> findById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        RoomDAO roomDAO = iRoomRepository.findById(id).orElse(null);
-        RoomDTO roomDTO = roomMapper.roomDAOToRoomDTO(roomDAO);
+        Room room = iRoomRepository.findById(id).orElse(null);
+        RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
         if(roomDTO != null){
             answer.put("room", roomDTO);
         }else{
@@ -65,10 +65,10 @@ public class RoomService {
     public Map<String,Object> saveRoom(RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(roomDTO != null){
-            BuildingDAO buildingDAO = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
-            RoomDAO roomDAO = roomMapper.roomDTOToRoomDAO(roomDTO);
-            roomDAO.setBuilding(buildingDAO);
-            iRoomRepository.save(roomDAO);
+            Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
+            Room room = roomMapper.roomDTOToRoom(roomDTO);
+            room.setBuilding(building);
+            iRoomRepository.save(room);
             answer.put("room", "Room saved successfully");
         }else{
             answer.put("error", "Not successful");
@@ -79,10 +79,10 @@ public class RoomService {
     public Map<String,Object> editRoom(RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(roomDTO.getId() != null && iRoomRepository.existsById(roomDTO.getId())){
-            BuildingDAO buildingDAO = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
-            RoomDAO roomDAO = roomMapper.roomDTOToRoomDAO(roomDTO);
-            roomDAO.setBuilding(buildingDAO);
-            iRoomRepository.save(roomDAO);
+            Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
+            Room room = roomMapper.roomDTOToRoom(roomDTO);
+            room.setBuilding(building);
+            iRoomRepository.save(room);
             answer.put("room", "Room updated successfully");
         }else{
             answer.put("error", "Room not found");

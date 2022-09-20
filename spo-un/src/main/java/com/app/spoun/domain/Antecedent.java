@@ -1,4 +1,4 @@
-package com.app.spoun.dao;
+package com.app.spoun.domain;
 
 import javax.persistence.*;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "antecedent", schema = "spo-un")
-public class AntecedentDAO {
+public class Antecedent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
@@ -22,7 +22,7 @@ public class AntecedentDAO {
 
     @JoinColumn(name = "patient_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private PatientDAO patient;
+    private Patient patient;
 
     @Override
     public String toString() {

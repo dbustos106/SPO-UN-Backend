@@ -1,4 +1,4 @@
-package com.app.spoun.dao;
+package com.app.spoun.domain;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "patient", schema = "spo-un")
-public class PatientDAO {
+public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
@@ -43,10 +43,10 @@ public class PatientDAO {
     private String blood_type;
 
     @OneToMany(mappedBy = "patient")
-    private List<AntecedentDAO> antecedents;
+    private List<Antecedent> antecedents;
 
     @OneToMany(mappedBy = "patient")
-    private List<AppointmentDAO> appointments;
+    private List<Appointment> appointments;
 
     @Override
     public String toString() {

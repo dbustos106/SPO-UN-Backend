@@ -1,6 +1,6 @@
 package com.app.spoun.services;
 
-import com.app.spoun.dao.PatientDAO;
+import com.app.spoun.domain.Patient;
 import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.mappers.PatientMapper;
 import com.app.spoun.mappers.PatientMapperImpl;
@@ -28,11 +28,11 @@ public class PatientService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<PatientDAO> patientsDAO = iPatientRepository.findAll(page);
+        Page<Patient> patientsDAO = iPatientRepository.findAll(page);
 
         List<PatientDTO> listPatientsDTO = new ArrayList<>();
-        for(PatientDAO patientDAO: patientsDAO){
-            PatientDTO patientDTO = patientMapper.patientDAOToPatientDTO(patientDAO);
+        for(Patient patient : patientsDAO){
+            PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
             listPatientsDTO.add(patientDTO);
         }
         Page<PatientDTO> patientsDTO = new PageImpl<>(listPatientsDTO);
@@ -47,8 +47,8 @@ public class PatientService {
 
     public Map<String,Object> findById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        PatientDAO patientDAO = iPatientRepository.findById(id).orElse(null);
-        PatientDTO patientDTO = patientMapper.patientDAOToPatientDTO(patientDAO);
+        Patient patient = iPatientRepository.findById(id).orElse(null);
+        PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
         if(patientDTO != null){
             answer.put("patient", patientDTO);
         }else{
@@ -60,8 +60,8 @@ public class PatientService {
     public Map<String,Object> savePatient(PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(patientDTO != null){
-            PatientDAO patientDAO = patientMapper.patientDTOToPatientDAO(patientDTO);
-            iPatientRepository.save(patientDAO);
+            Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+            iPatientRepository.save(patient);
             answer.put("patient", "Patient saved successfully");
         }else{
             answer.put("error", "Not successful");
@@ -72,8 +72,8 @@ public class PatientService {
     public Map<String,Object> editPatient(PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(patientDTO.getId() != null && iPatientRepository.existsById(patientDTO.getId())){
-            PatientDAO patientDAO = patientMapper.patientDTOToPatientDAO(patientDTO);
-            iPatientRepository.save(patientDAO);
+            Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+            iPatientRepository.save(patient);
             answer.put("patient", "Patient updated successfully");
         }else{
             answer.put("error", "Patient not found");

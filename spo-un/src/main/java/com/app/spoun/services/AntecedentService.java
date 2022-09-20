@@ -1,7 +1,7 @@
 package com.app.spoun.services;
 
-import com.app.spoun.dao.AntecedentDAO;
-import com.app.spoun.dao.PatientDAO;
+import com.app.spoun.domain.Antecedent;
+import com.app.spoun.domain.Patient;
 import com.app.spoun.dto.AntecedentDTO;
 import com.app.spoun.mappers.AntecedentMapper;
 import com.app.spoun.mappers.AntecedentMapperImpl;
@@ -33,11 +33,11 @@ public class AntecedentService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<AntecedentDAO> antecedentsDAO = iAntecedentRepository.findAll(page);
+        Page<Antecedent> antecedentsDAO = iAntecedentRepository.findAll(page);
 
         List<AntecedentDTO> listAntecedentsDTO = new ArrayList<>();
-        for(AntecedentDAO antecedentDAO: antecedentsDAO){
-            AntecedentDTO antecedentDTO = antecedentMapper.antecedentDAOToAntecedentDTO(antecedentDAO);
+        for(Antecedent antecedent : antecedentsDAO){
+            AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
             listAntecedentsDTO.add(antecedentDTO);
         }
         Page<AntecedentDTO> antecedentsDTO = new PageImpl<>(listAntecedentsDTO);
@@ -52,8 +52,8 @@ public class AntecedentService {
 
     public Map<String,Object> findById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        AntecedentDAO antecedentDAO = iAntecedentRepository.findById(id).orElse(null);
-        AntecedentDTO antecedentDTO = antecedentMapper.antecedentDAOToAntecedentDTO(antecedentDAO);
+        Antecedent antecedent = iAntecedentRepository.findById(id).orElse(null);
+        AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
         if(antecedentDTO != null){
             answer.put("antecedent", antecedentDTO);
         }else{
@@ -66,10 +66,10 @@ public class AntecedentService {
         Map<String,Object> answer = new TreeMap<>();
         if(antecedentDTO != null){
 
-            PatientDAO patientDAO = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
-            AntecedentDAO antecedentDAO = antecedentMapper.antecedentDTOToAntecedentDAO(antecedentDTO);
-            antecedentDAO.setPatient(patientDAO);
-            iAntecedentRepository.save(antecedentDAO);
+            Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
+            Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
+            antecedent.setPatient(patient);
+            iAntecedentRepository.save(antecedent);
             answer.put("antecedent", "Antecedent saved successfully");
         }else{
             answer.put("error", "Not successful");
@@ -80,10 +80,10 @@ public class AntecedentService {
     public Map<String,Object> editAntecedent(AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(antecedentDTO.getId() != null && iAntecedentRepository.existsById(antecedentDTO.getId())){
-            PatientDAO patientDAO = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
-            AntecedentDAO antecedentDAO = antecedentMapper.antecedentDTOToAntecedentDAO(antecedentDTO);
-            antecedentDAO.setPatient(patientDAO);
-            iAntecedentRepository.save(antecedentDAO);
+            Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
+            Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
+            antecedent.setPatient(patient);
+            iAntecedentRepository.save(antecedent);
             answer.put("antecedent", "Student updated successfully");
         }else{
             answer.put("error", "Antecedent not found");

@@ -1,6 +1,6 @@
 package com.app.spoun.services;
 
-import com.app.spoun.dao.BuildingDAO;
+import com.app.spoun.domain.Building;
 import com.app.spoun.dto.BuildingDTO;
 import com.app.spoun.mappers.BuildingMapper;
 import com.app.spoun.mappers.BuildingMapperImpl;
@@ -25,11 +25,11 @@ public class BuildingService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<BuildingDAO> buildingsDAO = iBuildingRepository.findAll(page);
+        Page<Building> buildingsDAO = iBuildingRepository.findAll(page);
 
         List<BuildingDTO> listBuildingsDTO = new ArrayList<>();
-        for(BuildingDAO buildingDAO: buildingsDAO){
-            BuildingDTO buildingDTO = buildingMapper.buildingDAOToBuildingDTO(buildingDAO);
+        for(Building building : buildingsDAO){
+            BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
             listBuildingsDTO.add(buildingDTO);
         }
         Page<BuildingDTO> buildingsDTO = new PageImpl<>(listBuildingsDTO);
@@ -44,8 +44,8 @@ public class BuildingService {
 
     public Map<String,Object> findById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        BuildingDAO buildingDAO = iBuildingRepository.findById(id).orElse(null);
-        BuildingDTO buildingDTO = buildingMapper.buildingDAOToBuildingDTO(buildingDAO);
+        Building building = iBuildingRepository.findById(id).orElse(null);
+        BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
         if(buildingDTO != null){
             answer.put("building", buildingDTO);
         }else{
@@ -57,8 +57,8 @@ public class BuildingService {
     public Map<String,Object> saveBuilding(BuildingDTO buildingDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(buildingDTO != null){
-            BuildingDAO buildingDAO = buildingMapper.buildingDTOToBuildingDAO(buildingDTO);
-            iBuildingRepository.save(buildingDAO);
+            Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
+            iBuildingRepository.save(building);
             answer.put("building", "Building saved successfully");
         }else{
             answer.put("error", "Not successful");
@@ -69,8 +69,8 @@ public class BuildingService {
     public Map<String,Object> editBuilding(BuildingDTO buildingDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(buildingDTO.getId() != null && iBuildingRepository.existsById(buildingDTO.getId())){
-            BuildingDAO buildingDAO = buildingMapper.buildingDTOToBuildingDAO(buildingDTO);
-            iBuildingRepository.save(buildingDAO);
+            Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
+            iBuildingRepository.save(building);
             answer.put("building", "Building updated successfully");
         }else{
             answer.put("error", "Building not found");

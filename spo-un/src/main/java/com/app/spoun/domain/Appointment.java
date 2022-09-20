@@ -1,4 +1,4 @@
-package com.app.spoun.dao;
+package com.app.spoun.domain;
 
 import javax.persistence.*;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "appointment", schema = "spo-un")
-public class AppointmentDAO {
+public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
@@ -39,18 +39,18 @@ public class AppointmentDAO {
 
     @JoinColumn(name = "room_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private RoomDAO room;
+    private Room room;
 
     @JoinColumn(name = "patient_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private PatientDAO patient;
+    private Patient patient;
 
     @JoinColumn(name = "professor_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private ProfessorDAO professor;
+    private Professor professor;
 
     @OneToMany(mappedBy = "appointment")
-    private List<Student_AppointmentDAO> students;
+    private List<Student_Appointment> students;
 
     @Override
     public String toString() {

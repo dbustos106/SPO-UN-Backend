@@ -1,9 +1,9 @@
 package com.app.spoun.services;
 
-import com.app.spoun.dao.AppointmentDAO;
-import com.app.spoun.dao.PatientDAO;
-import com.app.spoun.dao.ProfessorDAO;
-import com.app.spoun.dao.RoomDAO;
+import com.app.spoun.domain.Appointment;
+import com.app.spoun.domain.Patient;
+import com.app.spoun.domain.Professor;
+import com.app.spoun.domain.Room;
 import com.app.spoun.dto.AppointmentDTO;
 import com.app.spoun.mappers.AppointmentMapper;
 import com.app.spoun.mappers.AppointmentMapperImpl;
@@ -44,11 +44,11 @@ public class AppointmentService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<AppointmentDAO> appointmentsDAO = iAppointmentRepository.findAll(page);
+        Page<Appointment> appointmentsDAO = iAppointmentRepository.findAll(page);
 
         List<AppointmentDTO> listAppointmentsDTO = new ArrayList<>();
-        for(AppointmentDAO appointmentDAO: appointmentsDAO){
-            AppointmentDTO appointmentDTO = appointmentMapper.appointmentDAOToAppointmentDTO(appointmentDAO);
+        for(Appointment appointment : appointmentsDAO){
+            AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
             listAppointmentsDTO.add(appointmentDTO);
         }
         Page<AppointmentDTO> appointmentsDTO = new PageImpl<>(listAppointmentsDTO);
@@ -63,8 +63,8 @@ public class AppointmentService {
 
     public Map<String,Object> findAppointmentById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        AppointmentDAO appointmentDAO = iAppointmentRepository.findById(id).orElse(null);
-        AppointmentDTO appointmentDTO = appointmentMapper.appointmentDAOToAppointmentDTO(appointmentDAO);
+        Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
+        AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
         if(appointmentDTO != null){
             answer.put("appointment", appointmentDTO);
         }else{
@@ -76,14 +76,14 @@ public class AppointmentService {
     public Map<String,Object> saveAppointment(AppointmentDTO appointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(appointmentDTO != null){
-            RoomDAO roomDAO = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
-            PatientDAO patientDAO = iPatientRepository.findById(appointmentDTO.getPatient_id()).orElse(null);
-            ProfessorDAO professorDAO = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
-            AppointmentDAO appointmentDAO = appointmentMapper.appointmentDTOToAppointmentDAO(appointmentDTO);
-            appointmentDAO.setRoom(roomDAO);
-            appointmentDAO.setPatient(patientDAO);
-            appointmentDAO.setProfessor(professorDAO);
-            iAppointmentRepository.save(appointmentDAO);
+            Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
+            Patient patient = iPatientRepository.findById(appointmentDTO.getPatient_id()).orElse(null);
+            Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
+            Appointment appointment = appointmentMapper.appointmentDTOToAppointment(appointmentDTO);
+            appointment.setRoom(room);
+            appointment.setPatient(patient);
+            appointment.setProfessor(professor);
+            iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment saved successfully");
         }else{
             answer.put("error", "Not successful");
@@ -94,14 +94,14 @@ public class AppointmentService {
     public Map<String,Object> editAppointment(AppointmentDTO appointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(appointmentDTO.getId() != null && iAppointmentRepository.existsById(appointmentDTO.getId())){
-            RoomDAO roomDAO = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
-            PatientDAO patientDAO = iPatientRepository.findById(appointmentDTO.getPatient_id()).orElse(null);
-            ProfessorDAO professorDAO = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
-            AppointmentDAO appointmentDAO = appointmentMapper.appointmentDTOToAppointmentDAO(appointmentDTO);
-            appointmentDAO.setRoom(roomDAO);
-            appointmentDAO.setPatient(patientDAO);
-            appointmentDAO.setProfessor(professorDAO);
-            iAppointmentRepository.save(appointmentDAO);
+            Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
+            Patient patient = iPatientRepository.findById(appointmentDTO.getPatient_id()).orElse(null);
+            Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
+            Appointment appointment = appointmentMapper.appointmentDTOToAppointment(appointmentDTO);
+            appointment.setRoom(room);
+            appointment.setPatient(patient);
+            appointment.setProfessor(professor);
+            iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment updated successfully");
         }else{
             answer.put("error", "Appointment not found");

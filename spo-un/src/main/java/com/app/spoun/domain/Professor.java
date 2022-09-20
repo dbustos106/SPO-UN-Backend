@@ -1,19 +1,18 @@
-package com.app.spoun.dao;
+package com.app.spoun.domain;
 
 import javax.persistence.*;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
-import java.util.List;
-
-@Setter
 @Getter
+@Setter
 @Entity
-@Table(name = "student", schema = "spo-un")
-public class StudentDAO {
+@Table(name = "professor", schema = "spo-un")
+public class Professor {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
     private Integer id;
 
     @Column(name = "username")
@@ -31,24 +30,21 @@ public class StudentDAO {
     @Column(name = "document_number")
     private String document_number;
 
-    @JoinColumn(name = "Professor_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private ProfessorDAO professor;
+    @OneToMany(mappedBy = "professor")
+    private List<Student> students;
 
-    @OneToMany(mappedBy = "student")
-    private List<Student_AppointmentDAO> appointments;
+    @OneToMany(mappedBy = "professor")
+    private List<Appointment> appointments;
 
     @Override
     public String toString() {
-        return "StudentDAO{" +
+        return "ProfessorDAO{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", document_type='" + document_type + '\'' +
                 ", document_number='" + document_number + '\'' +
-                ", professor=" + professor +
                 '}';
     }
-
 }

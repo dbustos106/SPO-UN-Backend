@@ -1,6 +1,6 @@
 package com.app.spoun.services;
 
-import com.app.spoun.dao.ProfessorDAO;
+import com.app.spoun.domain.Professor;
 import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.mappers.ProfessorMapper;
 import com.app.spoun.mappers.ProfessorMapperImpl;
@@ -29,11 +29,11 @@ public class ProfessorService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<ProfessorDAO> professorsDAO = iProfessorRepository.findAll(page);
+        Page<Professor> professorsDAO = iProfessorRepository.findAll(page);
 
         List<ProfessorDTO> listProfessorsDTO = new ArrayList<>();
-        for(ProfessorDAO professorDAO: professorsDAO){
-            ProfessorDTO professorDTO = professorMapper.professorDAOToProfessorDTO(professorDAO);
+        for(Professor professor : professorsDAO){
+            ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
             listProfessorsDTO.add(professorDTO);
         }
         Page<ProfessorDTO> professorsDTO = new PageImpl<>(listProfessorsDTO);
@@ -48,8 +48,8 @@ public class ProfessorService {
 
     public Map<String,Object> findProfessorById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        ProfessorDAO professorDAO = iProfessorRepository.findById(id).orElse(null);
-        ProfessorDTO professorDTO = professorMapper.professorDAOToProfessorDTO(professorDAO);
+        Professor professor = iProfessorRepository.findById(id).orElse(null);
+        ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
         if(professorDTO != null){
             answer.put("professor", professorDTO);
         }else{
@@ -61,8 +61,8 @@ public class ProfessorService {
     public Map<String,Object> saveProfessor(ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(professorDTO != null){
-            ProfessorDAO professorDAO = professorMapper.professorDTOToProfessorDAO(professorDTO);
-            iProfessorRepository.save(professorDAO);
+            Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+            iProfessorRepository.save(professor);
             answer.put("message", "Professor saved successfully");
         }else{
             answer.put("error", "Not successful");
@@ -73,8 +73,8 @@ public class ProfessorService {
     public Map<String,Object> editProfessor(ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(professorDTO.getId() != null && iProfessorRepository.existsById(professorDTO.getId())){
-            ProfessorDAO professorDAO = professorMapper.professorDTOToProfessorDAO(professorDTO);
-            iProfessorRepository.save(professorDAO);
+            Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+            iProfessorRepository.save(professor);
             answer.put("message", "Professor updated successfully");
         }else{
             answer.put("error", "Professor not found");

@@ -31,7 +31,15 @@ dependencies {
 	testImplementation 'junit:junit:4.13.1'
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
+	// https://mvnrepository.com/artifact/de.mkammerer/argon2-jvm
+	implementation group: 'de.mkammerer', name: 'argon2-jvm', version: '2.11'
+
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+
+	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.11'
+
 }
 
 tasks.withType(JavaCompile) {
