@@ -1,8 +1,10 @@
 package com.app.spoun.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class Student_AppointmentDTO {
 
     private Integer student_id;

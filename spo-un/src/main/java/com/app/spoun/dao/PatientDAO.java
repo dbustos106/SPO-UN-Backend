@@ -2,9 +2,11 @@ package com.app.spoun.dao;
 
 import javax.persistence.*;
 import java.util.List;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "patient", schema = "spo-un")
 public class PatientDAO {
@@ -45,5 +47,21 @@ public class PatientDAO {
 
     @OneToMany(mappedBy = "patient")
     private List<AppointmentDAO> appointments;
+
+    @Override
+    public String toString() {
+        return "PatientDAO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", document_type='" + document_type + '\'' +
+                ", document_number='" + document_number + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", blood_type='" + blood_type + '\'' +
+                '}';
+    }
 
 }

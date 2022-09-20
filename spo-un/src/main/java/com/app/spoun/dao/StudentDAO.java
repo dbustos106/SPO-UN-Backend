@@ -1,11 +1,14 @@
 package com.app.spoun.dao;
 
 import javax.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "student", schema = "spo-un")
 public class StudentDAO {
@@ -28,11 +31,24 @@ public class StudentDAO {
     @Column(name = "document_number")
     private String document_number;
 
-    @JoinColumn(name = "professor_id")
+    @JoinColumn(name = "Professor_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private ProfessorDAO professor;
 
     @OneToMany(mappedBy = "student")
     private List<Student_AppointmentDAO> appointments;
+
+    @Override
+    public String toString() {
+        return "StudentDAO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", document_type='" + document_type + '\'' +
+                ", document_number='" + document_number + '\'' +
+                ", professor=" + professor +
+                '}';
+    }
 
 }

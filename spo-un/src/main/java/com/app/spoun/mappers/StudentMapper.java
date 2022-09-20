@@ -2,8 +2,7 @@ package com.app.spoun.mappers;
 
 import com.app.spoun.dao.StudentDAO;
 import com.app.spoun.dto.StudentDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper
 public interface StudentMapper {

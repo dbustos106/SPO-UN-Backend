@@ -1,11 +1,13 @@
 package com.app.spoun.dao;
 
 import javax.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "room", schema = "spo-un")
 public class RoomDAO {
@@ -22,5 +24,14 @@ public class RoomDAO {
 
     @OneToMany(mappedBy = "room")
     private List<AppointmentDAO> appointments;
+
+    @Override
+    public String toString() {
+        return "RoomDAO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", building=" + building +
+                '}';
+    }
 
 }

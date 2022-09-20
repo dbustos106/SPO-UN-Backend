@@ -1,9 +1,11 @@
 package com.app.spoun.dao;
 
 import javax.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "admin", schema = "spo-un")
 public class AdminDAO {
@@ -16,5 +18,14 @@ public class AdminDAO {
 
     @Column(name = "password")
     private String password;
+
+    @Override
+    public String toString() {
+        return "AdminDAO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 
 }

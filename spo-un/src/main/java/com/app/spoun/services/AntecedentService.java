@@ -1,10 +1,12 @@
 package com.app.spoun.services;
 
 import com.app.spoun.dao.AntecedentDAO;
+import com.app.spoun.dao.PatientDAO;
 import com.app.spoun.dto.AntecedentDTO;
 import com.app.spoun.mappers.AntecedentMapper;
 import com.app.spoun.mappers.AntecedentMapperImpl;
 import com.app.spoun.repository.IAntecedentRepository;
+import com.app.spoun.repository.IPatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +23,9 @@ import java.util.TreeMap;
 public class AntecedentService {
     @Autowired
     private IAntecedentRepository iAntecedentRepository;
+
+    @Autowired
+    private IPatientRepository iPatientRepository;
 
     private AntecedentMapper antecedentMapper = new AntecedentMapperImpl();
 
@@ -60,7 +65,10 @@ public class AntecedentService {
     public Map<String,Object> saveAntecedent(AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(antecedentDTO != null){
+
+            PatientDAO patientDAO = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
             AntecedentDAO antecedentDAO = antecedentMapper.antecedentDTOToAntecedentDAO(antecedentDTO);
+            antecedentDAO.setPatient(patientDAO);
             iAntecedentRepository.save(antecedentDAO);
             answer.put("antecedent", "Antecedent saved successfully");
         }else{
@@ -72,7 +80,9 @@ public class AntecedentService {
     public Map<String,Object> editAntecedent(AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(antecedentDTO.getId() != null && iAntecedentRepository.existsById(antecedentDTO.getId())){
+            PatientDAO patientDAO = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
             AntecedentDAO antecedentDAO = antecedentMapper.antecedentDTOToAntecedentDAO(antecedentDTO);
+            antecedentDAO.setPatient(patientDAO);
             iAntecedentRepository.save(antecedentDAO);
             answer.put("antecedent", "Student updated successfully");
         }else{

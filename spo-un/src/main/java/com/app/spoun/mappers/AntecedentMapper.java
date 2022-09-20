@@ -2,8 +2,7 @@ package com.app.spoun.mappers;
 
 import com.app.spoun.dao.AntecedentDAO;
 import com.app.spoun.dto.AntecedentDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper
 public interface AntecedentMapper {

@@ -1,19 +1,18 @@
 package com.app.spoun.services;
 
+import com.app.spoun.dao.AppointmentDAO;
+import com.app.spoun.dao.StudentDAO;
 import com.app.spoun.dao.Student_AppointmentDAO;
 import com.app.spoun.dto.Student_AppointmentDTO;
+import com.app.spoun.mappers.StudentMapperImpl;
 import com.app.spoun.mappers.Student_AppointmentMapper;
 import com.app.spoun.mappers.Student_AppointmentMapperImpl;
+import com.app.spoun.repository.IAppointmentRepository;
+import com.app.spoun.repository.IStudentRepository;
 import com.app.spoun.repository.IStudent_AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -23,8 +22,15 @@ public class Student_AppointmentService {
     @Autowired
     private IStudent_AppointmentRepository iStudent_AppointmentRepository;
 
+    @Autowired
+    private IStudentRepository iStudentRepository;
+
+    @Autowired
+    private IAppointmentRepository iAppointmentRepository;
+
     private Student_AppointmentMapper student_AppointmentMapper = new Student_AppointmentMapperImpl();
 
+    /*
     public Map<String,Object> getAllStudent_Appointment (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
@@ -45,14 +51,21 @@ public class Student_AppointmentService {
         }
         return answer;
     }
+     */
 
     public Map<String,Object> saveStudent_Appointment(Student_AppointmentDTO student_AppointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(student_AppointmentDTO != null){
+            StudentDAO studentDAO = iStudentRepository.findById(4).orElse(null);
+            AppointmentDAO appointmentDAO = iAppointmentRepository.findById(student_AppointmentDTO.getAppointment_id()).orElse(null);
 
-            System.out.println(student_AppointmentDTO);
             Student_AppointmentDAO student_AppointmentDAO = student_AppointmentMapper.student_AppointmentDTOToStudent_AppointmentDAO(student_AppointmentDTO);
+            student_AppointmentDAO.setStudent(studentDAO);
+            student_AppointmentDAO.setAppointment(appointmentDAO);
+
+            System.out.println("Este es studentAppointmentDAO");
             System.out.println(student_AppointmentDAO);
+
             iStudent_AppointmentRepository.save(student_AppointmentDAO);
             answer.put("message", "Student_Appointment saved successfully");
         }else{

@@ -1,9 +1,11 @@
 package com.app.spoun.services;
 
+import com.app.spoun.dao.BuildingDAO;
 import com.app.spoun.dao.RoomDAO;
 import com.app.spoun.dto.RoomDTO;
 import com.app.spoun.mappers.RoomMapper;
 import com.app.spoun.mappers.RoomMapperImpl;
+import com.app.spoun.repository.IBuildingRepository;
 import com.app.spoun.repository.IRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,9 @@ import java.util.TreeMap;
 public class RoomService {
     @Autowired
     private IRoomRepository iRoomRepository;
+
+    @Autowired
+    private IBuildingRepository iBuildingRepository;
 
     private RoomMapper roomMapper = new RoomMapperImpl();
 
@@ -60,7 +65,9 @@ public class RoomService {
     public Map<String,Object> saveRoom(RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(roomDTO != null){
+            BuildingDAO buildingDAO = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
             RoomDAO roomDAO = roomMapper.roomDTOToRoomDAO(roomDTO);
+            roomDAO.setBuilding(buildingDAO);
             iRoomRepository.save(roomDAO);
             answer.put("room", "Room saved successfully");
         }else{
@@ -72,7 +79,9 @@ public class RoomService {
     public Map<String,Object> editRoom(RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(roomDTO.getId() != null && iRoomRepository.existsById(roomDTO.getId())){
+            BuildingDAO buildingDAO = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
             RoomDAO roomDAO = roomMapper.roomDTOToRoomDAO(roomDTO);
+            roomDAO.setBuilding(buildingDAO);
             iRoomRepository.save(roomDAO);
             answer.put("room", "Room updated successfully");
         }else{
@@ -85,7 +94,7 @@ public class RoomService {
         Map<String,Object> answer = new TreeMap<>();
         if(iRoomRepository.existsById(id)){
             iRoomRepository.deleteById(id);
-            answer.put("menssage", "Successful");
+            answer.put("menssage", "Room deleted successfully");
         }else{
             answer.put("error", "Room not found");
         }

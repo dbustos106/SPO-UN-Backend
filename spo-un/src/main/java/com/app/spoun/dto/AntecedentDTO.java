@@ -1,11 +1,10 @@
 package com.app.spoun.dto;
 
-import com.app.spoun.dao.PatientDAO;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.*;
-
-@Data
+@Getter
+@Setter
 public class AntecedentDTO {
 
     private Integer id;

@@ -1,6 +1,5 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.dao.Student_AppointmentPK;
 import com.app.spoun.dto.Student_AppointmentDTO;
 import com.app.spoun.services.Student_AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ public class Student_AppointmentController {
     @Autowired
     private Student_AppointmentService student_AppointmentService;
 
+    /*
     @GetMapping
     public ResponseEntity<?> getAllStudent_Appointment (
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -29,15 +29,16 @@ public class Student_AppointmentController {
         }
         return ResponseEntity.ok().body(answer);
     }
+    */
 
     @PostMapping
     public ResponseEntity<?> saveStudent_Appointment(@RequestBody Student_AppointmentDTO student_AppointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
-        try{
+        //try{
             answer = student_AppointmentService.saveStudent_Appointment(student_AppointmentDTO);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
+        //}catch(Exception e){
+        //   answer.put("error", e);
+        //}
         return ResponseEntity.ok().body(answer);
     }
 

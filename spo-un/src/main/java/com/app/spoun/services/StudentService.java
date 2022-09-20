@@ -1,8 +1,10 @@
 package com.app.spoun.services;
 
+import com.app.spoun.dao.ProfessorDAO;
 import com.app.spoun.dto.StudentDTO;
 import com.app.spoun.mappers.StudentMapper;
 import com.app.spoun.mappers.StudentMapperImpl;
+import com.app.spoun.repository.IProfessorRepository;
 import com.app.spoun.repository.IStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,9 @@ import java.util.TreeMap;
 public class StudentService {
     @Autowired
     private IStudentRepository iStudentRepository;
+
+    @Autowired
+    private IProfessorRepository iProfessorRepository;
 
     private StudentMapper studentMapper = new StudentMapperImpl();
 
@@ -60,7 +65,9 @@ public class StudentService {
     public Map<String,Object> saveStudent(StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(studentDTO != null){
+            ProfessorDAO professorDAO = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
             StudentDAO studentDAO = studentMapper.studentDTOToStudentDAO(studentDTO);
+            studentDAO.setProfessor(professorDAO);
             iStudentRepository.save(studentDAO);
             answer.put("message", "Student saved successfully");
         }else{
@@ -72,7 +79,9 @@ public class StudentService {
     public Map<String,Object> editStudent(StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(studentDTO.getId() != null && iStudentRepository.existsById(studentDTO.getId())){
+            ProfessorDAO professorDAO = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
             StudentDAO studentDAO = studentMapper.studentDTOToStudentDAO(studentDTO);
+            studentDAO.setProfessor(professorDAO);
             iStudentRepository.save(studentDAO);
             answer.put("message", "Student updated successfully");
         }else{

@@ -1,8 +1,10 @@
 package com.app.spoun.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class BuildingDTO {
 
     private Integer id;

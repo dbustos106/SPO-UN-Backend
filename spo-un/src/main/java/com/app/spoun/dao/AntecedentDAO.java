@@ -1,9 +1,11 @@
 package com.app.spoun.dao;
 
 import javax.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "antecedent", schema = "spo-un")
 public class AntecedentDAO {
@@ -21,5 +23,15 @@ public class AntecedentDAO {
     @JoinColumn(name = "patient_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private PatientDAO patient;
+
+    @Override
+    public String toString() {
+        return "AntecedentDAO{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", patient=" + patient +
+                '}';
+    }
 
 }
