@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface IProfessorRepository extends JpaRepository<Professor, Integer> {
     Page<Professor> findAll(Pageable page);
     Optional<Professor> findById(Integer id);
+    Optional<Professor> findByUsername(String username);
     Professor save(Professor professor);
     void deleteById(Integer id);
     boolean existsById(Integer id);

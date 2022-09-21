@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface IPatientRepository extends JpaRepository<Patient, Integer> {
     Page<Patient> findAll(Pageable page);
     Optional<Patient> findById(Integer id);
+    Optional<Patient> findByUsername(String username);
     Patient save(Patient patient);
     void deleteById(Integer id);
     boolean existsById(Integer id);
