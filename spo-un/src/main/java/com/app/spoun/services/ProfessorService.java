@@ -5,6 +5,8 @@ import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.mappers.ProfessorMapper;
 import com.app.spoun.mappers.ProfessorMapperImpl;
 import com.app.spoun.repository.IProfessorRepository;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -62,6 +64,12 @@ public class ProfessorService {
         Map<String,Object> answer = new TreeMap<>();
         if(professorDTO != null){
             Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+
+            // encrypt password
+            Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+            String hashPasword = argon2.hash(1, 1024, 1, professor.getPassword());
+            //professor.setPassword(hashPasword);
+
             iProfessorRepository.save(professor);
             answer.put("message", "Professor saved successfully");
         }else{

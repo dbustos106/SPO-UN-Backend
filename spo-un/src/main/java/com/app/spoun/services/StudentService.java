@@ -74,7 +74,7 @@ public class StudentService {
             // encrypt password
             Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
             String hashPasword = argon2.hash(1, 1024, 1, student.getPassword());
-            student.setPassword(hashPasword);
+            //student.setPassword(hashPasword);
 
             iStudentRepository.save(student);
             answer.put("message", "Student saved successfully");

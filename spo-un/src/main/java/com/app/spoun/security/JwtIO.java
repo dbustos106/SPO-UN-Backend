@@ -1,18 +1,21 @@
 package com.app.spoun.security;
 
+import com.app.spoun.dto.UserDetails;
 import com.app.spoun.utils.GsonUtil;
 import io.fusionauth.jwt.JWTUtils;
 import io.fusionauth.jwt.Signer;
-import io.fusionauth.jwt.Verifier;
 import io.fusionauth.jwt.domain.JWT;
 import io.fusionauth.jwt.hmac.HMACSigner;
-import io.fusionauth.jwt.hmac.HMACVerifier;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 @Component
 public class JwtIO {
@@ -57,9 +60,20 @@ public class JwtIO {
         return result;
     }
 
-    public String getPayload(String encodedJWT){
-        JWT jwt = jwt(encodedJWT);
-        return jwt.subject;
+    public String extractUsername(String encodedJWT) {
+        UserDetails userDetails = getPayload(encodedJWT);
+        return userDetails.getUsername();
+    }
+
+    public String extractRole(String encodedJWT) {
+        UserDetails userDetails = getPayload(encodedJWT);
+        return userDetails.getRole();
+    }
+
+    public UserDetails getPayload(String encodedJWT){
+        Map<String, Object> claims = jwt(encodedJWT).getAllClaims();
+        UserDetails userDetails = GsonUtil.toObject(claims.get("sub").toString(), new UserDetails().getClass());
+        return userDetails;
     }
 
     private JWT jwt(String encodedJWT){

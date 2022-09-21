@@ -5,6 +5,8 @@ import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.mappers.PatientMapper;
 import com.app.spoun.mappers.PatientMapperImpl;
 import com.app.spoun.repository.IPatientRepository;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -61,6 +63,12 @@ public class PatientService {
         Map<String,Object> answer = new TreeMap<>();
         if(patientDTO != null){
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+
+            // encrypt password
+            Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+            String hashPasword = argon2.hash(1, 1024, 1, patient.getPassword());
+            //patient.setPassword(hashPasword);
+
             iPatientRepository.save(patient);
             answer.put("patient", "Patient saved successfully");
         }else{

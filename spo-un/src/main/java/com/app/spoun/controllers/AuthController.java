@@ -20,7 +20,7 @@ public class AuthController {
     private AuthValidator validator;
 
     @PostMapping(value = "oauth/user_credential/accesstoken", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> login(@RequestBody MultiValueMap<String, String> paramMap,
+    public ResponseEntity<?> login(@RequestParam MultiValueMap<String, String> paramMap,
                                    @RequestParam("grant_type") String grantType) throws Apiunauthorized {
 
         validator.validate(paramMap, grantType);
