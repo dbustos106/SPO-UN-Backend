@@ -5,8 +5,7 @@ import com.app.spoun.domain.Role;
 import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.mappers.ProfessorMapper;
 import com.app.spoun.mappers.ProfessorMapperImpl;
-import com.app.spoun.repository.IProfessorRepository;
-import com.app.spoun.repository.IRoleRepository;
+import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,15 @@ public class ProfessorService {
 
     @Autowired
     private IProfessorRepository iProfessorRepository;
+
+    @Autowired
+    private IStudentRepository iStudentRepository;
+
+    @Autowired
+    private IPatientRepository iPatientRepository;
+
+    @Autowired
+    private IAdminRepository iAdminRepository;
 
     @Autowired
     private IRoleRepository iRoleRepository;
@@ -91,14 +99,20 @@ public class ProfessorService {
     public Map<String,Object> saveProfessor(ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(professorDTO != null){
-            Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
-            professor.setRoles(new ArrayList<>());
+            if(iStudentRepository.existsByUsername(professorDTO.getUsername()) ||
+                    iPatientRepository.existsByUsername(professorDTO.getUsername()) ||
+                    iAdminRepository.existsByUsername(professorDTO.getUsername())){
+                answer.put("error", "Repeated username");
+            }else {
+                Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+                professor.setRoles(new ArrayList<>());
 
-            // encrypt password
-            professor.setPassword(passwordEncoder.encode(professor.getPassword()));
+                // encrypt password
+                professor.setPassword(passwordEncoder.encode(professor.getPassword()));
 
-            iProfessorRepository.save(professor);
-            answer.put("message", "Professor saved successfully");
+                iProfessorRepository.save(professor);
+                answer.put("message", "Professor saved successfully");
+            }
         }else{
             answer.put("error", "Not successful");
         }

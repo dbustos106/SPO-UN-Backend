@@ -16,4 +16,5 @@ public interface IAdminRepository extends JpaRepository<Admin, Integer> {
     Admin save(Admin admin);
     void deleteById(Integer id);
     boolean existsById(Integer id);
+    boolean existsByUsername(String username);
 }

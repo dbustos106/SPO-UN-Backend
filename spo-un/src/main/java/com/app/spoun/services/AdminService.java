@@ -5,8 +5,7 @@ import com.app.spoun.domain.Role;
 import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.mappers.AdminMapper;
 import com.app.spoun.mappers.AdminMapperImpl;
-import com.app.spoun.repository.IAdminRepository;
-import com.app.spoun.repository.IRoleRepository;
+import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,15 @@ import java.util.TreeMap;
 public class AdminService {
     @Autowired
     private IAdminRepository iAdminRepository;
+
+    @Autowired
+    private IProfessorRepository iProfessorRepository;
+
+    @Autowired
+    private IStudentRepository iStudentRepository;
+
+    @Autowired
+    private IPatientRepository iPatientRepository;
 
     @Autowired
     private IRoleRepository iRoleRepository;
@@ -90,14 +98,20 @@ public class AdminService {
     public Map<String,Object> saveAdmin(AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(adminDTO != null){
-            Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
-            admin.setRoles(new ArrayList<>());
+            if(iProfessorRepository.existsByUsername(adminDTO.getUsername()) ||
+                    iPatientRepository.existsByUsername(adminDTO.getUsername()) ||
+                    iStudentRepository.existsByUsername(adminDTO.getUsername())){
+                answer.put("error", "Repeated username");
+            }else {
+                Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
+                admin.setRoles(new ArrayList<>());
 
-            // encrypt password
-            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+                // encrypt password
+                admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 
-            iAdminRepository.save(admin);
-            answer.put("message", "Admin saved successfully");
+                iAdminRepository.save(admin);
+                answer.put("message", "Admin saved successfully");
+            }
         }else{
             answer.put("error", "Not successful");
         }

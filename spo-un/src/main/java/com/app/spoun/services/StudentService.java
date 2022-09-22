@@ -6,9 +6,7 @@ import com.app.spoun.domain.Student;
 import com.app.spoun.dto.StudentDTO;
 import com.app.spoun.mappers.StudentMapper;
 import com.app.spoun.mappers.StudentMapperImpl;
-import com.app.spoun.repository.IProfessorRepository;
-import com.app.spoun.repository.IRoleRepository;
-import com.app.spoun.repository.IStudentRepository;
+import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,12 @@ public class StudentService {
 
     @Autowired
     private IProfessorRepository iProfessorRepository;
+
+    @Autowired
+    private IPatientRepository iPatientRepository;
+
+    @Autowired
+    private IAdminRepository iAdminRepository;
 
     @Autowired
     private IRoleRepository iRoleRepository;
@@ -95,16 +99,22 @@ public class StudentService {
     public Map<String,Object> saveStudent(StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(studentDTO != null){
-            Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
-            Student student = studentMapper.studentDTOToStudent(studentDTO);
-            student.setRoles(new ArrayList<>());
-            student.setProfessor(professor);
+            if(iProfessorRepository.existsByUsername(studentDTO.getUsername()) ||
+                    iPatientRepository.existsByUsername(studentDTO.getUsername()) ||
+                    iAdminRepository.existsByUsername(studentDTO.getUsername())){
+                answer.put("error", "Repeated username");
+            }else {
+                Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
+                Student student = studentMapper.studentDTOToStudent(studentDTO);
+                student.setRoles(new ArrayList<>());
+                student.setProfessor(professor);
 
-            // encrypt password
-            student.setPassword(passwordEncoder.encode(student.getPassword()));
+                // encrypt password
+                student.setPassword(passwordEncoder.encode(student.getPassword()));
 
-            iStudentRepository.save(student);
-            answer.put("message", "Student saved successfully");
+                iStudentRepository.save(student);
+                answer.put("message", "Student saved successfully");
+            }
         }else{
             answer.put("error", "Not successful");
         }

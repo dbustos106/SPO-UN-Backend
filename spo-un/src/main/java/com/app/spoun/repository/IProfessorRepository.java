@@ -16,4 +16,5 @@ public interface IProfessorRepository extends JpaRepository<Professor, Integer> 
     Professor save(Professor professor);
     void deleteById(Integer id);
     boolean existsById(Integer id);
+    boolean existsByUsername(String username);
 }

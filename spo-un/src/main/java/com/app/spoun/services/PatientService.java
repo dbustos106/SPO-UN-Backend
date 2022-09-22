@@ -5,8 +5,7 @@ import com.app.spoun.domain.Role;
 import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.mappers.PatientMapper;
 import com.app.spoun.mappers.PatientMapperImpl;
-import com.app.spoun.repository.IPatientRepository;
-import com.app.spoun.repository.IRoleRepository;
+import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,15 @@ import java.util.TreeMap;
 public class PatientService {
     @Autowired
     private IPatientRepository iPatientRepository;
+
+    @Autowired
+    private IStudentRepository iStudentRepository;
+
+    @Autowired
+    private IProfessorRepository iProfessorRepository;
+
+    @Autowired
+    private IAdminRepository iAdminRepository;
 
     @Autowired
     private IRoleRepository iRoleRepository;
@@ -90,14 +98,20 @@ public class PatientService {
     public Map<String,Object> savePatient(PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(patientDTO != null){
-            Patient patient = patientMapper.patientDTOToPatient(patientDTO);
-            patient.setRoles(new ArrayList<>());
+            if(iProfessorRepository.existsByUsername(patientDTO.getUsername()) ||
+                    iStudentRepository.existsByUsername(patientDTO.getUsername()) ||
+                    iAdminRepository.existsByUsername(patientDTO.getUsername())){
+                answer.put("error", "Repeated username");
+            }else {
+                Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+                patient.setRoles(new ArrayList<>());
 
-            // encrypt password
-            patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+                // encrypt password
+                patient.setPassword(passwordEncoder.encode(patient.getPassword()));
 
-            iPatientRepository.save(patient);
-            answer.put("patient", "Patient saved successfully");
+                iPatientRepository.save(patient);
+                answer.put("patient", "Patient saved successfully");
+            }
         }else{
             answer.put("error", "Not successful");
         }
