@@ -1,40 +1,68 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.Professor;
+import com.app.spoun.domain.Role;
 import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.mappers.ProfessorMapper;
 import com.app.spoun.mappers.ProfessorMapperImpl;
 import com.app.spoun.repository.IProfessorRepository;
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
+import com.app.spoun.repository.IRoleRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+@RequiredArgsConstructor
+@Transactional
 @Service
+@Slf4j
 public class ProfessorService {
 
     @Autowired
     private IProfessorRepository iProfessorRepository;
 
+    @Autowired
+    private IRoleRepository iRoleRepository;
+
     private ProfessorMapper professorMapper = new ProfessorMapperImpl();
+
+    private final PasswordEncoder passwordEncoder;
+
+    public Map<String,Object> addRoleToProfessor(String username, String roleName){
+        Map<String,Object> answer = new TreeMap<>();
+
+        Professor professor = iProfessorRepository.findByUsername(username).orElse(null);
+        Role role = iRoleRepository.findByName(roleName).orElse(null);
+
+        if(professor != null && role != null) {
+            professor.getRoles().add(role);
+            answer.put("message", "Role added successfully");
+        }else{
+            answer.put("error", "Not successful");
+        }
+
+        return answer;
+    }
 
     public Map<String,Object> getAllProfessor(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<Professor> professorsDAO = iProfessorRepository.findAll(page);
+        Page<Professor> professors = iProfessorRepository.findAll(page);
 
         List<ProfessorDTO> listProfessorsDTO = new ArrayList<>();
-        for(Professor professor : professorsDAO){
+        for(Professor professor : professors){
             ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
             listProfessorsDTO.add(professorDTO);
         }
@@ -64,11 +92,10 @@ public class ProfessorService {
         Map<String,Object> answer = new TreeMap<>();
         if(professorDTO != null){
             Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+            professor.setRoles(new ArrayList<>());
 
             // encrypt password
-            Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
-            String hashPasword = argon2.hash(1, 1024, 1, professor.getPassword());
-            //professor.setPassword(hashPasword);
+            professor.setPassword(passwordEncoder.encode(professor.getPassword()));
 
             iProfessorRepository.save(professor);
             answer.put("message", "Professor saved successfully");

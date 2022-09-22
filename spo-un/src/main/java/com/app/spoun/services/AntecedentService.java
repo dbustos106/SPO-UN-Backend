@@ -14,11 +14,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+@Transactional
 @Service
 public class AntecedentService {
     @Autowired
@@ -33,10 +35,10 @@ public class AntecedentService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<Antecedent> antecedentsDAO = iAntecedentRepository.findAll(page);
+        Page<Antecedent> antecedents = iAntecedentRepository.findAll(page);
 
         List<AntecedentDTO> listAntecedentsDTO = new ArrayList<>();
-        for(Antecedent antecedent : antecedentsDAO){
+        for(Antecedent antecedent : antecedents){
             AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
             listAntecedentsDTO.add(antecedentDTO);
         }
@@ -65,7 +67,6 @@ public class AntecedentService {
     public Map<String,Object> saveAntecedent(AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(antecedentDTO != null){
-
             Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
             Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
             antecedent.setPatient(patient);

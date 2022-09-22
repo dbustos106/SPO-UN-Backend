@@ -49,8 +49,11 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Professor professor;
 
-    @OneToMany(mappedBy = "appointment")
-    private List<Student_Appointment> students;
+    @ManyToMany
+    @JoinTable(name = "student_appointment",
+            joinColumns = { @JoinColumn(name = "appointment_id")},
+            inverseJoinColumns = {@JoinColumn(name = "student_id")})
+    private List<Student> students;
 
     @Override
     public String toString() {

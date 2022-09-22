@@ -1,16 +1,10 @@
 package com.app.spoun.services;
 
-import com.app.spoun.domain.Appointment;
-import com.app.spoun.domain.Patient;
-import com.app.spoun.domain.Professor;
-import com.app.spoun.domain.Room;
+import com.app.spoun.domain.*;
 import com.app.spoun.dto.AppointmentDTO;
 import com.app.spoun.mappers.AppointmentMapper;
 import com.app.spoun.mappers.AppointmentMapperImpl;
-import com.app.spoun.repository.IAppointmentRepository;
-import com.app.spoun.repository.IPatientRepository;
-import com.app.spoun.repository.IProfessorRepository;
-import com.app.spoun.repository.IRoomRepository;
+import com.app.spoun.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,11 +12,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+@Transactional
 @Service
 public class AppointmentService {
 
@@ -38,16 +34,36 @@ public class AppointmentService {
     @Autowired
     private IProfessorRepository iProfessorRepository;
 
+    @Autowired
+    private IStudentRepository iStudentRepository;
+
     private AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
+
+    public Map<String,Object> addStudentToAppointment(String username, Integer appointment_id){
+        Map<String,Object> answer = new TreeMap<>();
+
+        Student student = iStudentRepository.findByUsername(username).orElse(null);
+        Appointment appointment = iAppointmentRepository.findById(appointment_id).orElse(null);
+
+        if(student != null && appointment != null) {
+            appointment.getStudents().add(student);
+            answer.put("message", "Student added successfully");
+        }else{
+            answer.put("error", "Not successful");
+        }
+
+        return answer;
+
+    }
 
     public Map<String,Object> getAllAppointment (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<Appointment> appointmentsDAO = iAppointmentRepository.findAll(page);
+        Page<Appointment> appointments = iAppointmentRepository.findAll(page);
 
         List<AppointmentDTO> listAppointmentsDTO = new ArrayList<>();
-        for(Appointment appointment : appointmentsDAO){
+        for(Appointment appointment : appointments){
             AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
             listAppointmentsDTO.add(appointmentDTO);
         }

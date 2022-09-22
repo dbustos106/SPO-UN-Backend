@@ -17,7 +17,7 @@ public class BuildingController {
     @Autowired
     private BuildingService buildingService;
 
-    @GetMapping
+    @GetMapping(value = "/all")
     public ResponseEntity<?> getAllBuilding (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
@@ -41,7 +41,7 @@ public class BuildingController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping
+    @PostMapping(value = "/save")
     public ResponseEntity<?> saveBuilding(@RequestBody BuildingDTO buildingDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -52,7 +52,7 @@ public class BuildingController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping
+    @PutMapping(value = "/edit")
     public ResponseEntity<?> editBuilding(@RequestBody BuildingDTO buildingDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -63,7 +63,7 @@ public class BuildingController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deleteBuilding(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

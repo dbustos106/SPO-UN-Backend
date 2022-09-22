@@ -4,6 +4,8 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -19,9 +21,15 @@ public class Admin {
     @Column(name = "password")
     private String password;
 
+    @ManyToMany
+    @JoinTable(name = "role_admin",
+            joinColumns = { @JoinColumn(name = "admin_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private List<Role> roles;
+
     @Override
     public String toString() {
-        return "AdminDAO{" +
+        return "Admin{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

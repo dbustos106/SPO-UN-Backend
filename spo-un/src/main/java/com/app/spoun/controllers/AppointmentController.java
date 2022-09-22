@@ -16,7 +16,20 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    @GetMapping
+    @PostMapping(value = "/addStudent")
+    public ResponseEntity<?> addStudentToAppointment(
+            @RequestParam String username,
+            @RequestParam Integer appointment_id){
+        Map<String,Object> answer = new TreeMap<>();
+        try{
+            answer = appointmentService.addStudentToAppointment(username, appointment_id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+    @GetMapping(value = "/all")
     public ResponseEntity<?> getAllAppointment (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
@@ -40,7 +53,7 @@ public class AppointmentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping
+    @PostMapping(value = "/save")
     public ResponseEntity<?> saveAppointment(@RequestBody AppointmentDTO appointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -51,7 +64,7 @@ public class AppointmentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping
+    @PutMapping(value = "/edit")
     public ResponseEntity<?> editAppointment(@RequestBody AppointmentDTO appointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -62,7 +75,7 @@ public class AppointmentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deleteAppointment(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

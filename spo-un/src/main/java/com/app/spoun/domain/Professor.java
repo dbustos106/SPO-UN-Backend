@@ -36,6 +36,12 @@ public class Professor {
     @OneToMany(mappedBy = "professor")
     private List<Appointment> appointments;
 
+    @ManyToMany
+    @JoinTable(name = "role_professor",
+            joinColumns = { @JoinColumn(name = "professor_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private List<Role> roles;
+
     @Override
     public String toString() {
         return "ProfessorDAO{" +
@@ -47,4 +53,5 @@ public class Professor {
                 ", document_number='" + document_number + '\'' +
                 '}';
     }
+
 }

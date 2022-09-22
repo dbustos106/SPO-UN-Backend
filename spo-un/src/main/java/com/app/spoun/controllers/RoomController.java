@@ -16,7 +16,7 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @GetMapping
+    @GetMapping(value = "/all")
     public ResponseEntity<?> getAllRoom (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
@@ -40,7 +40,7 @@ public class RoomController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping
+    @PostMapping(value = "/save")
     public ResponseEntity<?> saveRoom(@RequestBody RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -51,7 +51,7 @@ public class RoomController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping
+    @PutMapping(value = "/edit")
     public ResponseEntity<?> editRoom(@RequestBody RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -62,7 +62,7 @@ public class RoomController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deleteRoom(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

@@ -14,11 +14,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+@Transactional
 @Service
 public class RoomService {
     @Autowired
@@ -33,10 +35,10 @@ public class RoomService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<Room> roomsDAO = iRoomRepository.findAll(page);
+        Page<Room> rooms = iRoomRepository.findAll(page);
 
         List<RoomDTO> listRoomsDTO = new ArrayList<>();
-        for(Room room : roomsDAO){
+        for(Room room : rooms){
             RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
             listRoomsDTO.add(roomDTO);
         }

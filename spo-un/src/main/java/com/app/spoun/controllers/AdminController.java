@@ -16,7 +16,20 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @GetMapping
+    @PostMapping(value = "/addRole")
+    public ResponseEntity<?> addRoleToAdmin(
+            @RequestParam String username,
+            @RequestParam String roleName){
+        Map<String,Object> answer = new TreeMap<>();
+        try{
+            answer = adminService.addRoleToAdmin(username, roleName);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+    @GetMapping(value = "/all")
     public ResponseEntity<?> getAllAdmin (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
@@ -40,18 +53,19 @@ public class AdminController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping
+    @PostMapping(value = "/save")
     public ResponseEntity<?> saveAdmin(@RequestBody AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = adminService.saveAdmin(adminDTO);
+            adminService.addRoleToAdmin(adminDTO.getUsername(), "Admin");
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping
+    @PutMapping(value = "/edit")
     public ResponseEntity<?> editAdmin(@RequestBody AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -62,7 +76,7 @@ public class AdminController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deleteAdmin(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

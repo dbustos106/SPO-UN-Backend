@@ -16,7 +16,20 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping
+    @PostMapping(value = "/addRole")
+    public ResponseEntity<?> addRoleToPatient(
+            @RequestParam String username,
+            @RequestParam String roleName){
+        Map<String,Object> answer = new TreeMap<>();
+        try{
+            answer = patientService.addRoleToPatient(username, roleName);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+    @GetMapping(value = "/all")
     public ResponseEntity<?> getAllPatient (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
@@ -40,18 +53,19 @@ public class PatientController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping
+    @PostMapping(value = "/save")
     public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = patientService.savePatient(patientDTO);
+            patientService.addRoleToPatient(patientDTO.getUsername(), "Patient");
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping
+    @PutMapping(value = "/edit")
     public ResponseEntity<?> editPatient(@RequestBody PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -62,7 +76,7 @@ public class PatientController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deletePatient(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
