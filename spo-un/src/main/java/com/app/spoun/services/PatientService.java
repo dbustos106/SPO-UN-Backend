@@ -1,39 +1,67 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.Patient;
+import com.app.spoun.domain.Role;
 import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.mappers.PatientMapper;
 import com.app.spoun.mappers.PatientMapperImpl;
 import com.app.spoun.repository.IPatientRepository;
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
+import com.app.spoun.repository.IRoleRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+@RequiredArgsConstructor
+@Transactional
 @Service
+@Slf4j
 public class PatientService {
     @Autowired
     private IPatientRepository iPatientRepository;
 
+    @Autowired
+    private IRoleRepository iRoleRepository;
+
     private PatientMapper patientMapper = new PatientMapperImpl();
+
+    private final PasswordEncoder passwordEncoder;
+
+    public Map<String,Object> addRoleToPatient(String username, String roleName){
+        Map<String,Object> answer = new TreeMap<>();
+
+        Patient patient = iPatientRepository.findByUsername(username).orElse(null);
+        Role role = iRoleRepository.findByName(roleName).orElse(null);
+
+        if(patient != null && role != null) {
+            patient.getRoles().add(role);
+            answer.put("message", "Role added successfully");
+        }else{
+            answer.put("error", "Not successful");
+        }
+
+        return answer;
+    }
 
     public Map<String,Object> getAllPatient (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<Patient> patientsDAO = iPatientRepository.findAll(page);
+        Page<Patient> patients = iPatientRepository.findAll(page);
 
         List<PatientDTO> listPatientsDTO = new ArrayList<>();
-        for(Patient patient : patientsDAO){
+        for(Patient patient : patients){
             PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
             listPatientsDTO.add(patientDTO);
         }
@@ -63,11 +91,10 @@ public class PatientService {
         Map<String,Object> answer = new TreeMap<>();
         if(patientDTO != null){
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+            patient.setRoles(new ArrayList<>());
 
             // encrypt password
-            Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
-            String hashPasword = argon2.hash(1, 1024, 1, patient.getPassword());
-            //patient.setPassword(hashPasword);
+            patient.setPassword(passwordEncoder.encode(patient.getPassword()));
 
             iPatientRepository.save(patient);
             answer.put("patient", "Patient saved successfully");

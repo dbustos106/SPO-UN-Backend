@@ -9,22 +9,17 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "jms.jwt")
 public class JwtIOPropieties {
 
-    private Security security;
     private String timezone;
     private String issuer;
     private Token token;
     private Excluded excluted;
 
     @Data
-    public static class Security{
-        private boolean enabled;
-    }
-
-    @Data
     public static class Token{
         private Auth auth;
         private String secret;
-        private int expiresIn;
+        private int access_expires_in;
+        private int refresh_expires_in;
     }
 
     @Data

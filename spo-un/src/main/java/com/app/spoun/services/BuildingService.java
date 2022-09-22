@@ -12,8 +12,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
+@Transactional
 @Service
 public class BuildingService {
     @Autowired
@@ -25,10 +27,10 @@ public class BuildingService {
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
-        Page<Building> buildingsDAO = iBuildingRepository.findAll(page);
+        Page<Building> buildings = iBuildingRepository.findAll(page);
 
         List<BuildingDTO> listBuildingsDTO = new ArrayList<>();
-        for(Building building : buildingsDAO){
+        for(Building building : buildings){
             BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
             listBuildingsDTO.add(buildingDTO);
         }

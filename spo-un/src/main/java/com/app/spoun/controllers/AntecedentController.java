@@ -16,7 +16,7 @@ public class AntecedentController {
     @Autowired
     private AntecedentService antecedentService;
 
-    @GetMapping
+    @GetMapping(value = "/all")
     public ResponseEntity<?> getAllAntecedent (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
@@ -40,7 +40,7 @@ public class AntecedentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping
+    @PostMapping(value = "/save")
     public ResponseEntity<?> saveAntecedent(@RequestBody AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -51,7 +51,7 @@ public class AntecedentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping
+    @PutMapping(value = "/edit")
     public ResponseEntity<?> editAntecedent(@RequestBody AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -62,7 +62,7 @@ public class AntecedentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deleteAntecedent(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -72,4 +72,5 @@ public class AntecedentController {
         }
         return ResponseEntity.ok().body(answer);
     }
+
 }

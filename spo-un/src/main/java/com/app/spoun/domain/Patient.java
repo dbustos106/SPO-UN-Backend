@@ -48,6 +48,12 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
 
+    @ManyToMany
+    @JoinTable(name = "role_patient",
+            joinColumns = { @JoinColumn(name = "patient_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private List<Role> roles;
+
     @Override
     public String toString() {
         return "PatientDAO{" +

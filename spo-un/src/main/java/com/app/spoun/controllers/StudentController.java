@@ -4,6 +4,7 @@ import com.app.spoun.dto.StudentDTO;
 import com.app.spoun.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -16,7 +17,20 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @GetMapping
+    @PostMapping(value = "/addRole")
+    public ResponseEntity<?> addRoleToStudent(
+            @RequestParam String username,
+            @RequestParam String roleName){
+        Map<String,Object> answer = new TreeMap<>();
+        try{
+            answer = studentService.addRoleToStudent(username, roleName);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+    @GetMapping(value = "/all")
     public ResponseEntity<?> getAllStudent (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
@@ -40,18 +54,19 @@ public class StudentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping
-    public ResponseEntity<?> saveStudent(@RequestBody StudentDTO studentDTO){
+    @PostMapping(value = "/save")
+    public ResponseEntity<?> saveStudent(@RequestBody StudentDTO studentDTO) throws InterruptedException {
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = studentService.saveStudent(studentDTO);
+            studentService.addRoleToStudent(studentDTO.getUsername(), "Student");
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping
+    @PutMapping(value = "/edit")
     public ResponseEntity<?> editStudent(@RequestBody StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
@@ -62,7 +77,7 @@ public class StudentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deleteStudent(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

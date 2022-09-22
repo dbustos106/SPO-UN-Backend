@@ -1,52 +1,83 @@
 package com.app.spoun.services;
 
+
 import com.app.spoun.domain.Admin;
 import com.app.spoun.domain.Patient;
 import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Student;
-import com.app.spoun.dto.JwtResponse;
-import com.app.spoun.dto.UserDetails;
-import com.app.spoun.exceptions.Apiunauthorized;
 import com.app.spoun.repository.IAdminRepository;
 import com.app.spoun.repository.IPatientRepository;
 import com.app.spoun.repository.IProfessorRepository;
 import com.app.spoun.repository.IStudentRepository;
-import com.app.spoun.security.JwtIO;
-import com.app.spoun.utils.DateUtil;
-import com.app.spoun.validator.AuthValidator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Service
-public class AuthService {
+@RequiredArgsConstructor
+@Transactional
+@Slf4j
+public class AuthService implements UserDetailsService {
 
     @Autowired
-    private JwtIO jwtIO;
+    private IStudentRepository iStudentRepository;
 
     @Autowired
-    private DateUtil dateUtil;
+    private IProfessorRepository iProfessorRepository;
 
     @Autowired
-    private AuthValidator validator;
+    private IPatientRepository iPatientRepository;
 
-    @Value("${jms.jwt.token.expiresIn}")
-    private int EXPIRES_IN;
+    @Autowired
+    private IAdminRepository iAdminRepository;
 
-    public JwtResponse login(String clientId, String clientSecret) throws Apiunauthorized {
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        // UserDetails
-        UserDetails userDetails = validator.authenticate(clientId, clientSecret);
-
-        JwtResponse jwt = JwtResponse.builder()
-                .tokenType("bearer")
-                .accessToken(jwtIO.generateToken(userDetails))
-                .issuedAt(dateUtil.getDateMillis() + "")
-                .clientId(clientId)
-                .expiresIn(EXPIRES_IN)
-                .build();
-
-        return jwt;
+        Patient patient = iPatientRepository.findByUsername(username).orElse(null);
+        if(patient != null){
+            patient.getRoles().forEach(role -> {
+                authorities.add(new SimpleGrantedAuthority(role.getName()));
+            });
+            return new User(patient.getUsername(), patient.getPassword(), authorities);
+        }else{
+            Student student = iStudentRepository.findByUsername(username).orElse(null);
+            if(student != null){
+                student.getRoles().forEach(role -> {
+                    authorities.add(new SimpleGrantedAuthority(role.getName()));
+                });
+                return new User(student.getUsername(), student.getPassword(), authorities);
+            }else{
+                Professor professor = iProfessorRepository.findByUsername(username).orElse(null);
+                if(professor != null){
+                    professor.getRoles().forEach(role -> {
+                        authorities.add(new SimpleGrantedAuthority(role.getName()));
+                    });
+                    return new User(professor.getUsername(), professor.getPassword(), authorities);
+                }else{
+                    Admin admin = iAdminRepository.findByUsername(username).orElse(null);
+                    if(admin != null){
+                        admin.getRoles().forEach(role -> {
+                            authorities.add(new SimpleGrantedAuthority(role.getName()));
+                        });
+                        return new User(admin.getUsername(), admin.getPassword(), authorities);
+                    }else{
+                        throw new UsernameNotFoundException("User not found in the database");
+                    }
+                }
+            }
+        }
     }
+
 }
