@@ -109,8 +109,8 @@ public class PatientService {
                 // encrypt password
                 patient.setPassword(passwordEncoder.encode(patient.getPassword()));
 
-                iPatientRepository.save(patient);
-                answer.put("patient", "Patient saved successfully");
+                Patient patient_answer = iPatientRepository.save(patient);
+                answer.put("patient", "Patient " + patient_answer.getId() + " saved successfully");
             }
         }else{
             answer.put("error", "Not successful");

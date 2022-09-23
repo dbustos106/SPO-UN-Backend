@@ -110,8 +110,8 @@ public class ProfessorService {
                 // encrypt password
                 professor.setPassword(passwordEncoder.encode(professor.getPassword()));
 
-                iProfessorRepository.save(professor);
-                answer.put("message", "Professor saved successfully");
+                Professor professor_answer = iProfessorRepository.save(professor);
+                answer.put("message", "Professor " + professor_answer.getId() + " saved successfully");
             }
         }else{
             answer.put("error", "Not successful");

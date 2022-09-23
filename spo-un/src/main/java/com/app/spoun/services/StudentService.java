@@ -112,8 +112,8 @@ public class StudentService {
                 // encrypt password
                 student.setPassword(passwordEncoder.encode(student.getPassword()));
 
-                iStudentRepository.save(student);
-                answer.put("message", "Student saved successfully");
+                Student student_answer = iStudentRepository.save(student);
+                answer.put("message", "Student " + student_answer.getId() + " saved successfully");
             }
         }else{
             answer.put("error", "Not successful");

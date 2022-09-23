@@ -109,8 +109,8 @@ public class AdminService {
                 // encrypt password
                 admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 
-                iAdminRepository.save(admin);
-                answer.put("message", "Admin saved successfully");
+                Admin admin_answer = iAdminRepository.save(admin);
+                answer.put("message", "Admin " + admin_answer.getId() + " saved successfully");
             }
         }else{
             answer.put("error", "Not successful");
