@@ -26,10 +26,8 @@ public class AuthController {
 
     @Value("${jms.jwt.issuer:none}")
     private String ISSUER;
-
     @Value("${jms.jwt.token.secret:secret}")
     private String SECRET;
-
     @Value("${jms.jwt.token.access_expires_in:600000}")
     private int ACCESS_EXPIRES_IN;
 

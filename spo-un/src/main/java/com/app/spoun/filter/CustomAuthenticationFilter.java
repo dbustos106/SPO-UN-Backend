@@ -25,11 +25,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private static String ISSUER = JwtIOComponent.ISSUER;
-
     private static String SECRET = JwtIOComponent.SECRET;
-
     private static int ACCESS_EXPIRES_IN = JwtIOComponent.ACCESS_EXPIRES_IN;
-
     private static int REFRESH_EXPIRES_IN = JwtIOComponent.REFRESH_EXPIRES_IN;
 
     private final AuthenticationManager authenticationManager;
