@@ -16,19 +16,6 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @PostMapping(value = "/addRole")
-    public ResponseEntity<?> addRoleToPatient(
-            @RequestParam String username,
-            @RequestParam String roleName){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = patientService.addRoleToPatient(username, roleName);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllPatient (
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -47,18 +34,6 @@ public class PatientController {
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = patientService.findById(id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
-    @PostMapping(value = "/save")
-    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = patientService.savePatient(patientDTO);
-            patientService.addRoleToPatient(patientDTO.getUsername(), "Patient");
         }catch(Exception e){
             answer.put("error", e);
         }

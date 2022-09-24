@@ -1,6 +1,5 @@
 package com.app.spoun.services;
 
-
 import com.app.spoun.domain.Admin;
 import com.app.spoun.domain.Patient;
 import com.app.spoun.domain.Professor;

@@ -16,19 +16,6 @@ public class ProfessorController {
     @Autowired
     private ProfessorService professorService;
 
-    @PostMapping(value = "/addRole")
-    public ResponseEntity<?> addRoleToProfessor(
-            @RequestParam String username,
-            @RequestParam String roleName){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = professorService.addRoleToProfessor(username, roleName);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllProfessor (
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -47,18 +34,6 @@ public class ProfessorController {
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = professorService.findProfessorById(id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
-    @PostMapping(value = "/save")
-    public ResponseEntity<?> saveProfessor(@RequestBody ProfessorDTO professorDTO){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = professorService.saveProfessor(professorDTO);
-            professorService.addRoleToProfessor(professorDTO.getUsername(), "Professor");
         }catch(Exception e){
             answer.put("error", e);
         }

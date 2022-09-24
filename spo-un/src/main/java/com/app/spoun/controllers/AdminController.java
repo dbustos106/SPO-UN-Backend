@@ -16,19 +16,6 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @PostMapping(value = "/addRole")
-    public ResponseEntity<?> addRoleToAdmin(
-            @RequestParam String username,
-            @RequestParam String roleName){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = adminService.addRoleToAdmin(username, roleName);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllAdmin (
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -47,18 +34,6 @@ public class AdminController {
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = adminService.findById(id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
-    @PostMapping(value = "/save")
-    public ResponseEntity<?> saveAdmin(@RequestBody AdminDTO adminDTO){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = adminService.saveAdmin(adminDTO);
-            adminService.addRoleToAdmin(adminDTO.getUsername(), "Admin");
         }catch(Exception e){
             answer.put("error", e);
         }
