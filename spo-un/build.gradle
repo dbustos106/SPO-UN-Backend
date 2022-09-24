@@ -25,10 +25,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'mysql:mysql-connector-java'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation(platform('org.junit:junit-bom:5.9.1'))
+	testImplementation('org.junit.jupiter:junit-jupiter')
+	testImplementation("org.assertj:assertj-core:3.23.1")
+	testImplementation "org.mockito:mockito-core:3.+"
+	testImplementation group: 'com.h2database', name: 'h2', version: '2.1.214'
 
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
-	testImplementation 'junit:junit:4.13.1'
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
 	// https://mvnrepository.com/artifact/de.mkammerer/argon2-jvm
@@ -67,5 +72,8 @@ tasks.withType(JavaCompile) {
 }
 
 test {
-	useTestNG()
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }

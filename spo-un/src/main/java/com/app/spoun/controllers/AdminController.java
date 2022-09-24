@@ -16,6 +16,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllAdmin (
             @RequestParam(required = false, defaultValue = "0") Integer page,
