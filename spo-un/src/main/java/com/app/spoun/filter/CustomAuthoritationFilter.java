@@ -37,18 +37,19 @@ public class CustomAuthoritationFilter extends OncePerRequestFilter {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
                 try {
+
                     String token = authorizationHeader.substring("Bearer ".length());
                     DecodedJWT decodedJWT = JWTUtil.verifyToken(token, SECRET);
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    stream(roles).forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
+                    authorities.add(new SimpleGrantedAuthority(roles[1]));
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
+
                 }catch (Exception e) {
                     response.setStatus(FORBIDDEN.value());
                     Map<String, String> error = new HashMap<>();

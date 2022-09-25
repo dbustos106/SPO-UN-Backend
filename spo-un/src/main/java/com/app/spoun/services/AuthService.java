@@ -47,6 +47,7 @@ public class AuthService implements UserDetailsService {
         Patient patient = iPatientRepository.findByUsername(username).orElse(null);
         if(patient != null){
             patient.getRoles().forEach(role -> {
+                authorities.add(new SimpleGrantedAuthority(patient.getId().toString()));
                 authorities.add(new SimpleGrantedAuthority(role.getName()));
             });
             return new User(patient.getUsername(), patient.getPassword(), authorities);
@@ -54,6 +55,7 @@ public class AuthService implements UserDetailsService {
             Student student = iStudentRepository.findByUsername(username).orElse(null);
             if(student != null){
                 student.getRoles().forEach(role -> {
+                    authorities.add(new SimpleGrantedAuthority(student.getId().toString()));
                     authorities.add(new SimpleGrantedAuthority(role.getName()));
                 });
                 return new User(student.getUsername(), student.getPassword(), authorities);
@@ -61,6 +63,7 @@ public class AuthService implements UserDetailsService {
                 Professor professor = iProfessorRepository.findByUsername(username).orElse(null);
                 if(professor != null){
                     professor.getRoles().forEach(role -> {
+                        authorities.add(new SimpleGrantedAuthority(professor.getId().toString()));
                         authorities.add(new SimpleGrantedAuthority(role.getName()));
                     });
                     return new User(professor.getUsername(), professor.getPassword(), authorities);
@@ -68,6 +71,7 @@ public class AuthService implements UserDetailsService {
                     Admin admin = iAdminRepository.findByUsername(username).orElse(null);
                     if(admin != null){
                         admin.getRoles().forEach(role -> {
+                            authorities.add(new SimpleGrantedAuthority(admin.getId().toString()));
                             authorities.add(new SimpleGrantedAuthority(role.getName()));
                         });
                         return new User(admin.getUsername(), admin.getPassword(), authorities);
