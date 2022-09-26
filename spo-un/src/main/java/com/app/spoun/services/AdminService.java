@@ -83,7 +83,7 @@ public class AdminService {
         return answer;
     }
 
-    public Map<String,Object> findById(Integer id){
+    public Map<String,Object> findAdminById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
         Admin admin = iAdminRepository.findById(id).orElse(null);
         AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);

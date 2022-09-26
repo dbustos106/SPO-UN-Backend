@@ -62,7 +62,7 @@ public class PatientService {
         return answer;
     }
 
-    public Map<String,Object> getAllPatient (Integer idPage, Integer size){
+    public Map<String,Object> getAllPatient(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
@@ -83,7 +83,7 @@ public class PatientService {
         return answer;
     }
 
-    public Map<String,Object> findById(Integer id){
+    public Map<String,Object> findPatientById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
         Patient patient = iPatientRepository.findById(id).orElse(null);
         PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);

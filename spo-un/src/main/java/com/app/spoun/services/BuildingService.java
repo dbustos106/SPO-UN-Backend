@@ -44,7 +44,7 @@ public class BuildingService {
         return answer;
     }
 
-    public Map<String,Object> findById(Integer id){
+    public Map<String,Object> findBuildingById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
         Building building = iBuildingRepository.findById(id).orElse(null);
         BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);

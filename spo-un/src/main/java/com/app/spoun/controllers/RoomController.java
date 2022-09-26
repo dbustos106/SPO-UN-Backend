@@ -33,7 +33,7 @@ public class RoomController {
     public ResponseEntity<?> findRoomById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roomService.findById(id);
+            answer = roomService.findRoomById(id);
         }catch(Exception e){
             answer.put("error", e);
         }

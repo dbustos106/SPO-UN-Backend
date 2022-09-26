@@ -52,7 +52,7 @@ public class AntecedentService {
         return answer;
     }
 
-    public Map<String,Object> findById(Integer id){
+    public Map<String,Object> findAntecedentById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
         Antecedent antecedent = iAntecedentRepository.findById(id).orElse(null);
         AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);

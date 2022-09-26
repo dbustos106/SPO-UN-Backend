@@ -33,7 +33,7 @@ public class AdminController {
     public ResponseEntity<?> findAdminById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = adminService.findById(id);
+            answer = adminService.findAdminById(id);
         }catch(Exception e){
             answer.put("error", e);
         }

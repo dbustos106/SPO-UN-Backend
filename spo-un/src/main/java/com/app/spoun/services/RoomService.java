@@ -52,7 +52,7 @@ public class RoomService {
         return answer;
     }
 
-    public Map<String,Object> findById(Integer id){
+    public Map<String,Object> findRoomById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
         Room room = iRoomRepository.findById(id).orElse(null);
         RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);

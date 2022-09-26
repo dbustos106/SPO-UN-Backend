@@ -33,7 +33,7 @@ public class PatientController {
     public ResponseEntity<?> findPatientById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = patientService.findById(id);
+            answer = patientService.findPatientById(id);
         }catch(Exception e){
             answer.put("error", e);
         }
