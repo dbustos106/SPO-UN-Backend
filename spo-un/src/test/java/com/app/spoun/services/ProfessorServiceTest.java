@@ -2,8 +2,7 @@ package com.app.spoun.services;
 
 import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Role;
-import com.app.spoun.domain.Student;
-import com.app.spoun.dto.StudentDTO;
+import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class StudentServiceTest {
+class ProfessorServiceTest {
 
     @Mock
     private IStudentRepository iStudentRepository;
@@ -44,13 +43,11 @@ class StudentServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private StudentService studentService;
+    private ProfessorService professorService;
 
     private Professor professor;
 
     private Role role;
-
-    private Student student;
 
     @BeforeEach
     void setUp() {
@@ -61,55 +58,47 @@ class StudentServiceTest {
         professor.setName("Juana");
         professor.setDocument_type("cc");
         professor.setDocument_number("321");
+        professor.setRoles(new ArrayList<>());
 
         role = new Role();
-        role.setName("Student");
-
-        student = new Student();
-        student.setPassword("pass");
-        student.setName("Julian");
-        student.setDocument_type("cc");
-        student.setDocument_number("1234");
-        student.setRoles(new ArrayList<>());
-        student.setProfessor(new Professor());
-        student.setAppointments(new ArrayList<>());
+        role.setName("Professor");
 
     }
 
     @Test
-    void addRoleToStudent(){
-        Mockito.when(iStudentRepository.findByUsername(any(String.class))).thenReturn(Optional.of(student));
+    void addRoleToProfessor(){
+        Mockito.when(iProfessorRepository.findByUsername(any(String.class))).thenReturn(Optional.of(professor));
         Mockito.when(iRoleRepository.findByName(any(String.class))).thenReturn(Optional.of(role));
-        assertNotNull(studentService.addRoleToStudent("Julian", "Student"));
+        assertNotNull(professorService.addRoleToProfessor("Juana", "Professor"));
     }
 
     @Test
-    void getAllStudent(){
-        Page<Student> students = new PageImpl<>(Arrays.asList(student));
-        Mockito.when(iStudentRepository.findAll(any(Pageable.class))).thenReturn(students);
-        assertNotNull(studentService.getAllStudent(0, 10));
+    void getAllProfessor(){
+        Page<Professor> professors = new PageImpl<>(Arrays.asList(professor));
+        Mockito.when(iProfessorRepository.findAll(any(Pageable.class))).thenReturn(professors);
+        assertNotNull(professorService.getAllProfessor(0, 10));
     }
 
     @Test
-    void findStudentById(){
-        Mockito.when(iStudentRepository.findById(any(Integer.class))).thenReturn(Optional.of(student));
-        assertNotNull(studentService.findStudentById(1));
+    void findProfessorById(){
+        Mockito.when(iProfessorRepository.findById(any(Integer.class))).thenReturn(Optional.of(professor));
+        assertNotNull(professorService.findProfessorById(1));
     }
 
     @Test
-    void saveStudent() {
-        Mockito.when(iStudentRepository.save(any(Student.class))).thenReturn(student);
-        assertNotNull(studentService.saveStudent(new StudentDTO()));
+    void saveProfessor() {
+        Mockito.when(iProfessorRepository.save(any(Professor.class))).thenReturn(professor);
+        assertNotNull(professorService.saveProfessor(new ProfessorDTO()));
     }
 
     @Test
-    void editStudent(){
-        assertNotNull(studentService.editStudent(new StudentDTO()));
+    void editProfessor(){
+        assertNotNull(professorService.editProfessor(new ProfessorDTO()));
     }
 
     @Test
-    void deleteStudent(){
-        assertNotNull(studentService.deleteStudent(1));
+    void deleteProfessor(){
+        assertNotNull(professorService.deleteProfessor(1));
     }
 
 }

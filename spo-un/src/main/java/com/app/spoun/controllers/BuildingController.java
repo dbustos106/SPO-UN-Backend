@@ -34,7 +34,7 @@ public class BuildingController {
     public ResponseEntity<?> findBuildingById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = buildingService.findById(id);
+            answer = buildingService.findBuildingById(id);
         }catch(Exception e){
             answer.put("error", e);
         }

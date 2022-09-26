@@ -33,7 +33,7 @@ public class AntecedentController {
     public ResponseEntity<?> findAntecedentById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.findById(id);
+            answer = antecedentService.findAntecedentById(id);
         }catch(Exception e){
             answer.put("error", e);
         }

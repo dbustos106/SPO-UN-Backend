@@ -63,12 +63,6 @@ dependencies {
 
 }
 
-tasks.withType(JavaCompile) {
-	options.compilerArgs = [
-			'-Amapstruct.suppressGeneratorTimestamp=true'
-	]
-}
-
-test {
-	useTestNG()
+tasks.withType(Test) {
+	useJUnitPlatform()
 }
