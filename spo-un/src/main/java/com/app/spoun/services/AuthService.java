@@ -46,34 +46,26 @@ public class AuthService implements UserDetailsService {
 
         Patient patient = iPatientRepository.findByUsername(username).orElse(null);
         if(patient != null){
-            patient.getRoles().forEach(role -> {
-                authorities.add(new SimpleGrantedAuthority(patient.getId().toString()));
-                authorities.add(new SimpleGrantedAuthority(role.getName()));
-            });
+            authorities.add(new SimpleGrantedAuthority(patient.getId().toString()));
+            authorities.add(new SimpleGrantedAuthority(patient.getRole().getName()));
             return new User(patient.getUsername(), patient.getPassword(), authorities);
         }else{
             Student student = iStudentRepository.findByUsername(username).orElse(null);
             if(student != null){
-                student.getRoles().forEach(role -> {
-                    authorities.add(new SimpleGrantedAuthority(student.getId().toString()));
-                    authorities.add(new SimpleGrantedAuthority(role.getName()));
-                });
+                authorities.add(new SimpleGrantedAuthority(student.getId().toString()));
+                authorities.add(new SimpleGrantedAuthority(student.getRole().getName()));
                 return new User(student.getUsername(), student.getPassword(), authorities);
             }else{
                 Professor professor = iProfessorRepository.findByUsername(username).orElse(null);
                 if(professor != null){
-                    professor.getRoles().forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(professor.getId().toString()));
-                        authorities.add(new SimpleGrantedAuthority(role.getName()));
-                    });
+                    authorities.add(new SimpleGrantedAuthority(professor.getId().toString()));
+                    authorities.add(new SimpleGrantedAuthority(professor.getRole().getName()));
                     return new User(professor.getUsername(), professor.getPassword(), authorities);
                 }else{
                     Admin admin = iAdminRepository.findByUsername(username).orElse(null);
                     if(admin != null){
-                        admin.getRoles().forEach(role -> {
-                            authorities.add(new SimpleGrantedAuthority(admin.getId().toString()));
-                            authorities.add(new SimpleGrantedAuthority(role.getName()));
-                        });
+                        authorities.add(new SimpleGrantedAuthority(admin.getId().toString()));
+                        authorities.add(new SimpleGrantedAuthority(admin.getRole().getName()));
                         return new User(admin.getUsername(), admin.getPassword(), authorities);
                     }else{
                         throw new UsernameNotFoundException("User not found in the database");

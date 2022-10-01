@@ -15,4 +15,5 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Integ
     Appointment save(Appointment appointment);
     void deleteById(Integer id);
     boolean existsById(Integer id);
+
 }

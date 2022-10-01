@@ -17,4 +17,5 @@ public interface IPatientRepository extends JpaRepository<Patient, Integer> {
     void deleteById(Integer id);
     boolean existsById(Integer id);
     boolean existsByUsername(String username);
+
 }

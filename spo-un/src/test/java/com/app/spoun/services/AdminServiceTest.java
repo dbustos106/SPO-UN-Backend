@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -53,21 +52,14 @@ class AdminServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        admin = new Admin();
-        admin.setUsername("Admin");
-        admin.setPassword("pass");
-        admin.setRoles(new ArrayList<>());
-
         role = new Role();
         role.setName("Professor");
 
-    }
+        admin = new Admin();
+        admin.setUsername("Admin");
+        admin.setPassword("pass");
+        admin.setRole(role);
 
-    @Test
-    void addRoleToAdmin(){
-        Mockito.when(iAdminRepository.findByUsername(any(String.class))).thenReturn(Optional.of(admin));
-        Mockito.when(iRoleRepository.findByName(any(String.class))).thenReturn(Optional.of(role));
-        assertNotNull(adminService.addRoleToAdmin("Admin", "Admin"));
     }
 
     @Test

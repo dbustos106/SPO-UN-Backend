@@ -19,4 +19,6 @@ public class ProfessorDTO {
 
     private String document_number;
 
+    private Integer role_id;
+
 }

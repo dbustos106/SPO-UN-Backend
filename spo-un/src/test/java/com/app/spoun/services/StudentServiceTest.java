@@ -70,17 +70,10 @@ class StudentServiceTest {
         student.setName("Julian");
         student.setDocument_type("cc");
         student.setDocument_number("1234");
-        student.setRoles(new ArrayList<>());
         student.setProfessor(new Professor());
         student.setAppointments(new ArrayList<>());
+        student.setRole(role);
 
-    }
-
-    @Test
-    void addRoleToStudent(){
-        Mockito.when(iStudentRepository.findByUsername(any(String.class))).thenReturn(Optional.of(student));
-        Mockito.when(iRoleRepository.findByName(any(String.class))).thenReturn(Optional.of(role));
-        assertNotNull(studentService.addRoleToStudent("Julian", "Student"));
     }
 
     @Test

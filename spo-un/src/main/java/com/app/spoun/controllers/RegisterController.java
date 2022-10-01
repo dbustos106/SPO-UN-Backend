@@ -39,7 +39,6 @@ public class RegisterController {
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = studentService.saveStudent(studentDTO);
-            studentService.addRoleToStudent(studentDTO.getUsername(), "Student");
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -51,7 +50,6 @@ public class RegisterController {
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = professorService.saveProfessor(professorDTO);
-            professorService.addRoleToProfessor(professorDTO.getUsername(), "Professor");
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -63,7 +61,6 @@ public class RegisterController {
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = patientService.savePatient(patientDTO);
-            patientService.addRoleToPatient(patientDTO.getUsername(), "Patient");
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -75,7 +72,6 @@ public class RegisterController {
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = adminService.saveAdmin(adminDTO);
-            adminService.addRoleToAdmin(adminDTO.getUsername(), "Admin");
         }catch(Exception e){
             answer.put("error", e);
         }

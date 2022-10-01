@@ -3,10 +3,6 @@ package com.app.spoun.domain;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.CascadeType;
 
 import java.util.List;
 
@@ -38,21 +34,19 @@ public class Student {
     @ManyToOne(fetch = FetchType.LAZY)
     private Professor professor;
 
+    @JoinColumn(name = "role_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Role role;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "student_appointment",
             joinColumns = { @JoinColumn(name = "student_id")},
             inverseJoinColumns = {@JoinColumn(name = "appointment_id")})
     private List<Appointment> appointments;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_student",
-                joinColumns = { @JoinColumn(name = "student_id")},
-                inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private List<Role> roles;
-
     @Override
     public String toString() {
-        return "StudentDAO{" +
+        return "Student{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
@@ -60,6 +54,7 @@ public class Student {
                 ", document_type='" + document_type + '\'' +
                 ", document_number='" + document_number + '\'' +
                 ", professor=" + professor +
+                ", role=" + role +
                 '}';
     }
 

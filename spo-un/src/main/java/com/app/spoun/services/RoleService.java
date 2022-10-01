@@ -1,12 +1,10 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.Role;
-import com.app.spoun.domain.Student;
 import com.app.spoun.dto.RoleDTO;
 import com.app.spoun.mappers.RoleMapper;
 import com.app.spoun.mappers.RoleMapperImpl;
 import com.app.spoun.repository.IRoleRepository;
-import com.app.spoun.repository.IStudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,7 +43,7 @@ public class RoleService {
         Page<RoleDTO> rolesDTO = new PageImpl<>(listRolesDTO);
 
         if(rolesDTO.getSize() != 0){
-            answer.put("roles", rolesDTO);
+            answer.put("message", rolesDTO);
         }else {
             answer.put("error", "None role found");
         }
@@ -57,7 +55,7 @@ public class RoleService {
         Role role = iRoleRepository.findById(id).orElse(null);
         RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
         if(roleDTO != null){
-            answer.put("role", roleDTO);
+            answer.put("message", roleDTO);
         }else{
             answer.put("error", "Role not found");
         }
@@ -71,7 +69,7 @@ public class RoleService {
             iRoleRepository.save(role);
             answer.put("message", "Role saved successfully");
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Role not saved");
         }
         return answer;
     }
@@ -92,7 +90,7 @@ public class RoleService {
         Map<String,Object> answer = new TreeMap<>();
         if(iRoleRepository.existsById(id)){
             iRoleRepository.deleteById(id);
-            answer.put("menssage", "Role deleted successfully");
+            answer.put("message", "Role deleted successfully");
         }else{
             answer.put("error", "Role not found");
         }

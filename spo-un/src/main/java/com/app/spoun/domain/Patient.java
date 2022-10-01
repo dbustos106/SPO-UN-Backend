@@ -42,21 +42,19 @@ public class Patient {
     @Column(name = "blood_type")
     private String blood_type;
 
+    @JoinColumn(name = "role_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Role role;
+
     @OneToMany(mappedBy = "patient")
     private List<Antecedent> antecedents;
 
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
 
-    @ManyToMany
-    @JoinTable(name = "role_patient",
-            joinColumns = { @JoinColumn(name = "patient_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private List<Role> roles;
-
     @Override
     public String toString() {
-        return "PatientDAO{" +
+        return "Patient{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
@@ -67,6 +65,7 @@ public class Patient {
                 ", age=" + age +
                 ", gender='" + gender + '\'' +
                 ", blood_type='" + blood_type + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 

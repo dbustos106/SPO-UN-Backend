@@ -26,7 +26,7 @@ public class Antecedent {
 
     @Override
     public String toString() {
-        return "AntecedentDAO{" +
+        return "Antecedent{" +
                 "id=" + id +
                 ", type='" + type + '\'' +
                 ", description='" + description + '\'' +

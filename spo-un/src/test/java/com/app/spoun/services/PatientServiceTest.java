@@ -1,11 +1,8 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.Patient;
-import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Role;
-import com.app.spoun.domain.Student;
 import com.app.spoun.dto.PatientDTO;
-import com.app.spoun.dto.StudentDTO;
 import com.app.spoun.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +53,9 @@ class PatientServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
+        role = new Role();
+        role.setName("Student");
+
         patient = new Patient();
         patient.setUsername("Laura");
         patient.setPassword("pass");
@@ -63,18 +63,8 @@ class PatientServiceTest {
         patient.setAge(34);
         patient.setAntecedents(new ArrayList<>());
         patient.setAppointments(new ArrayList<>());
-        patient.setRoles(new ArrayList<>());
+        patient.setRole(role);
 
-        role = new Role();
-        role.setName("Student");
-
-    }
-
-    @Test
-    void addRoleToPatient(){
-        Mockito.when(iPatientRepository.findByUsername(any(String.class))).thenReturn(Optional.of(patient));
-        Mockito.when(iRoleRepository.findByName(any(String.class))).thenReturn(Optional.of(role));
-        assertNotNull(patientService.addRoleToPatient("Laura", "Patient"));
     }
 
     @Test

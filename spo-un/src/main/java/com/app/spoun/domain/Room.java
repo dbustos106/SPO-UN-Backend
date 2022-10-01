@@ -27,7 +27,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "RoomDAO{" +
+        return "Room{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", building=" + building +

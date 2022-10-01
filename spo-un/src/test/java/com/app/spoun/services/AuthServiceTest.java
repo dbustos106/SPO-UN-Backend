@@ -1,9 +1,6 @@
 package com.app.spoun.services;
 
-import com.app.spoun.domain.Admin;
-import com.app.spoun.domain.Patient;
-import com.app.spoun.domain.Professor;
-import com.app.spoun.domain.Student;
+import com.app.spoun.domain.*;
 import com.app.spoun.repository.IAdminRepository;
 import com.app.spoun.repository.IPatientRepository;
 import com.app.spoun.repository.IProfessorRepository;
@@ -46,39 +43,51 @@ class AuthServiceTest {
 
     private Professor professor;
 
+    private Role role;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
+        role = new Role();
+
         admin = new Admin();
+        admin.setId(1);
         admin.setUsername("Admin");
         admin.setPassword("pass");
-        admin.setRoles(new ArrayList<>());
+        role.setName("Admin");
+        admin.setRole(role);
 
         patient = new Patient();
+        patient.setId(1);
         patient.setUsername("Laura");
         patient.setPassword("pass");
         patient.setName("Laura Jimenez");
         patient.setAge(34);
         patient.setAntecedents(new ArrayList<>());
         patient.setAppointments(new ArrayList<>());
-        patient.setRoles(new ArrayList<>());
+        role.setName("Patient");
+        patient.setRole(role);
 
         professor = new Professor();
+        professor.setId(1);
         professor.setPassword("pass");
         professor.setName("Juana");
         professor.setDocument_type("cc");
         professor.setDocument_number("321");
-        professor.setRoles(new ArrayList<>());
+        role.setName("Professor");
+        professor.setRole(role);
 
         student = new Student();
+        student.setId(1);
         student.setPassword("pass");
         student.setName("Julian");
         student.setDocument_type("cc");
         student.setDocument_number("1234");
-        student.setRoles(new ArrayList<>());
         student.setProfessor(new Professor());
         student.setAppointments(new ArrayList<>());
+        role.setName("Admin");
+        student.setRole(role);
 
     }
 

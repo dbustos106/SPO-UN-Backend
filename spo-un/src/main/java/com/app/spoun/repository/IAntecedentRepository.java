@@ -15,4 +15,5 @@ public interface IAntecedentRepository extends JpaRepository<Antecedent, Integer
     Antecedent save(Antecedent antecedent);
     void deleteById(Integer id);
     boolean existsById(Integer id);
+
 }

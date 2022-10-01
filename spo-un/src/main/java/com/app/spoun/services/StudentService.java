@@ -47,22 +47,6 @@ public class StudentService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String,Object> addRoleToStudent(String username, String roleName){
-        Map<String,Object> answer = new TreeMap<>();
-
-        Student student = iStudentRepository.findByUsername(username).orElse(null);
-        Role role = iRoleRepository.findByName(roleName).orElse(null);
-
-        if(student != null && role != null) {
-            student.getRoles().add(role);
-            answer.put("message", "Role added successfully");
-        }else{
-            answer.put("error", "Not successful");
-        }
-
-        return answer;
-    }
-
     public Map<String,Object> getAllStudent (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
@@ -77,7 +61,7 @@ public class StudentService {
         Page<StudentDTO> studentsDTO = new PageImpl<>(listStudentsDTO);
 
         if(studentsDTO.getSize() != 0){
-            answer.put("students", studentsDTO);
+            answer.put("message", studentsDTO);
         }else {
             answer.put("error", "None student found");
         }
@@ -89,7 +73,7 @@ public class StudentService {
         Student student = iStudentRepository.findById(id).orElse(null);
         StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
         if(studentDTO != null){
-            answer.put("student", studentDTO);
+            answer.put("message", studentDTO);
         }else{
             answer.put("error", "Student not found");
         }
@@ -104,9 +88,10 @@ public class StudentService {
                     iAdminRepository.existsByUsername(studentDTO.getUsername())){
                 answer.put("error", "Repeated username");
             }else {
+                Role role = iRoleRepository.findByName("Student").orElse(null);
                 Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
                 Student student = studentMapper.studentDTOToStudent(studentDTO);
-                student.setRoles(new ArrayList<>());
+                student.setRole(role);
                 student.setProfessor(professor);
 
                 // encrypt password
@@ -116,7 +101,7 @@ public class StudentService {
                 answer.put("message", "Student " + student_answer.getId() + " saved successfully");
             }
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Student not saved");
         }
         return answer;
     }
@@ -139,7 +124,7 @@ public class StudentService {
         Map<String,Object> answer = new TreeMap<>();
         if(iStudentRepository.existsById(id)){
             iStudentRepository.deleteById(id);
-            answer.put("menssage", "Student deleted successfully");
+            answer.put("message", "Student deleted successfully");
         }else{
             answer.put("error", "Student not found");
         }

@@ -45,7 +45,7 @@ public class RoomService {
         Page<RoomDTO> roomsDTO = new PageImpl<>(listRoomsDTO);
 
         if(roomsDTO.getSize() != 0){
-            answer.put("rooms", roomsDTO);
+            answer.put("message", roomsDTO);
         }else {
             answer.put("error", "None room found");
         }
@@ -57,7 +57,7 @@ public class RoomService {
         Room room = iRoomRepository.findById(id).orElse(null);
         RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
         if(roomDTO != null){
-            answer.put("room", roomDTO);
+            answer.put("message", roomDTO);
         }else{
             answer.put("error", "Room not found");
         }
@@ -71,9 +71,9 @@ public class RoomService {
             Room room = roomMapper.roomDTOToRoom(roomDTO);
             room.setBuilding(building);
             iRoomRepository.save(room);
-            answer.put("room", "Room saved successfully");
+            answer.put("message", "Room saved successfully");
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Room not saved");
         }
         return answer;
     }
@@ -85,7 +85,7 @@ public class RoomService {
             Room room = roomMapper.roomDTOToRoom(roomDTO);
             room.setBuilding(building);
             iRoomRepository.save(room);
-            answer.put("room", "Room updated successfully");
+            answer.put("message", "Room updated successfully");
         }else{
             answer.put("error", "Room not found");
         }
@@ -96,7 +96,7 @@ public class RoomService {
         Map<String,Object> answer = new TreeMap<>();
         if(iRoomRepository.existsById(id)){
             iRoomRepository.deleteById(id);
-            answer.put("menssage", "Room deleted successfully");
+            answer.put("message", "Room deleted successfully");
         }else{
             answer.put("error", "Room not found");
         }

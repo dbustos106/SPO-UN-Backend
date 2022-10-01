@@ -47,22 +47,6 @@ public class ProfessorService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String,Object> addRoleToProfessor(String username, String roleName){
-        Map<String,Object> answer = new TreeMap<>();
-
-        Professor professor = iProfessorRepository.findByUsername(username).orElse(null);
-        Role role = iRoleRepository.findByName(roleName).orElse(null);
-
-        if(professor != null && role != null) {
-            professor.getRoles().add(role);
-            answer.put("message", "Role added successfully");
-        }else{
-            answer.put("error", "Not successful");
-        }
-
-        return answer;
-    }
-
     public Map<String,Object> getAllProfessor(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
@@ -77,7 +61,7 @@ public class ProfessorService {
         Page<ProfessorDTO> professorsDTO = new PageImpl<>(listProfessorsDTO);
 
         if(professorsDTO.getSize() != 0){
-            answer.put("professors", professorsDTO);
+            answer.put("message", professorsDTO);
         }else {
             answer.put("error", "None professor found");
         }
@@ -89,7 +73,7 @@ public class ProfessorService {
         Professor professor = iProfessorRepository.findById(id).orElse(null);
         ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
         if(professorDTO != null){
-            answer.put("professor", professorDTO);
+            answer.put("message", professorDTO);
         }else{
             answer.put("error", "Professor not found");
         }
@@ -104,8 +88,9 @@ public class ProfessorService {
                     iAdminRepository.existsByUsername(professorDTO.getUsername())){
                 answer.put("error", "Repeated username");
             }else {
+                Role role = iRoleRepository.findByName("Professor").orElse(null);
                 Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
-                professor.setRoles(new ArrayList<>());
+                professor.setRole(role);
 
                 // encrypt password
                 professor.setPassword(passwordEncoder.encode(professor.getPassword()));
@@ -114,7 +99,7 @@ public class ProfessorService {
                 answer.put("message", "Professor " + professor_answer.getId() + " saved successfully");
             }
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Professor not saved");
         }
         return answer;
     }
@@ -135,7 +120,7 @@ public class ProfessorService {
         Map<String,Object> answer = new TreeMap<>();
         if(iProfessorRepository.existsById(id)){
             iProfessorRepository.deleteById(id);
-            answer.put("menssage", "Professor deleted successfully");
+            answer.put("message", "Professor deleted successfully");
         }else{
             answer.put("error", "Professor not found");
         }

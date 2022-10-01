@@ -45,7 +45,7 @@ public class AntecedentService {
         Page<AntecedentDTO> antecedentsDTO = new PageImpl<>(listAntecedentsDTO);
 
         if(antecedentsDTO.getSize() != 0){
-            answer.put("antecedents", antecedentsDTO);
+            answer.put("message", antecedentsDTO);
         }else {
             answer.put("error", "None antecedent found");
         }
@@ -57,7 +57,7 @@ public class AntecedentService {
         Antecedent antecedent = iAntecedentRepository.findById(id).orElse(null);
         AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
         if(antecedentDTO != null){
-            answer.put("antecedent", antecedentDTO);
+            answer.put("message", antecedentDTO);
         }else{
             answer.put("error", "Antecedent not found");
         }
@@ -71,9 +71,9 @@ public class AntecedentService {
             Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
             antecedent.setPatient(patient);
             iAntecedentRepository.save(antecedent);
-            answer.put("antecedent", "Antecedent saved successfully");
+            answer.put("message", "Antecedent saved successfully");
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Antecedent not saved");
         }
         return answer;
     }
@@ -85,7 +85,7 @@ public class AntecedentService {
             Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
             antecedent.setPatient(patient);
             iAntecedentRepository.save(antecedent);
-            answer.put("antecedent", "Student updated successfully");
+            answer.put("message", "Student updated successfully");
         }else{
             answer.put("error", "Antecedent not found");
         }
@@ -96,7 +96,7 @@ public class AntecedentService {
         Map<String,Object> answer = new TreeMap<>();
         if(iAntecedentRepository.existsById(id)){
             iAntecedentRepository.deleteById(id);
-            answer.put("menssage", "Successful");
+            answer.put("message", "Successful");
         }else{
             answer.put("error", "Antecedent not found");
         }

@@ -2,10 +2,6 @@ package com.app.spoun.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,29 +19,17 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_student",
-            joinColumns = { @JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "student_id")})
+    @OneToMany(mappedBy = "role")
     private List<Student> students;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_professor",
-            joinColumns = { @JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "professor_id")})
-    private List<Student> professors;
+    @OneToMany(mappedBy = "role")
+    private List<Professor> professors;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_patient",
-            joinColumns = { @JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "patient_id")})
-    private List<Student> patients;
+    @OneToMany(mappedBy = "role")
+    private List<Patient> patients;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_admin",
-            joinColumns = { @JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "admin_id")})
-    private List<Student> admins;
+    @OneToMany(mappedBy = "role")
+    private List<Admin> admins;
 
     @Override
     public String toString() {

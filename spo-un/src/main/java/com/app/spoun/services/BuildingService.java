@@ -37,7 +37,7 @@ public class BuildingService {
         Page<BuildingDTO> buildingsDTO = new PageImpl<>(listBuildingsDTO);
 
         if(buildingsDTO.getSize() != 0){
-            answer.put("buildings", buildingsDTO);
+            answer.put("message", buildingsDTO);
         }else {
             answer.put("error", "None building found");
         }
@@ -49,7 +49,7 @@ public class BuildingService {
         Building building = iBuildingRepository.findById(id).orElse(null);
         BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
         if(buildingDTO != null){
-            answer.put("building", buildingDTO);
+            answer.put("message", buildingDTO);
         }else{
             answer.put("error", "Building not found");
         }
@@ -61,9 +61,9 @@ public class BuildingService {
         if(buildingDTO != null){
             Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
             iBuildingRepository.save(building);
-            answer.put("building", "Building saved successfully");
+            answer.put("message", "Building saved successfully");
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Building not saved");
         }
         return answer;
     }
@@ -73,7 +73,7 @@ public class BuildingService {
         if(buildingDTO.getId() != null && iBuildingRepository.existsById(buildingDTO.getId())){
             Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
             iBuildingRepository.save(building);
-            answer.put("building", "Building updated successfully");
+            answer.put("message", "Building updated successfully");
         }else{
             answer.put("error", "Building not found");
         }
@@ -84,7 +84,7 @@ public class BuildingService {
         Map<String,Object> answer = new TreeMap<>();
         if(iBuildingRepository.existsById(id)){
             iBuildingRepository.deleteById(id);
-            answer.put("menssage", "Successful");
+            answer.put("message", "Successful");
         }else{
             answer.put("error", "Building not found");
         }

@@ -27,4 +27,6 @@ public class PatientDTO {
 
     private String blood_type;
 
+    private Integer role_id;
+
 }

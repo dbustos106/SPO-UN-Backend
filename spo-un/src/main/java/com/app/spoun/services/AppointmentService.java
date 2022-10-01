@@ -70,7 +70,7 @@ public class AppointmentService {
         Page<AppointmentDTO> appointmentsDTO = new PageImpl<>(listAppointmentsDTO);
 
         if(appointmentsDTO.getSize() != 0){
-            answer.put("appointments", appointmentsDTO);
+            answer.put("message", appointmentsDTO);
         }else {
             answer.put("error", "None appointment found");
         }
@@ -82,7 +82,7 @@ public class AppointmentService {
         Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
         AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
         if(appointmentDTO != null){
-            answer.put("appointment", appointmentDTO);
+            answer.put("message", appointmentDTO);
         }else{
             answer.put("error", "Appointment not found");
         }
@@ -102,7 +102,7 @@ public class AppointmentService {
             iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment saved successfully");
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Appointment not saved");
         }
         return answer;
     }
@@ -129,7 +129,7 @@ public class AppointmentService {
         Map<String,Object> answer = new TreeMap<>();
         if(iAppointmentRepository.existsById(id)){
             iAppointmentRepository.deleteById(id);
-            answer.put("menssage", "Appointment deleted successfully");
+            answer.put("message", "Appointment deleted successfully");
         }else{
             answer.put("error", "Appointment not found");
         }

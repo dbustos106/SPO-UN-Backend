@@ -46,22 +46,6 @@ public class PatientService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String,Object> addRoleToPatient(String username, String roleName){
-        Map<String,Object> answer = new TreeMap<>();
-
-        Patient patient = iPatientRepository.findByUsername(username).orElse(null);
-        Role role = iRoleRepository.findByName(roleName).orElse(null);
-
-        if(patient != null && role != null) {
-            patient.getRoles().add(role);
-            answer.put("message", "Role added successfully");
-        }else{
-            answer.put("error", "Not successful");
-        }
-
-        return answer;
-    }
-
     public Map<String,Object> getAllPatient(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
@@ -76,7 +60,7 @@ public class PatientService {
         Page<PatientDTO> patientsDTO = new PageImpl<>(listPatientsDTO);
 
         if(patientsDTO.getSize() != 0){
-            answer.put("patients", patientsDTO);
+            answer.put("message", patientsDTO);
         }else {
             answer.put("error", "None patient found");
         }
@@ -88,7 +72,7 @@ public class PatientService {
         Patient patient = iPatientRepository.findById(id).orElse(null);
         PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
         if(patientDTO != null){
-            answer.put("patient", patientDTO);
+            answer.put("message", patientDTO);
         }else{
             answer.put("error", "Patient not found");
         }
@@ -103,17 +87,18 @@ public class PatientService {
                     iAdminRepository.existsByUsername(patientDTO.getUsername())){
                 answer.put("error", "Repeated username");
             }else {
+                Role role = iRoleRepository.findByName("Patient").orElse(null);
                 Patient patient = patientMapper.patientDTOToPatient(patientDTO);
-                patient.setRoles(new ArrayList<>());
+                patient.setRole(role);
 
                 // encrypt password
                 patient.setPassword(passwordEncoder.encode(patient.getPassword()));
 
                 Patient patient_answer = iPatientRepository.save(patient);
-                answer.put("patient", "Patient " + patient_answer.getId() + " saved successfully");
+                answer.put("message", "Patient " + patient_answer.getId() + " saved successfully");
             }
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Patient not saved");
         }
         return answer;
     }
@@ -123,7 +108,7 @@ public class PatientService {
         if(patientDTO.getId() != null && iPatientRepository.existsById(patientDTO.getId())){
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
             iPatientRepository.save(patient);
-            answer.put("patient", "Patient updated successfully");
+            answer.put("message", "Patient updated successfully");
         }else{
             answer.put("error", "Patient not found");
         }
@@ -134,7 +119,7 @@ public class PatientService {
         Map<String,Object> answer = new TreeMap<>();
         if(iPatientRepository.existsById(id)){
             iPatientRepository.deleteById(id);
-            answer.put("menssage", "Successful");
+            answer.put("message", "Successful");
         }else{
             answer.put("error", "Patient not found");
         }

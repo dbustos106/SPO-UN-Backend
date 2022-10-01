@@ -17,4 +17,5 @@ public interface IStudentRepository extends JpaRepository<Student, Integer>{
     void deleteById(Integer id);
     boolean existsById(Integer id);
     boolean existsByUsername(String username);
+
 }

@@ -49,6 +49,9 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Professor professor;
 
+    @OneToMany(mappedBy = "appointment")
+    private List<Schedule> schedules;
+
     @ManyToMany
     @JoinTable(name = "student_appointment",
             joinColumns = { @JoinColumn(name = "appointment_id")},
@@ -57,7 +60,7 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return "AppointmentDAO{" +
+        return "Appointment{" +
                 "id=" + id +
                 ", start_time='" + start_time + '\'' +
                 ", end_time='" + end_time + '\'' +

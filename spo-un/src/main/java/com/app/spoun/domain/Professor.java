@@ -30,27 +30,26 @@ public class Professor {
     @Column(name = "document_number")
     private String document_number;
 
+    @JoinColumn(name = "role_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Role role;
+
     @OneToMany(mappedBy = "professor")
     private List<Student> students;
 
     @OneToMany(mappedBy = "professor")
     private List<Appointment> appointments;
 
-    @ManyToMany
-    @JoinTable(name = "role_professor",
-            joinColumns = { @JoinColumn(name = "professor_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private List<Role> roles;
-
     @Override
     public String toString() {
-        return "ProfessorDAO{" +
+        return "Professor{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", document_type='" + document_type + '\'' +
                 ", document_number='" + document_number + '\'' +
+                ", role=" + role +
                 '}';
     }
 

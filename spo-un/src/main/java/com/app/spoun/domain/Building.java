@@ -23,7 +23,7 @@ public class Building {
 
     @Override
     public String toString() {
-        return "BuildingDAO{" +
+        return "Building{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

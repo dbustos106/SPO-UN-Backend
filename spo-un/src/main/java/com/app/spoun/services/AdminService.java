@@ -46,22 +46,6 @@ public class AdminService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String,Object> addRoleToAdmin(String username, String roleName){
-        Map<String,Object> answer = new TreeMap<>();
-
-        Admin admin = iAdminRepository.findByUsername(username).orElse(null);
-        Role role = iRoleRepository.findByName(roleName).orElse(null);
-
-        if(admin != null && role != null) {
-            admin.getRoles().add(role);
-            answer.put("message", "Role added successfully");
-        }else{
-            answer.put("error", "Not successful");
-        }
-
-        return answer;
-    }
-
     public Map<String,Object> getAllAdmin(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
@@ -76,7 +60,7 @@ public class AdminService {
         Page<AdminDTO> adminsDTO = new PageImpl<>(listAdminsDTO);
 
         if(adminsDTO.getSize() != 0){
-            answer.put("admins", adminsDTO);
+            answer.put("message", adminsDTO);
         }else {
             answer.put("error", "None admin found");
         }
@@ -88,7 +72,7 @@ public class AdminService {
         Admin admin = iAdminRepository.findById(id).orElse(null);
         AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
         if(adminDTO != null){
-            answer.put("admin", adminDTO);
+            answer.put("message", adminDTO);
         }else{
             answer.put("error", "Admin not found");
         }
@@ -103,8 +87,9 @@ public class AdminService {
                     iStudentRepository.existsByUsername(adminDTO.getUsername())){
                 answer.put("error", "Repeated username");
             }else {
+                Role role = iRoleRepository.findByName("Admin").orElse(null);
                 Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
-                admin.setRoles(new ArrayList<>());
+                admin.setRole(role);
 
                 // encrypt password
                 admin.setPassword(passwordEncoder.encode(admin.getPassword()));
@@ -113,7 +98,7 @@ public class AdminService {
                 answer.put("message", "Admin " + admin_answer.getId() + " saved successfully");
             }
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Admin not saved");
         }
         return answer;
     }
@@ -134,7 +119,7 @@ public class AdminService {
         Map<String,Object> answer = new TreeMap<>();
         if(iAdminRepository.existsById(id)){
             iAdminRepository.deleteById(id);
-            answer.put("menssage", "Student deleted successfully");
+            answer.put("message", "Student deleted successfully");
         }else{
             answer.put("error", "Admin not found");
         }

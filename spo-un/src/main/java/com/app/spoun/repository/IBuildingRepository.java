@@ -15,4 +15,5 @@ public interface IBuildingRepository extends JpaRepository<Building, Integer>{
     Building save(Building building);
     void deleteById(Integer id);
     boolean existsById(Integer id);
+
 }

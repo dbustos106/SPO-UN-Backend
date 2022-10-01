@@ -19,6 +19,8 @@ public class StudentDTO {
 
     private String document_number;
 
-    private Integer Professor_id;
+    private Integer professor_id;
+
+    private Integer role_id;
 
 }

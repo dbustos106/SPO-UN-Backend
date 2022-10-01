@@ -4,8 +4,6 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Entity
@@ -21,11 +19,9 @@ public class Admin {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
-    @JoinTable(name = "role_admin",
-            joinColumns = { @JoinColumn(name = "admin_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private List<Role> roles;
+    @JoinColumn(name = "role_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Role role;
 
     @Override
     public String toString() {
@@ -33,6 +29,7 @@ public class Admin {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", role=" + role +
                 '}';
     }
 

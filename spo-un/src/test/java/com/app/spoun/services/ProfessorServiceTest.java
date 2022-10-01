@@ -53,23 +53,16 @@ class ProfessorServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
+        role = new Role();
+        role.setName("Professor");
+
         professor = new Professor();
         professor.setPassword("pass");
         professor.setName("Juana");
         professor.setDocument_type("cc");
         professor.setDocument_number("321");
-        professor.setRoles(new ArrayList<>());
+        professor.setRole(role);
 
-        role = new Role();
-        role.setName("Professor");
-
-    }
-
-    @Test
-    void addRoleToProfessor(){
-        Mockito.when(iProfessorRepository.findByUsername(any(String.class))).thenReturn(Optional.of(professor));
-        Mockito.when(iRoleRepository.findByName(any(String.class))).thenReturn(Optional.of(role));
-        assertNotNull(professorService.addRoleToProfessor("Juana", "Professor"));
     }
 
     @Test
