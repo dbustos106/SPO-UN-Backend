@@ -91,12 +91,14 @@ public class ProfessorService {
                 Role role = iRoleRepository.findByName("Professor").orElse(null);
                 Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
                 professor.setRole(role);
+                professor.setStudents(new ArrayList<>());
+                professor.setAppointments(new ArrayList<>());
 
                 // encrypt password
                 professor.setPassword(passwordEncoder.encode(professor.getPassword()));
 
-                Professor professor_answer = iProfessorRepository.save(professor);
-                answer.put("message", "Professor " + professor_answer.getId() + " saved successfully");
+                iProfessorRepository.save(professor);
+                answer.put("message", "Professor saved successfully");
             }
         }else{
             answer.put("error", "Professor not saved");

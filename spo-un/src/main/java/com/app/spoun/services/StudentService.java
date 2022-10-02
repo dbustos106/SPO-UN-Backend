@@ -91,14 +91,15 @@ public class StudentService {
                 Role role = iRoleRepository.findByName("Student").orElse(null);
                 Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
                 Student student = studentMapper.studentDTOToStudent(studentDTO);
-                student.setRole(role);
                 student.setProfessor(professor);
+                student.setRole(role);
+                student.setAppointments(new ArrayList<>());
 
                 // encrypt password
                 student.setPassword(passwordEncoder.encode(student.getPassword()));
 
-                Student student_answer = iStudentRepository.save(student);
-                answer.put("message", "Student " + student_answer.getId() + " saved successfully");
+                iStudentRepository.save(student);
+                answer.put("message", "Student saved successfully");
             }
         }else{
             answer.put("error", "Student not saved");

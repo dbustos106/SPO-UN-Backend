@@ -90,12 +90,14 @@ public class PatientService {
                 Role role = iRoleRepository.findByName("Patient").orElse(null);
                 Patient patient = patientMapper.patientDTOToPatient(patientDTO);
                 patient.setRole(role);
+                patient.setAntecedents(new ArrayList<>());
+                patient.setAppointments(new ArrayList<>());
 
                 // encrypt password
                 patient.setPassword(passwordEncoder.encode(patient.getPassword()));
 
-                Patient patient_answer = iPatientRepository.save(patient);
-                answer.put("message", "Patient " + patient_answer.getId() + " saved successfully");
+                iPatientRepository.save(patient);
+                answer.put("message", "Patient saved successfully");
             }
         }else{
             answer.put("error", "Patient not saved");

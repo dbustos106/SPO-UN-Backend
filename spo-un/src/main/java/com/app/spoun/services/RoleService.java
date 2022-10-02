@@ -66,6 +66,11 @@ public class RoleService {
         Map<String,Object> answer = new TreeMap<>();
         if(roleDTO != null){
             Role role = roleMapper.roleDTOToRole(roleDTO);
+            role.setStudents(new ArrayList<>());
+            role.setProfessors(new ArrayList<>());
+            role.setPatients(new ArrayList<>());
+            role.setAdmins(new ArrayList<>());
+
             iRoleRepository.save(role);
             answer.put("message", "Role saved successfully");
         }else{

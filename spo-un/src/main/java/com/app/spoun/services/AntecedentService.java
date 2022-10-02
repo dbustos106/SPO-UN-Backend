@@ -70,6 +70,7 @@ public class AntecedentService {
             Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
             Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
             antecedent.setPatient(patient);
+
             iAntecedentRepository.save(antecedent);
             answer.put("message", "Antecedent saved successfully");
         }else{

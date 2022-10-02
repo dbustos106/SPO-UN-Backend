@@ -54,7 +54,7 @@ public class Appointment {
 
     @ManyToMany
     @JoinTable(name = "student_appointment",
-            joinColumns = { @JoinColumn(name = "appointment_id")},
+            joinColumns = {@JoinColumn(name = "appointment_id")},
             inverseJoinColumns = {@JoinColumn(name = "student_id")})
     private List<Student> students;
 

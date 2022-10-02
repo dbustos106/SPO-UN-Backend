@@ -60,6 +60,8 @@ public class BuildingService {
         Map<String,Object> answer = new TreeMap<>();
         if(buildingDTO != null){
             Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
+            building.setRooms(new ArrayList<>());
+
             iBuildingRepository.save(building);
             answer.put("message", "Building saved successfully");
         }else{

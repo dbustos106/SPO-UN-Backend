@@ -93,14 +93,17 @@ public class AppointmentService {
         Map<String,Object> answer = new TreeMap<>();
         if(appointmentDTO != null){
             Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
-            Patient patient = iPatientRepository.findById(appointmentDTO.getPatient_id()).orElse(null);
             Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
             Appointment appointment = appointmentMapper.appointmentDTOToAppointment(appointmentDTO);
             appointment.setRoom(room);
-            appointment.setPatient(patient);
+            appointment.setPatient(null);
             appointment.setProfessor(professor);
-            iAppointmentRepository.save(appointment);
+            appointment.setStudents(new ArrayList<>());
+            appointment.setSchedules(new ArrayList<>());
+
+            Appointment appointment_answer = iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment saved successfully");
+            answer.put("id", appointment_answer.getId());
         }else{
             answer.put("error", "Appointment not saved");
         }

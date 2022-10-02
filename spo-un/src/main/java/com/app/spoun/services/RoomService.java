@@ -70,6 +70,8 @@ public class RoomService {
             Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
             Room room = roomMapper.roomDTOToRoom(roomDTO);
             room.setBuilding(building);
+            room.setAppointments(new ArrayList<>());
+
             iRoomRepository.save(room);
             answer.put("message", "Room saved successfully");
         }else{

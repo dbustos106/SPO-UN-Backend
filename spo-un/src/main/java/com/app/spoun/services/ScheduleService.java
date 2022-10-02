@@ -71,6 +71,7 @@ public class ScheduleService {
             Appointment appointment = iAppointmentRepository.findById(scheduleDTO.getAppointment_id()).orElse(null);
             Schedule schedule = scheduleMapper.scheduleDTOToSchedule(scheduleDTO);
             schedule.setAppointment(appointment);
+
             iScheduleRepository.save(schedule);
             answer.put("message", "Schedule saved successfully");
         }else{
