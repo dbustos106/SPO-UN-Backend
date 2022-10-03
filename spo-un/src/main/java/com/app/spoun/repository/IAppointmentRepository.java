@@ -23,4 +23,9 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Integ
             "WHERE student_appointment.student_id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
     List<Appointment> getStudentConfirmedScheduleById(Integer id);
 
+    @Query(value = "SELECT appointment.id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
+            "FROM (appointment INNER JOIN professor ON professor.id = appointment.professor_id)\n" +
+            "WHERE professor.id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
+    List<Appointment> getProfessorConfirmedScheduleById(Integer id);
+
 }

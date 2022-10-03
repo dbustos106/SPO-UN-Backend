@@ -71,7 +71,7 @@ public class StudentService {
         if(listConfirmedSchedulesDTO.size() != 0){
             answer.put("message", listConfirmedSchedulesDTO);
         }else{
-            answer.put("error", "None agenda found");
+            answer.put("error", "No confirmed schedule found");
         }
         return answer;
     }
@@ -89,7 +89,7 @@ public class StudentService {
         if(listSchedulesDTO.size() != 0){
             answer.put("message", listSchedulesDTO);
         }else{
-            answer.put("error", "None schedule found");
+            answer.put("error", "No schedule found");
         }
 
         return answer;
@@ -111,7 +111,7 @@ public class StudentService {
         if(studentsDTO.getSize() != 0){
             answer.put("message", studentsDTO);
         }else {
-            answer.put("error", "None student found");
+            answer.put("error", "No student found");
         }
         return answer;
     }

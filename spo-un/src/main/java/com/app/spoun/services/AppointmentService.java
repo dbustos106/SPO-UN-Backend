@@ -77,7 +77,7 @@ public class AppointmentService {
         if(appointmentsDTO.getSize() != 0){
             answer.put("message", appointmentsDTO);
         }else {
-            answer.put("error", "None appointment found");
+            answer.put("error", "No appointment found");
         }
         return answer;
     }

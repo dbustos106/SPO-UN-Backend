@@ -62,7 +62,7 @@ public class PatientService {
         if(patientsDTO.getSize() != 0){
             answer.put("message", patientsDTO);
         }else {
-            answer.put("error", "None patient found");
+            answer.put("error", "No patient found");
         }
         return answer;
     }

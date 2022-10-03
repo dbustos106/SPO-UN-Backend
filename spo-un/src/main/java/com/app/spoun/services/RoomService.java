@@ -47,7 +47,7 @@ public class RoomService {
         if(roomsDTO.getSize() != 0){
             answer.put("message", roomsDTO);
         }else {
-            answer.put("error", "None room found");
+            answer.put("error", "No room found");
         }
         return answer;
     }

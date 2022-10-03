@@ -45,7 +45,7 @@ public class RoleService {
         if(rolesDTO.getSize() != 0){
             answer.put("message", rolesDTO);
         }else {
-            answer.put("error", "None role found");
+            answer.put("error", "No role found");
         }
         return answer;
     }

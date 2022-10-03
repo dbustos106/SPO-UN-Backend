@@ -48,7 +48,7 @@ public class ScheduleService {
         if(schedulesDTO.getSize() != 0){
             answer.put("message", schedulesDTO);
         }else {
-            answer.put("error", "None schedule found");
+            answer.put("error", "No schedule found");
         }
         return answer;
     }

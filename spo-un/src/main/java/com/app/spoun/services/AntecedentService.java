@@ -47,7 +47,7 @@ public class AntecedentService {
         if(antecedentsDTO.getSize() != 0){
             answer.put("message", antecedentsDTO);
         }else {
-            answer.put("error", "None antecedent found");
+            answer.put("error", "No antecedent found");
         }
         return answer;
     }
