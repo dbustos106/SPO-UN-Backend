@@ -42,9 +42,9 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/auth/login/**", "/auth/tokenRefresh/**", "/register/patient/**").permitAll();
 
-        http.authorizeRequests().antMatchers(POST, "/register/admin/**").hasAnyAuthority("Admin");
-        http.authorizeRequests().antMatchers(POST, "/register/professor/**").hasAnyAuthority("Admin");
-        http.authorizeRequests().antMatchers(POST, "/register/student/**").hasAnyAuthority("Professor");
+        //http.authorizeRequests().antMatchers(POST, "/register/admin/**").hasAnyAuthority("Admin");
+        //http.authorizeRequests().antMatchers(POST, "/register/professor/**").hasAnyAuthority("Admin");
+        //http.authorizeRequests().antMatchers(POST, "/register/student/**").hasAnyAuthority("Professor");
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);

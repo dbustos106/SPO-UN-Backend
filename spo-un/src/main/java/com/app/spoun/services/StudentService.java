@@ -1,9 +1,10 @@
 package com.app.spoun.services;
 
-import com.app.spoun.domain.Professor;
-import com.app.spoun.domain.Role;
-import com.app.spoun.domain.Student;
+import com.app.spoun.domain.*;
+import com.app.spoun.dto.ScheduleDTO;
 import com.app.spoun.dto.StudentDTO;
+import com.app.spoun.mappers.ScheduleMapper;
+import com.app.spoun.mappers.ScheduleMapperImpl;
 import com.app.spoun.mappers.StudentMapper;
 import com.app.spoun.mappers.StudentMapperImpl;
 import com.app.spoun.repository.*;
@@ -43,9 +44,56 @@ public class StudentService {
     @Autowired
     private IRoleRepository iRoleRepository;
 
+    @Autowired
+    private IScheduleRepository iScheduleRepository;
+
+    @Autowired
+    private IAppointmentRepository iAppointmentRepository;
+
     private StudentMapper studentMapper = new StudentMapperImpl();
 
+    private ScheduleMapper scheduleMapper = new ScheduleMapperImpl();
+
     private final PasswordEncoder passwordEncoder;
+
+    public Map<String, Object> getStudentConfirmedScheduleById(Integer id){
+        Map<String,Object> answer = new TreeMap<>();
+        List<Appointment> appointments = iAppointmentRepository.getStudentConfirmedScheduleById(id);
+
+        List<Map<String, Object>> listConfirmedSchedulesDTO = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            Map<String,Object> confirmedSchedule = new TreeMap<>();
+            confirmedSchedule.put("start_time", appointment.getStart_time());
+            confirmedSchedule.put("end_time", appointment.getEnd_time());
+            listConfirmedSchedulesDTO.add(confirmedSchedule);
+        }
+
+        if(listConfirmedSchedulesDTO.size() != 0){
+            answer.put("message", listConfirmedSchedulesDTO);
+        }else{
+            answer.put("error", "No confirmed schedule found");
+        }
+        return answer;
+    }
+
+    public Map<String, Object> getStudentSchedulingById(Integer id){
+        Map<String,Object> answer = new TreeMap<>();
+        List<Schedule> schedules = iScheduleRepository.getStudentSchedulingById(id);
+
+        List<ScheduleDTO> listSchedulesDTO = new ArrayList<>();
+        for(Schedule schedule : schedules){
+            ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
+            listSchedulesDTO.add(scheduleDTO);
+        }
+
+        if(listSchedulesDTO.size() != 0){
+            answer.put("message", listSchedulesDTO);
+        }else{
+            answer.put("error", "No schedule found");
+        }
+
+        return answer;
+    }
 
     public Map<String,Object> getAllStudent (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
@@ -63,7 +111,7 @@ public class StudentService {
         if(studentsDTO.getSize() != 0){
             answer.put("message", studentsDTO);
         }else {
-            answer.put("error", "None student found");
+            answer.put("error", "No student found");
         }
         return answer;
     }

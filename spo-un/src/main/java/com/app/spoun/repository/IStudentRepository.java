@@ -12,11 +12,17 @@ import java.util.Optional;
 @Repository
 public interface IStudentRepository extends JpaRepository<Student, Integer>{
     Page<Student> findAll(Pageable page);
+
     Optional<Student> findById(Integer id);
+
     Optional<Student> findByUsername(String username);
+
     Student save(Student student);
+
     void deleteById(Integer id);
+
     boolean existsById(Integer id);
+
     boolean existsByUsername(String username);
 
     @Query(value = "SELECT s FROM Student s WHERE s.professor = ?1")

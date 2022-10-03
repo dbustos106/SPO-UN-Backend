@@ -1,5 +1,6 @@
 package com.app.spoun.services;
 
+import com.app.spoun.domain.Appointment;
 import com.app.spoun.domain.Patient;
 import com.app.spoun.domain.Role;
 import com.app.spoun.dto.PatientDTO;
@@ -42,9 +43,32 @@ public class PatientService {
     @Autowired
     private IRoleRepository iRoleRepository;
 
+    @Autowired
+    private IAppointmentRepository iAppointmentRepository;
+
     private PatientMapper patientMapper = new PatientMapperImpl();
 
     private final PasswordEncoder passwordEncoder;
+
+    public Map<String, Object> getPatientConfirmedScheduleById(Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        List<Appointment> appointments = iAppointmentRepository.getPatientConfirmedScheduleById(id);
+
+        List<Map<String, Object>> listConfirmedSchedulesDTO = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            Map<String,Object> confirmedSchedule = new TreeMap<>();
+            confirmedSchedule.put("start_time", appointment.getStart_time());
+            confirmedSchedule.put("end_time", appointment.getEnd_time());
+            listConfirmedSchedulesDTO.add(confirmedSchedule);
+        }
+
+        if(listConfirmedSchedulesDTO.size() != 0){
+            answer.put("message", listConfirmedSchedulesDTO);
+        }else{
+            answer.put("error", "No confirmed schedule found");
+        }
+        return answer;
+    }
 
     public Map<String,Object> getAllPatient(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
@@ -62,7 +86,7 @@ public class PatientService {
         if(patientsDTO.getSize() != 0){
             answer.put("message", patientsDTO);
         }else {
-            answer.put("error", "None patient found");
+            answer.put("error", "No patient found");
         }
         return answer;
     }

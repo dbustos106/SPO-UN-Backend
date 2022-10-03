@@ -39,7 +39,7 @@ public class BuildingService {
         if(buildingsDTO.getSize() != 0){
             answer.put("message", buildingsDTO);
         }else {
-            answer.put("error", "None building found");
+            answer.put("error", "No building found");
         }
         return answer;
     }

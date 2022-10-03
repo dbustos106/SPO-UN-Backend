@@ -16,6 +16,17 @@ public class ProfessorController {
     @Autowired
     private ProfessorService professorService;
 
+    @GetMapping(value = "/confirmedSchedule/{id}")
+    public ResponseEntity<?> getProfessorConfirmedScheduleById(@PathVariable("id") Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = professorService.getProfessorConfirmedScheduleById(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllProfessor (
             @RequestParam(required = false, defaultValue = "0") Integer page,

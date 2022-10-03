@@ -16,6 +16,28 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    @GetMapping(value = "/confirmedSchedule/{id}")
+    public ResponseEntity<?> getStudentConfirmedScheduleById(@PathVariable("id") Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = studentService.getStudentConfirmedScheduleById(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+    @GetMapping(value = "/schedule/{id}")
+    public ResponseEntity<?> getStudentScheduleById(@PathVariable("id") Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = studentService.getStudentSchedulingById(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllStudent (
             @RequestParam(required = false, defaultValue = "0") Integer page,

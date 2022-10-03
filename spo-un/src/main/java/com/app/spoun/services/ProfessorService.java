@@ -1,5 +1,6 @@
 package com.app.spoun.services;
 
+import com.app.spoun.domain.Appointment;
 import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Role;
 import com.app.spoun.domain.Student;
@@ -47,11 +48,34 @@ public class ProfessorService {
     @Autowired
     private IRoleRepository iRoleRepository;
 
+    @Autowired
+    private IAppointmentRepository iAppointmentRepository;
+
     private ProfessorMapper professorMapper = new ProfessorMapperImpl();
 
     private StudentMapper studentMapper = new StudentMapperImpl();
 
     private final PasswordEncoder passwordEncoder;
+
+    public Map<String, Object> getProfessorConfirmedScheduleById(Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        List<Appointment> appointments = iAppointmentRepository.getProfessorConfirmedScheduleById(id);
+
+        List<Map<String, Object>> listConfirmedSchedulesDTO = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            Map<String,Object> confirmedSchedule = new TreeMap<>();
+            confirmedSchedule.put("start_time", appointment.getStart_time());
+            confirmedSchedule.put("end_time", appointment.getEnd_time());
+            listConfirmedSchedulesDTO.add(confirmedSchedule);
+        }
+
+        if(listConfirmedSchedulesDTO.size() != 0){
+            answer.put("message", listConfirmedSchedulesDTO);
+        }else{
+            answer.put("error", "No confirmed schedule found");
+        }
+        return answer;
+    }
 
     public Map<String,Object> getAllProfessor(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
@@ -69,7 +93,7 @@ public class ProfessorService {
         if(professorsDTO.getSize() != 0){
             answer.put("message", professorsDTO);
         }else {
-            answer.put("error", "None professor found");
+            answer.put("error", "No professor found");
         }
         return answer;
     }

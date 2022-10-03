@@ -62,7 +62,7 @@ public class AdminService {
         if(adminsDTO.getSize() != 0){
             answer.put("message", adminsDTO);
         }else {
-            answer.put("error", "None admin found");
+            answer.put("error", "No admin found");
         }
         return answer;
     }
