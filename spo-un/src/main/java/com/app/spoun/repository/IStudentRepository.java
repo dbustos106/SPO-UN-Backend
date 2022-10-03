@@ -4,6 +4,7 @@ import com.app.spoun.domain.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,5 +18,8 @@ public interface IStudentRepository extends JpaRepository<Student, Integer>{
     void deleteById(Integer id);
     boolean existsById(Integer id);
     boolean existsByUsername(String username);
+
+    @Query(value = "SELECT s FROM Student s WHERE s.professor = ?1")
+    Page<Student> findByProfessorId(Integer id, Pageable page);
 
 }
