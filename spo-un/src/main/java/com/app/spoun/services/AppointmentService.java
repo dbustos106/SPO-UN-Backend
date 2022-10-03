@@ -107,6 +107,7 @@ public class AppointmentService {
             Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
             Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
             Appointment appointment = appointmentMapper.appointmentDTOToAppointment(appointmentDTO);
+            appointment.setState("Activo");
             appointment.setRoom(room);
             appointment.setPatient(null);
             appointment.setProfessor(professor);
@@ -115,13 +116,13 @@ public class AppointmentService {
             Appointment appointment_answer = iAppointmentRepository.save(appointment);
 
             // Save schedule
-            for(ScheduleDTO scheduleDTO : schedulesDTO){
+            for (ScheduleDTO scheduleDTO : schedulesDTO) {
                 scheduleDTO.setAppointment_id(appointment_answer.getId());
                 scheduleService.saveSchedule(scheduleDTO);
             }
 
             // Save students
-            for(String student : students){
+            for (String student : students) {
                 this.addStudentToAppointment(student, appointment_answer.getId());
             }
 
@@ -141,26 +142,29 @@ public class AppointmentService {
             List<ScheduleDTO> schedulesDTO = appointment_scheduleDTO.getSchedules();
             List<String> students = appointment_scheduleDTO.getStudents();
 
-            if(iAppointmentRepository.existsById(appointmentDTO.getId())) {
+            if(appointmentDTO.getId() != null && iAppointmentRepository.existsById(appointmentDTO.getId())) {
+
+                // Get appointment
+                Appointment appointment = iAppointmentRepository.findById(appointmentDTO.getId()).orElse(null);
 
                 // Update appointment
                 Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
                 Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
-                Appointment appointment = appointmentMapper.appointmentDTOToAppointment(appointmentDTO);
+                appointment.setProcedure_type(appointmentDTO.getProcedure_type());
                 appointment.setRoom(room);
-                appointment.setPatient(null);
                 appointment.setProfessor(professor);
-                Appointment appointment_answer = iAppointmentRepository.save(appointment);
+                appointment.setSchedules(new ArrayList<>());
+                appointment.setStudents(new ArrayList<>());
 
                 // Update schedule
                 for (ScheduleDTO scheduleDTO : schedulesDTO) {
-                    scheduleDTO.setAppointment_id(appointment_answer.getId());
+                    scheduleDTO.setAppointment_id(appointment.getId());
                     scheduleService.saveSchedule(scheduleDTO);
                 }
 
                 // Update students
                 for (String student : students) {
-                    this.addStudentToAppointment(student, appointment_answer.getId());
+                    this.addStudentToAppointment(student, appointment.getId());
                 }
 
                 answer.put("message", "Appointment updated successfully");

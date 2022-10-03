@@ -51,7 +51,7 @@ public class ProfessorController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/students/{id}")
     public ResponseEntity<?> getStudentsByProfessorId(
             @PathVariable("id") Integer id,
             @RequestParam(required = false, defaultValue = "0") Integer page,
