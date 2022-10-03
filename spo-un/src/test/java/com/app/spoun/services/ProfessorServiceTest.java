@@ -2,6 +2,7 @@ package com.app.spoun.services;
 
 import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Role;
+import com.app.spoun.domain.Student;
 import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.repository.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,8 @@ class ProfessorServiceTest {
 
     private Role role;
 
+    private Student student;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -77,6 +80,14 @@ class ProfessorServiceTest {
         Mockito.when(iProfessorRepository.findById(any(Integer.class))).thenReturn(Optional.of(professor));
         assertNotNull(professorService.findProfessorById(1));
     }
+
+    @Test
+    void findStudentsByProfessorId(){
+        Page<Student> students = new PageImpl<>(Arrays.asList(student));;
+        Mockito.when(iStudentRepository.findByProfessorId(any(Integer.class), any(Pageable.class))).thenReturn(students);
+        assertNotNull(professorService.findStudentsByProfessorId(0, 10, 1));
+    }
+
 
     @Test
     void saveProfessor() {

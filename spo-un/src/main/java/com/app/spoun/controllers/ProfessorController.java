@@ -40,6 +40,20 @@ public class ProfessorController {
         return ResponseEntity.ok().body(answer);
     }
 
+    @GetMapping(value = "/{pid}")
+    public ResponseEntity<?> findStudentsByProfessorId(
+            @PathVariable("pid") Integer pid,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = professorService.findStudentsByProfessorId(page, size, pid);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editProfessor(@RequestBody ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();

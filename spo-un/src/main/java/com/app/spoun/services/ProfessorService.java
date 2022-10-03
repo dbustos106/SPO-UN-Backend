@@ -2,9 +2,13 @@ package com.app.spoun.services;
 
 import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Role;
+import com.app.spoun.domain.Student;
 import com.app.spoun.dto.ProfessorDTO;
+import com.app.spoun.dto.StudentDTO;
 import com.app.spoun.mappers.ProfessorMapper;
 import com.app.spoun.mappers.ProfessorMapperImpl;
+import com.app.spoun.mappers.StudentMapper;
+import com.app.spoun.mappers.StudentMapperImpl;
 import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +49,8 @@ public class ProfessorService {
 
     private ProfessorMapper professorMapper = new ProfessorMapperImpl();
 
+    private StudentMapper studentMapper = new StudentMapperImpl();
+
     private final PasswordEncoder passwordEncoder;
 
     public Map<String,Object> getAllProfessor(Integer idPage, Integer size){
@@ -76,6 +82,27 @@ public class ProfessorService {
             answer.put("message", professorDTO);
         }else{
             answer.put("error", "Professor not found");
+        }
+        return answer;
+    }
+
+    public Map<String,Object> findStudentsByProfessorId (Integer idPage, Integer size, Integer Id){
+        Map<String,Object> answer = new TreeMap<>();
+
+        Pageable page = PageRequest.of(idPage, size);
+        Page<Student> students = iStudentRepository.findByProfessorId(Id, page);
+
+        List<StudentDTO> listStudentsDTO = new ArrayList<>();
+        for(Student student : students){
+            StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
+            listStudentsDTO.add(studentDTO);
+        }
+        Page<StudentDTO> studentsDTO = new PageImpl<>(listStudentsDTO);
+
+        if(studentsDTO.getSize() != 0){
+            answer.put("message", studentsDTO);
+        }else {
+            answer.put("error", "No students found under this professor");
         }
         return answer;
     }
