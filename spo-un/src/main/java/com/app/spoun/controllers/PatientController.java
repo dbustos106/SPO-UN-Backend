@@ -16,6 +16,17 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
+    @GetMapping(value = "/confirmedSchedule/{id}")
+    public ResponseEntity<?> getPatientConfirmedScheduleById(@PathVariable("id") Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = patientService.getPatientConfirmedScheduleById(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllPatient (
             @RequestParam(required = false, defaultValue = "0") Integer page,

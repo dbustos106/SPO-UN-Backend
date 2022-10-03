@@ -66,10 +66,10 @@ public class AppointmentController{
     }
 
     @PutMapping(value = "/edit")
-    public ResponseEntity<?> editAppointment(@RequestBody AppointmentDTO appointmentDTO){
+    public ResponseEntity<?> editAppointment(@RequestBody Appointment_ScheduleDTO appointment_scheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = appointmentService.editAppointment(appointmentDTO);
+            answer = appointmentService.editAppointment(appointment_scheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
