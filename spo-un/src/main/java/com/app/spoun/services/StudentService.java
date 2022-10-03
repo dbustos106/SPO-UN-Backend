@@ -76,9 +76,9 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String, Object> getStudentSchedulingById(Integer id){
+    public Map<String, Object> getStudentScheduleById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        List<Schedule> schedules = iScheduleRepository.getStudentSchedulingById(id);
+        List<Schedule> schedules = iScheduleRepository.getStudentScheduleById(id);
 
         List<ScheduleDTO> listSchedulesDTO = new ArrayList<>();
         for(Schedule schedule : schedules){
@@ -158,9 +158,15 @@ public class StudentService {
     public Map<String,Object> editStudent(StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(studentDTO.getId() != null && iStudentRepository.existsById(studentDTO.getId())){
+            Role role = iRoleRepository.findByName("Student").orElse(null);
             Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
             Student student = studentMapper.studentDTOToStudent(studentDTO);
             student.setProfessor(professor);
+            student.setRole(role);
+
+            // encrypt password
+            student.setPassword(passwordEncoder.encode(student.getPassword()));
+
             iStudentRepository.save(student);
             answer.put("message", "Student updated successfully");
         }else{

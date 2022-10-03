@@ -72,4 +72,5 @@ public class PatientController {
         }
         return ResponseEntity.ok().body(answer);
     }
+
 }

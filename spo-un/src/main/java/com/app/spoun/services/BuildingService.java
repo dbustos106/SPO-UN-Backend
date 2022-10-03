@@ -86,7 +86,7 @@ public class BuildingService {
         Map<String,Object> answer = new TreeMap<>();
         if(iBuildingRepository.existsById(id)){
             iBuildingRepository.deleteById(id);
-            answer.put("message", "Successful");
+            answer.put("message", "Building deleted successfully");
         }else{
             answer.put("error", "Building not found");
         }

@@ -85,7 +85,7 @@ class ProfessorServiceTest {
     void findStudentsByProfessorId(){
         Page<Student> students = new PageImpl<>(Arrays.asList(student));;
         Mockito.when(iStudentRepository.findByProfessorId(any(Integer.class), any(Pageable.class))).thenReturn(students);
-        assertNotNull(professorService.findStudentsByProfessorId(0, 10, 1));
+        assertNotNull(professorService.getStudentsByProfessorId(0, 10, 1));
     }
 
 

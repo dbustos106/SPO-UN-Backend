@@ -1,6 +1,5 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.dto.AppointmentDTO;
 import com.app.spoun.dto.Appointment_ScheduleDTO;
 import com.app.spoun.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;

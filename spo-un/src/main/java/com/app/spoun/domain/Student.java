@@ -40,7 +40,7 @@ public class Student {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "student_appointment",
-            joinColumns = { @JoinColumn(name = "student_id")},
+            joinColumns = {@JoinColumn(name = "student_id")},
             inverseJoinColumns = {@JoinColumn(name = "appointment_id")})
     private List<Appointment> appointments;
 

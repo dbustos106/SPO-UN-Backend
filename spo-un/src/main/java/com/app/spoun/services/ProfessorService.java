@@ -110,7 +110,7 @@ public class ProfessorService {
         return answer;
     }
 
-    public Map<String,Object> findStudentsByProfessorId (Integer idPage, Integer size, Integer Id){
+    public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Integer Id){
         Map<String,Object> answer = new TreeMap<>();
 
         Pageable page = PageRequest.of(idPage, size);
@@ -160,7 +160,13 @@ public class ProfessorService {
     public Map<String,Object> editProfessor(ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(professorDTO.getId() != null && iProfessorRepository.existsById(professorDTO.getId())){
+            Role role = iRoleRepository.findByName("Professor").orElse(null);
             Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+            professor.setRole(role);
+
+            // encrypt password
+            professor.setPassword(passwordEncoder.encode(professor.getPassword()));
+
             iProfessorRepository.save(professor);
             answer.put("message", "Professor updated successfully");
         }else{
@@ -179,5 +185,6 @@ public class ProfessorService {
         }
         return answer;
     }
+
 }
 

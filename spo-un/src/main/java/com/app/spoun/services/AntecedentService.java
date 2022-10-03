@@ -23,6 +23,7 @@ import java.util.TreeMap;
 @Transactional
 @Service
 public class AntecedentService {
+
     @Autowired
     private IAntecedentRepository iAntecedentRepository;
 
@@ -81,12 +82,13 @@ public class AntecedentService {
 
     public Map<String,Object> editAntecedent(AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
-        if(antecedentDTO.getId() != null && iAntecedentRepository.existsById(antecedentDTO.getId())){
+        if(antecedentDTO != null && antecedentDTO.getId() != null && iAntecedentRepository.existsById(antecedentDTO.getId())){
             Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
             Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
             antecedent.setPatient(patient);
+
             iAntecedentRepository.save(antecedent);
-            answer.put("message", "Student updated successfully");
+            answer.put("message", "Antecedent updated successfully");
         }else{
             answer.put("error", "Antecedent not found");
         }

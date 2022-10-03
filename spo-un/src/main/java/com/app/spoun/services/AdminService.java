@@ -105,10 +105,16 @@ public class AdminService {
 
     public Map<String,Object> editAdmin(AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
-        if(adminDTO.getId() != null && iAdminRepository.existsById(adminDTO.getId())){
+        if(adminDTO != null && adminDTO.getId() != null && iAdminRepository.existsById(adminDTO.getId())){
+            Role role = iRoleRepository.findByName("Admin").orElse(null);
             Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
+            admin.setRole(role);
+
+            // encrypt password
+            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+
             iAdminRepository.save(admin);
-            answer.put("message", "Student updated successfully");
+            answer.put("message", "Admin updated successfully");
         }else{
             answer.put("error", "Admin not found");
         }
@@ -119,7 +125,7 @@ public class AdminService {
         Map<String,Object> answer = new TreeMap<>();
         if(iAdminRepository.existsById(id)){
             iAdminRepository.deleteById(id);
-            answer.put("message", "Student deleted successfully");
+            answer.put("message", "Admin deleted successfully");
         }else{
             answer.put("error", "Admin not found");
         }

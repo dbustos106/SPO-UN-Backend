@@ -28,6 +28,7 @@ import java.util.TreeMap;
 @Service
 @Slf4j
 public class PatientService {
+
     @Autowired
     private IPatientRepository iPatientRepository;
 
@@ -132,7 +133,13 @@ public class PatientService {
     public Map<String,Object> editPatient(PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(patientDTO.getId() != null && iPatientRepository.existsById(patientDTO.getId())){
+            Role role = iRoleRepository.findByName("Patient").orElse(null);
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+            patient.setRole(role);
+
+            // encrypt password
+            patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+
             iPatientRepository.save(patient);
             answer.put("message", "Patient updated successfully");
         }else{
@@ -145,7 +152,7 @@ public class PatientService {
         Map<String,Object> answer = new TreeMap<>();
         if(iPatientRepository.existsById(id)){
             iPatientRepository.deleteById(id);
-            answer.put("message", "Successful");
+            answer.put("message", "Patient deleted successfully");
         }else{
             answer.put("error", "Patient not found");
         }

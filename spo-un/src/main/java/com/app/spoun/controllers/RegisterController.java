@@ -35,7 +35,7 @@ public class RegisterController {
     private AdminService adminService;
 
     @PostMapping(value = "/student")
-    public ResponseEntity<?> saveStudent(@RequestBody StudentDTO studentDTO) throws InterruptedException {
+    public ResponseEntity<?> saveStudent(@RequestBody StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = studentService.saveStudent(studentDTO);

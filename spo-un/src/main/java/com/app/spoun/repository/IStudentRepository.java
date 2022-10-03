@@ -25,7 +25,7 @@ public interface IStudentRepository extends JpaRepository<Student, Integer>{
 
     boolean existsByUsername(String username);
 
-    @Query(value = "SELECT s FROM Student s WHERE s.professor = ?1")
+    @Query(value = "SELECT * FROM student WHERE student.professor_id = ?1", nativeQuery = true)
     Page<Student> findByProfessorId(Integer id, Pageable page);
 
 }

@@ -31,7 +31,7 @@ public class StudentController {
     public ResponseEntity<?> getStudentScheduleById(@PathVariable("id") Integer id){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.getStudentSchedulingById(id);
+            answer = studentService.getStudentScheduleById(id);
         }catch(Exception e){
             answer.put("error", e);
         }
