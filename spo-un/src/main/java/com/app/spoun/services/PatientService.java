@@ -74,9 +74,11 @@ public class PatientService {
     public Map<String,Object> getAllPatient(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of patients
         Pageable page = PageRequest.of(idPage, size);
         Page<Patient> patients = iPatientRepository.findAll(page);
 
+        // map all patients
         List<PatientDTO> listPatientsDTO = new ArrayList<>();
         for(Patient patient : patients){
             PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
@@ -84,6 +86,7 @@ public class PatientService {
         }
         Page<PatientDTO> patientsDTO = new PageImpl<>(listPatientsDTO);
 
+        // return page of patients
         if(patientsDTO.getSize() != 0){
             answer.put("message", patientsDTO);
         }else {
@@ -112,7 +115,10 @@ public class PatientService {
                     iAdminRepository.existsByUsername(patientDTO.getUsername())){
                 answer.put("error", "Repeated username");
             }else {
+                // get role
                 Role role = iRoleRepository.findByName("Patient").orElse(null);
+
+                // save patient
                 Patient patient = patientMapper.patientDTOToPatient(patientDTO);
                 patient.setRole(role);
                 patient.setAntecedents(new ArrayList<>());
@@ -133,7 +139,10 @@ public class PatientService {
     public Map<String,Object> editPatient(PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(patientDTO.getId() != null && iPatientRepository.existsById(patientDTO.getId())){
+            // get role
             Role role = iRoleRepository.findByName("Patient").orElse(null);
+
+            // update patient
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
             patient.setRole(role);
 

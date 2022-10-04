@@ -19,6 +19,8 @@ public interface IScheduleRepository extends JpaRepository<Schedule, Integer>{
     void deleteById(Integer id);
     boolean existsById(Integer id);
 
+    void deleteByAppointment_id(Integer id);
+
     @Query(value = "SELECT schedule.id, schedule.start_time, schedule.end_time, schedule.appointment_id\n" +
             "FROM ((student_appointment INNER JOIN appointment ON student_appointment.appointment_id = appointment.id) INNER JOIN\n" +
             "schedule ON schedule.appointment_id = appointment.id)\n" +

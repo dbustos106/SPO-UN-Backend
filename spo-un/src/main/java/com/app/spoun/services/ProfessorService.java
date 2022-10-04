@@ -80,9 +80,11 @@ public class ProfessorService {
     public Map<String,Object> getAllProfessor(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of professors
         Pageable page = PageRequest.of(idPage, size);
         Page<Professor> professors = iProfessorRepository.findAll(page);
 
+        // map all professors
         List<ProfessorDTO> listProfessorsDTO = new ArrayList<>();
         for(Professor professor : professors){
             ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
@@ -90,6 +92,7 @@ public class ProfessorService {
         }
         Page<ProfessorDTO> professorsDTO = new PageImpl<>(listProfessorsDTO);
 
+        // return page of professors
         if(professorsDTO.getSize() != 0){
             answer.put("message", professorsDTO);
         }else {
@@ -113,9 +116,11 @@ public class ProfessorService {
     public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Integer Id){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of students
         Pageable page = PageRequest.of(idPage, size);
         Page<Student> students = iStudentRepository.findByProfessorId(Id, page);
 
+        // map all students
         List<StudentDTO> listStudentsDTO = new ArrayList<>();
         for(Student student : students){
             StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
@@ -123,6 +128,7 @@ public class ProfessorService {
         }
         Page<StudentDTO> studentsDTO = new PageImpl<>(listStudentsDTO);
 
+        // return page of students
         if(studentsDTO.getSize() != 0){
             answer.put("message", studentsDTO);
         }else {
@@ -139,7 +145,10 @@ public class ProfessorService {
                     iAdminRepository.existsByUsername(professorDTO.getUsername())){
                 answer.put("error", "Repeated username");
             }else {
+                // get role
                 Role role = iRoleRepository.findByName("Professor").orElse(null);
+
+                // save professor
                 Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
                 professor.setRole(role);
                 professor.setStudents(new ArrayList<>());
@@ -160,9 +169,14 @@ public class ProfessorService {
     public Map<String,Object> editProfessor(ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(professorDTO.getId() != null && iProfessorRepository.existsById(professorDTO.getId())){
+            // get role
             Role role = iRoleRepository.findByName("Professor").orElse(null);
+
+            // update professor
             Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
             professor.setRole(role);
+            professor.setStudents(new ArrayList<>());
+            professor.setAppointments(new ArrayList<>());
 
             // encrypt password
             professor.setPassword(passwordEncoder.encode(professor.getPassword()));

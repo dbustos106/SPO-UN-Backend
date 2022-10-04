@@ -35,9 +35,11 @@ public class AntecedentService {
     public Map<String,Object> getAllAntecedent (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of antecedents
         Pageable page = PageRequest.of(idPage, size);
         Page<Antecedent> antecedents = iAntecedentRepository.findAll(page);
 
+        // map all antecedents
         List<AntecedentDTO> listAntecedentsDTO = new ArrayList<>();
         for(Antecedent antecedent : antecedents){
             AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
@@ -45,6 +47,7 @@ public class AntecedentService {
         }
         Page<AntecedentDTO> antecedentsDTO = new PageImpl<>(listAntecedentsDTO);
 
+        // return page of antecedents
         if(antecedentsDTO.getSize() != 0){
             answer.put("message", antecedentsDTO);
         }else {
@@ -68,10 +71,12 @@ public class AntecedentService {
     public Map<String,Object> saveAntecedent(AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(antecedentDTO != null){
+            // get patient
             Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
+
+            // save antecedent
             Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
             antecedent.setPatient(patient);
-
             iAntecedentRepository.save(antecedent);
             answer.put("message", "Antecedent saved successfully");
         }else{
@@ -83,10 +88,12 @@ public class AntecedentService {
     public Map<String,Object> editAntecedent(AntecedentDTO antecedentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(antecedentDTO != null && antecedentDTO.getId() != null && iAntecedentRepository.existsById(antecedentDTO.getId())){
+            // get patient
             Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
+
+            // update antecedent
             Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
             antecedent.setPatient(patient);
-
             iAntecedentRepository.save(antecedent);
             answer.put("message", "Antecedent updated successfully");
         }else{

@@ -49,9 +49,11 @@ public class AdminService {
     public Map<String,Object> getAllAdmin(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of admins
         Pageable page = PageRequest.of(idPage, size);
         Page<Admin> admins = iAdminRepository.findAll(page);
 
+        // map all admins
         List<AdminDTO> listAdminsDTO = new ArrayList<>();
         for(Admin admin : admins){
             AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
@@ -59,6 +61,7 @@ public class AdminService {
         }
         Page<AdminDTO> adminsDTO = new PageImpl<>(listAdminsDTO);
 
+        // return page of admins
         if(adminsDTO.getSize() != 0){
             answer.put("message", adminsDTO);
         }else {
@@ -87,7 +90,10 @@ public class AdminService {
                     iStudentRepository.existsByUsername(adminDTO.getUsername())){
                 answer.put("error", "Repeated username");
             }else {
+                // get role
                 Role role = iRoleRepository.findByName("Admin").orElse(null);
+
+                // save admin
                 Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
                 admin.setRole(role);
 
@@ -106,7 +112,10 @@ public class AdminService {
     public Map<String,Object> editAdmin(AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(adminDTO != null && adminDTO.getId() != null && iAdminRepository.existsById(adminDTO.getId())){
+            // get role
             Role role = iRoleRepository.findByName("Admin").orElse(null);
+
+            // update admin
             Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
             admin.setRole(role);
 

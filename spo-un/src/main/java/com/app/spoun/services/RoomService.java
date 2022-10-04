@@ -34,9 +34,11 @@ public class RoomService {
     public Map<String,Object> getAllRoom (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of rooms
         Pageable page = PageRequest.of(idPage, size);
         Page<Room> rooms = iRoomRepository.findAll(page);
 
+        // map all rooms
         List<RoomDTO> listRoomsDTO = new ArrayList<>();
         for(Room room : rooms){
             RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
@@ -44,6 +46,7 @@ public class RoomService {
         }
         Page<RoomDTO> roomsDTO = new PageImpl<>(listRoomsDTO);
 
+        // return page of rooms
         if(roomsDTO.getSize() != 0){
             answer.put("message", roomsDTO);
         }else {
@@ -67,7 +70,10 @@ public class RoomService {
     public Map<String,Object> saveRoom(RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(roomDTO != null){
+            // get building
             Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
+
+            // save room
             Room room = roomMapper.roomDTOToRoom(roomDTO);
             room.setBuilding(building);
             room.setAppointments(new ArrayList<>());
@@ -83,7 +89,10 @@ public class RoomService {
     public Map<String,Object> editRoom(RoomDTO roomDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(roomDTO.getId() != null && iRoomRepository.existsById(roomDTO.getId())){
+            // get building
             Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
+
+            // update room
             Room room = roomMapper.roomDTOToRoom(roomDTO);
             room.setBuilding(building);
             iRoomRepository.save(room);

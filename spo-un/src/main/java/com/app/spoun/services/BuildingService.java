@@ -26,9 +26,11 @@ public class BuildingService {
     public Map<String,Object> getAllBuilding (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of buildings
         Pageable page = PageRequest.of(idPage, size);
         Page<Building> buildings = iBuildingRepository.findAll(page);
 
+        // map all buildings
         List<BuildingDTO> listBuildingsDTO = new ArrayList<>();
         for(Building building : buildings){
             BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
@@ -36,6 +38,7 @@ public class BuildingService {
         }
         Page<BuildingDTO> buildingsDTO = new PageImpl<>(listBuildingsDTO);
 
+        // return page of buildings
         if(buildingsDTO.getSize() != 0){
             answer.put("message", buildingsDTO);
         }else {
@@ -59,9 +62,9 @@ public class BuildingService {
     public Map<String,Object> saveBuilding(BuildingDTO buildingDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(buildingDTO != null){
+            // save building
             Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
             building.setRooms(new ArrayList<>());
-
             iBuildingRepository.save(building);
             answer.put("message", "Building saved successfully");
         }else{
@@ -73,6 +76,7 @@ public class BuildingService {
     public Map<String,Object> editBuilding(BuildingDTO buildingDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(buildingDTO.getId() != null && iBuildingRepository.existsById(buildingDTO.getId())){
+            // update building
             Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
             iBuildingRepository.save(building);
             answer.put("message", "Building updated successfully");

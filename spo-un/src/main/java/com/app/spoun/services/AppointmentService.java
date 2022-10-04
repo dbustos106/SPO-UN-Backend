@@ -6,6 +6,8 @@ import com.app.spoun.dto.Appointment_ScheduleDTO;
 import com.app.spoun.dto.ScheduleDTO;
 import com.app.spoun.mappers.AppointmentMapper;
 import com.app.spoun.mappers.AppointmentMapperImpl;
+import com.app.spoun.mappers.ScheduleMapper;
+import com.app.spoun.mappers.ScheduleMapperImpl;
 import com.app.spoun.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,16 +42,23 @@ public class AppointmentService {
     private IStudentRepository iStudentRepository;
 
     @Autowired
+    private IScheduleRepository iScheduleRepository;
+
+    @Autowired
     private ScheduleService scheduleService;
 
     private AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
 
+    private ScheduleMapper scheduleMapper = new ScheduleMapperImpl();
+
     public Map<String,Object> addStudentToAppointment(String username, Integer appointment_id){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get student and appointment
         Student student = iStudentRepository.findByUsername(username).orElse(null);
         Appointment appointment = iAppointmentRepository.findById(appointment_id).orElse(null);
 
+        // add student to appointment
         if(student != null && appointment != null) {
             appointment.getStudents().add(student);
             answer.put("message", "Student added successfully");
@@ -64,9 +73,11 @@ public class AppointmentService {
     public Map<String,Object> getAllAppointment (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of appointments
         Pageable page = PageRequest.of(idPage, size);
         Page<Appointment> appointments = iAppointmentRepository.findAll(page);
 
+        // map all appointments
         List<AppointmentDTO> listAppointmentsDTO = new ArrayList<>();
         for(Appointment appointment : appointments){
             AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
@@ -74,6 +85,7 @@ public class AppointmentService {
         }
         Page<AppointmentDTO> appointmentsDTO = new PageImpl<>(listAppointmentsDTO);
 
+        // return page of appointments
         if(appointmentsDTO.getSize() != 0){
             answer.put("message", appointmentsDTO);
         }else {
@@ -98,30 +110,32 @@ public class AppointmentService {
         Map<String,Object> answer = new TreeMap<>();
         if(appointment_scheduleDTO != null){
 
-            // Extract objects in Appointment_scheduleDTO
+            // extract objects in Appointment_scheduleDTO
             AppointmentDTO appointmentDTO = appointment_scheduleDTO.getAppointment();
             List<ScheduleDTO> schedulesDTO = appointment_scheduleDTO.getSchedules();
             List<String> students = appointment_scheduleDTO.getStudents();
 
-            // Save appointment
+            // get room and professor
             Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
             Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
+
+            // save appointment
             Appointment appointment = appointmentMapper.appointmentDTOToAppointment(appointmentDTO);
-            appointment.setState("Activo");
             appointment.setRoom(room);
             appointment.setPatient(null);
+            appointment.setState("Activo");
             appointment.setProfessor(professor);
             appointment.setStudents(new ArrayList<>());
             appointment.setSchedules(new ArrayList<>());
             Appointment appointment_answer = iAppointmentRepository.save(appointment);
 
-            // Save schedule
+            // save schedule
             for (ScheduleDTO scheduleDTO : schedulesDTO) {
                 scheduleDTO.setAppointment_id(appointment_answer.getId());
                 scheduleService.saveSchedule(scheduleDTO);
             }
 
-            // Save students
+            // save students
             for (String student : students) {
                 this.addStudentToAppointment(student, appointment_answer.getId());
             }
@@ -137,36 +151,46 @@ public class AppointmentService {
         Map<String,Object> answer = new TreeMap<>();
         if(appointment_scheduleDTO != null){
 
-            // Extract objects in Appointment_scheduleDTO
+            // extract objects in Appointment_scheduleDTO
             AppointmentDTO appointmentDTO = appointment_scheduleDTO.getAppointment();
             List<ScheduleDTO> schedulesDTO = appointment_scheduleDTO.getSchedules();
             List<String> students = appointment_scheduleDTO.getStudents();
 
             if(appointmentDTO.getId() != null && iAppointmentRepository.existsById(appointmentDTO.getId())) {
 
-                // Get appointment
+                // get appointment
                 Appointment appointment = iAppointmentRepository.findById(appointmentDTO.getId()).orElse(null);
 
-                // Update appointment
+                // get room and professor
                 Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
                 Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
-                appointment.setProcedure_type(appointmentDTO.getProcedure_type());
+
+                // if patient is null, update procedure type
+                if(appointment.getPatient() == null) {
+                    appointment.setProcedure_type(appointmentDTO.getProcedure_type());
+                }
+
+                // update appointment
                 appointment.setRoom(room);
                 appointment.setProfessor(professor);
-                appointment.setSchedules(new ArrayList<>());
                 appointment.setStudents(new ArrayList<>());
+                appointment.setSchedules(new ArrayList<>());
 
-                // Update schedule
+                // delete schedules
+                iScheduleRepository.deleteByAppointment_id(appointment.getId());
+
+                // update schedule
                 for (ScheduleDTO scheduleDTO : schedulesDTO) {
                     scheduleDTO.setAppointment_id(appointment.getId());
                     scheduleService.saveSchedule(scheduleDTO);
                 }
 
-                // Update students
+                // update students
                 for (String student : students) {
                     this.addStudentToAppointment(student, appointment.getId());
                 }
 
+                iAppointmentRepository.save(appointment);
                 answer.put("message", "Appointment updated successfully");
             }else{
                 answer.put("error", "Appointment not found");

@@ -32,9 +32,11 @@ public class RoleService {
     public Map<String,Object> getAllRole (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of roles
         Pageable page = PageRequest.of(idPage, size);
         Page<Role> roles = iRoleRepository.findAll(page);
 
+        // map all roles
         List<RoleDTO> listRolesDTO = new ArrayList<>();
         for(Role role : roles){
             RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
@@ -42,6 +44,7 @@ public class RoleService {
         }
         Page<RoleDTO> rolesDTO = new PageImpl<>(listRolesDTO);
 
+        // return page of roles
         if(rolesDTO.getSize() != 0){
             answer.put("message", rolesDTO);
         }else {
@@ -65,6 +68,7 @@ public class RoleService {
     public Map<String,Object> saveRole(RoleDTO roleDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(roleDTO != null){
+            // save role
             Role role = roleMapper.roleDTOToRole(roleDTO);
             role.setStudents(new ArrayList<>());
             role.setProfessors(new ArrayList<>());
@@ -82,7 +86,13 @@ public class RoleService {
     public Map<String,Object> editRole(RoleDTO roleDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(roleDTO.getId() != null && iRoleRepository.existsById(roleDTO.getId())){
+            // update role
             Role role = roleMapper.roleDTOToRole(roleDTO);
+            role.setStudents(new ArrayList<>());
+            role.setProfessors(new ArrayList<>());
+            role.setPatients(new ArrayList<>());
+            role.setAdmins(new ArrayList<>());
+
             iRoleRepository.save(role);
             answer.put("message", "Role updated successfully");
         }else{

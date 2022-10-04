@@ -35,9 +35,11 @@ public class ScheduleService {
     public Map<String,Object> getAllSchedule (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of schedules
         Pageable page = PageRequest.of(idPage, size);
         Page<Schedule> schedules = iScheduleRepository.findAll(page);
 
+        // map all schedules
         List<ScheduleDTO> listSchedulesDTO = new ArrayList<>();
         for(Schedule schedule : schedules){
             ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
@@ -45,6 +47,7 @@ public class ScheduleService {
         }
         Page<ScheduleDTO> schedulesDTO = new PageImpl<>(listSchedulesDTO);
 
+        // return page of schedules
         if(schedulesDTO.getSize() != 0){
             answer.put("message", schedulesDTO);
         }else {
@@ -68,10 +71,12 @@ public class ScheduleService {
     public Map<String,Object> saveSchedule(ScheduleDTO scheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(scheduleDTO != null){
+            // get appointment
             Appointment appointment = iAppointmentRepository.findById(scheduleDTO.getAppointment_id()).orElse(null);
+
+            // save schedule
             Schedule schedule = scheduleMapper.scheduleDTOToSchedule(scheduleDTO);
             schedule.setAppointment(appointment);
-
             iScheduleRepository.save(schedule);
             answer.put("message", "Schedule saved successfully");
         }else{
@@ -83,7 +88,10 @@ public class ScheduleService {
     public Map<String,Object> editSchedule(ScheduleDTO scheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(scheduleDTO.getId() != null && iScheduleRepository.existsById(scheduleDTO.getId())){
+            // get appointment
             Appointment appointment = iAppointmentRepository.findById(scheduleDTO.getAppointment_id()).orElse(null);
+
+            // update schedule
             Schedule schedule = scheduleMapper.scheduleDTOToSchedule(scheduleDTO);
             schedule.setAppointment(appointment);
             iScheduleRepository.save(schedule);

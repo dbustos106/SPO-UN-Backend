@@ -98,9 +98,11 @@ public class StudentService {
     public Map<String,Object> getAllStudent (Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
+        // get page of students
         Pageable page = PageRequest.of(idPage, size);
         Page<Student> students = iStudentRepository.findAll(page);
 
+        // map all students
         List<StudentDTO> listStudentsDTO = new ArrayList<>();
         for(Student student : students){
             StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
@@ -108,6 +110,7 @@ public class StudentService {
         }
         Page<StudentDTO> studentsDTO = new PageImpl<>(listStudentsDTO);
 
+        // return page of students
         if(studentsDTO.getSize() != 0){
             answer.put("message", studentsDTO);
         }else {
@@ -136,8 +139,11 @@ public class StudentService {
                     iAdminRepository.existsByUsername(studentDTO.getUsername())){
                 answer.put("error", "Repeated username");
             }else {
+                // get role and professor
                 Role role = iRoleRepository.findByName("Student").orElse(null);
                 Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
+
+                // save student
                 Student student = studentMapper.studentDTOToStudent(studentDTO);
                 student.setProfessor(professor);
                 student.setRole(role);
@@ -158,8 +164,11 @@ public class StudentService {
     public Map<String,Object> editStudent(StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
         if(studentDTO.getId() != null && iStudentRepository.existsById(studentDTO.getId())){
+            // get role and professor
             Role role = iRoleRepository.findByName("Student").orElse(null);
             Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
+
+            // update student
             Student student = studentMapper.studentDTOToStudent(studentDTO);
             student.setProfessor(professor);
             student.setRole(role);
