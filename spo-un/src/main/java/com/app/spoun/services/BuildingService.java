@@ -31,16 +31,16 @@ public class BuildingService {
         Page<Building> buildings = iBuildingRepository.findAll(page);
 
         // map all buildings
-        List<BuildingDTO> listBuildingsDTO = new ArrayList<>();
+        List<BuildingDTO> listBuildingDTOS = new ArrayList<>();
         for(Building building : buildings){
             BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
-            listBuildingsDTO.add(buildingDTO);
+            listBuildingDTOS.add(buildingDTO);
         }
-        Page<BuildingDTO> buildingsDTO = new PageImpl<>(listBuildingsDTO);
+        Page<BuildingDTO> buildingDTOS = new PageImpl<>(listBuildingDTOS);
 
         // return page of buildings
-        if(buildingsDTO.getSize() != 0){
-            answer.put("message", buildingsDTO);
+        if(buildingDTOS.getSize() != 0){
+            answer.put("message", buildingDTOS);
         }else {
             answer.put("error", "No building found");
         }

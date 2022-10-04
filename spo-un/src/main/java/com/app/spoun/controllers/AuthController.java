@@ -34,7 +34,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping(value = "/tokenRefresh")
+    @GetMapping(value = "/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){

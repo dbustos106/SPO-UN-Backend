@@ -17,7 +17,7 @@ public class AdminController {
     private AdminService adminService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllAdmin (
+    public ResponseEntity<?> getAllAdmin(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();

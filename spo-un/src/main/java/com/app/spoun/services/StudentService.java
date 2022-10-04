@@ -56,46 +56,54 @@ public class StudentService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getStudentConfirmedScheduleById(Integer id){
-        Map<String,Object> answer = new TreeMap<>();
-        List<Appointment> appointments = iAppointmentRepository.getStudentConfirmedScheduleById(id);
-
-        List<Map<String, Object>> listConfirmedSchedulesDTO = new ArrayList<>();
-        for(Appointment appointment : appointments){
-            Map<String,Object> confirmedSchedule = new TreeMap<>();
-            confirmedSchedule.put("start_time", appointment.getStart_time());
-            confirmedSchedule.put("end_time", appointment.getEnd_time());
-            listConfirmedSchedulesDTO.add(confirmedSchedule);
-        }
-
-        if(listConfirmedSchedulesDTO.size() != 0){
-            answer.put("message", listConfirmedSchedulesDTO);
-        }else{
-            answer.put("error", "No confirmed schedule found");
-        }
-        return answer;
-    }
-
     public Map<String, Object> getStudentScheduleById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
-        List<Schedule> schedules = iScheduleRepository.getStudentScheduleById(id);
 
-        List<ScheduleDTO> listSchedulesDTO = new ArrayList<>();
-        for(Schedule schedule : schedules){
-            ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
-            listSchedulesDTO.add(scheduleDTO);
+        // get appointments
+        List<Appointment> appointments = iAppointmentRepository.getStudentScheduleById(id);
+
+        // read schedules
+        List<Map<String, Object>> listScheduleDTOS = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            Map<String,Object> schedule = new TreeMap<>();
+            schedule.put("start_time", appointment.getStart_time());
+            schedule.put("end_time", appointment.getEnd_time());
+            listScheduleDTOS.add(schedule);
         }
 
-        if(listSchedulesDTO.size() != 0){
-            answer.put("message", listSchedulesDTO);
+        // return schedules
+        if(listScheduleDTOS.size() != 0){
+            answer.put("message", listScheduleDTOS);
         }else{
             answer.put("error", "No schedule found");
         }
+        return answer;
+    }
+
+    public Map<String, Object> getUnconfirmedStudentScheduleById(Integer id){
+        Map<String,Object> answer = new TreeMap<>();
+
+        // get schedules
+        List<Schedule> schedules = iScheduleRepository.getUnconfirmedStudentScheduleById(id);
+
+        // map schedules
+        List<ScheduleDTO> listScheduleDTOS = new ArrayList<>();
+        for(Schedule schedule : schedules){
+            ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
+            listScheduleDTOS.add(scheduleDTO);
+        }
+
+        // return schedules
+        if(listScheduleDTOS.size() != 0){
+            answer.put("message", listScheduleDTOS);
+        }else{
+            answer.put("error", "No unconfirmed schedule found");
+        }
 
         return answer;
     }
 
-    public Map<String,Object> getAllStudent (Integer idPage, Integer size){
+    public Map<String,Object> getAllStudent(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of students
@@ -103,16 +111,16 @@ public class StudentService {
         Page<Student> students = iStudentRepository.findAll(page);
 
         // map all students
-        List<StudentDTO> listStudentsDTO = new ArrayList<>();
+        List<StudentDTO> listStudentDTOS = new ArrayList<>();
         for(Student student : students){
             StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
-            listStudentsDTO.add(studentDTO);
+            listStudentDTOS.add(studentDTO);
         }
-        Page<StudentDTO> studentsDTO = new PageImpl<>(listStudentsDTO);
+        Page<StudentDTO> studentDTOS = new PageImpl<>(listStudentDTOS);
 
         // return page of students
-        if(studentsDTO.getSize() != 0){
-            answer.put("message", studentsDTO);
+        if(studentDTOS.getSize() != 0){
+            answer.put("message", studentDTOS);
         }else {
             answer.put("error", "No student found");
         }

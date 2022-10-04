@@ -57,22 +57,26 @@ public class ProfessorService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getProfessorConfirmedScheduleById(Integer id){
+    public Map<String, Object> getProfessorScheduleById(Integer id){
         Map<String, Object> answer = new TreeMap<>();
-        List<Appointment> appointments = iAppointmentRepository.getProfessorConfirmedScheduleById(id);
 
-        List<Map<String, Object>> listConfirmedSchedulesDTO = new ArrayList<>();
+        // get appointments
+        List<Appointment> appointments = iAppointmentRepository.getProfessorScheduleById(id);
+
+        // read schedules
+        List<Map<String, Object>> listScheduleDTOS = new ArrayList<>();
         for(Appointment appointment : appointments){
-            Map<String,Object> confirmedSchedule = new TreeMap<>();
-            confirmedSchedule.put("start_time", appointment.getStart_time());
-            confirmedSchedule.put("end_time", appointment.getEnd_time());
-            listConfirmedSchedulesDTO.add(confirmedSchedule);
+            Map<String,Object> schedule = new TreeMap<>();
+            schedule.put("start_time", appointment.getStart_time());
+            schedule.put("end_time", appointment.getEnd_time());
+            listScheduleDTOS.add(schedule);
         }
 
-        if(listConfirmedSchedulesDTO.size() != 0){
-            answer.put("message", listConfirmedSchedulesDTO);
+        // return schedules
+        if(listScheduleDTOS.size() != 0){
+            answer.put("message", listScheduleDTOS);
         }else{
-            answer.put("error", "No confirmed schedule found");
+            answer.put("error", "No schedule found");
         }
         return answer;
     }
@@ -85,16 +89,16 @@ public class ProfessorService {
         Page<Professor> professors = iProfessorRepository.findAll(page);
 
         // map all professors
-        List<ProfessorDTO> listProfessorsDTO = new ArrayList<>();
+        List<ProfessorDTO> listProfessorDTOS = new ArrayList<>();
         for(Professor professor : professors){
             ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
-            listProfessorsDTO.add(professorDTO);
+            listProfessorDTOS.add(professorDTO);
         }
-        Page<ProfessorDTO> professorsDTO = new PageImpl<>(listProfessorsDTO);
+        Page<ProfessorDTO> professorDTOS = new PageImpl<>(listProfessorDTOS);
 
         // return page of professors
-        if(professorsDTO.getSize() != 0){
-            answer.put("message", professorsDTO);
+        if(professorDTOS.getSize() != 0){
+            answer.put("message", professorDTOS);
         }else {
             answer.put("error", "No professor found");
         }
@@ -113,7 +117,7 @@ public class ProfessorService {
         return answer;
     }
 
-    public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Integer Id){
+    public Map<String,Object> getStudentsOfTheProfessor(Integer idPage, Integer size, Integer Id){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of students
@@ -121,16 +125,16 @@ public class ProfessorService {
         Page<Student> students = iStudentRepository.findByProfessorId(Id, page);
 
         // map all students
-        List<StudentDTO> listStudentsDTO = new ArrayList<>();
+        List<StudentDTO> listStudentDTOS = new ArrayList<>();
         for(Student student : students){
             StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
-            listStudentsDTO.add(studentDTO);
+            listStudentDTOS.add(studentDTO);
         }
-        Page<StudentDTO> studentsDTO = new PageImpl<>(listStudentsDTO);
+        Page<StudentDTO> studentDTOS = new PageImpl<>(listStudentDTOS);
 
         // return page of students
-        if(studentsDTO.getSize() != 0){
-            answer.put("message", studentsDTO);
+        if(studentDTOS.getSize() != 0){
+            answer.put("message", studentDTOS);
         }else {
             answer.put("error", "No students found under this professor");
         }

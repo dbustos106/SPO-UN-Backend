@@ -39,16 +39,16 @@ public class RoomService {
         Page<Room> rooms = iRoomRepository.findAll(page);
 
         // map all rooms
-        List<RoomDTO> listRoomsDTO = new ArrayList<>();
+        List<RoomDTO> listRoomDTOS = new ArrayList<>();
         for(Room room : rooms){
             RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
-            listRoomsDTO.add(roomDTO);
+            listRoomDTOS.add(roomDTO);
         }
-        Page<RoomDTO> roomsDTO = new PageImpl<>(listRoomsDTO);
+        Page<RoomDTO> roomDTOS = new PageImpl<>(listRoomDTOS);
 
         // return page of rooms
-        if(roomsDTO.getSize() != 0){
-            answer.put("message", roomsDTO);
+        if(roomDTOS.getSize() != 0){
+            answer.put("message", roomDTOS);
         }else {
             answer.put("error", "No room found");
         }

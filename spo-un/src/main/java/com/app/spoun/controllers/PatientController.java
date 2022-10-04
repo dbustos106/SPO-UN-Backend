@@ -16,11 +16,11 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping(value = "/confirmedSchedule/{id}")
-    public ResponseEntity<?> getPatientConfirmedScheduleById(@PathVariable("id") Integer id){
+    @GetMapping(value = "/schedule/{id}")
+    public ResponseEntity<?> getPatientScheduleById(@PathVariable("id") Integer id){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.getPatientConfirmedScheduleById(id);
+            answer = patientService.getPatientScheduleById(id);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -28,7 +28,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllPatient (
+    public ResponseEntity<?> getAllPatient(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();

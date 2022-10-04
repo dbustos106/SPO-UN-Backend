@@ -54,16 +54,16 @@ public class AdminService {
         Page<Admin> admins = iAdminRepository.findAll(page);
 
         // map all admins
-        List<AdminDTO> listAdminsDTO = new ArrayList<>();
+        List<AdminDTO> listAdminDTOS = new ArrayList<>();
         for(Admin admin : admins){
             AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
-            listAdminsDTO.add(adminDTO);
+            listAdminDTOS.add(adminDTO);
         }
-        Page<AdminDTO> adminsDTO = new PageImpl<>(listAdminsDTO);
+        Page<AdminDTO> adminDTOS = new PageImpl<>(listAdminDTOS);
 
         // return page of admins
-        if(adminsDTO.getSize() != 0){
-            answer.put("message", adminsDTO);
+        if(adminDTOS.getSize() != 0){
+            answer.put("message", adminDTOS);
         }else {
             answer.put("error", "No admin found");
         }

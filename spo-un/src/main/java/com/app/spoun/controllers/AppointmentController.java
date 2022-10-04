@@ -16,19 +16,6 @@ public class AppointmentController{
     @Autowired
     private AppointmentService appointmentService;
 
-    @PostMapping(value = "/addStudent")
-    public ResponseEntity<?> addStudentToAppointment(
-            @RequestParam String username,
-            @RequestParam Integer appointment_id){
-        Map<String,Object> answer = new TreeMap<>();
-        try{
-            answer = appointmentService.addStudentToAppointment(username, appointment_id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllAppointment (
             @RequestParam(required = false, defaultValue = "0") Integer page,

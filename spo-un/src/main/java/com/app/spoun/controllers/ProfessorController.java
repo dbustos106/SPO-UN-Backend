@@ -16,11 +16,11 @@ public class ProfessorController {
     @Autowired
     private ProfessorService professorService;
 
-    @GetMapping(value = "/confirmedSchedule/{id}")
-    public ResponseEntity<?> getProfessorConfirmedScheduleById(@PathVariable("id") Integer id){
+    @GetMapping(value = "/schedule/{id}")
+    public ResponseEntity<?> getProfessorScheduleById(@PathVariable("id") Integer id){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = professorService.getProfessorConfirmedScheduleById(id);
+            answer = professorService.getProfessorScheduleById(id);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -52,13 +52,13 @@ public class ProfessorController {
     }
 
     @GetMapping(value = "/students/{id}")
-    public ResponseEntity<?> getStudentsByProfessorId(
+    public ResponseEntity<?> getStudentsOfTheProfessor(
             @PathVariable("id") Integer id,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = professorService.getStudentsByProfessorId(page, size, id);
+            answer = professorService.getStudentsOfTheProfessor(page, size, id);
         }catch(Exception e){
             answer.put("error", e);
         }

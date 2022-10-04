@@ -51,22 +51,26 @@ public class PatientService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getPatientConfirmedScheduleById(Integer id){
+    public Map<String, Object> getPatientScheduleById(Integer id){
         Map<String, Object> answer = new TreeMap<>();
-        List<Appointment> appointments = iAppointmentRepository.getPatientConfirmedScheduleById(id);
 
-        List<Map<String, Object>> listConfirmedSchedulesDTO = new ArrayList<>();
+        // get appointments
+        List<Appointment> appointments = iAppointmentRepository.getPatientScheduleById(id);
+
+        // read schedules
+        List<Map<String, Object>> listScheduleDTOS = new ArrayList<>();
         for(Appointment appointment : appointments){
-            Map<String,Object> confirmedSchedule = new TreeMap<>();
-            confirmedSchedule.put("start_time", appointment.getStart_time());
-            confirmedSchedule.put("end_time", appointment.getEnd_time());
-            listConfirmedSchedulesDTO.add(confirmedSchedule);
+            Map<String,Object> schedule = new TreeMap<>();
+            schedule.put("start_time", appointment.getStart_time());
+            schedule.put("end_time", appointment.getEnd_time());
+            listScheduleDTOS.add(schedule);
         }
 
-        if(listConfirmedSchedulesDTO.size() != 0){
-            answer.put("message", listConfirmedSchedulesDTO);
+        // return schedules
+        if(listScheduleDTOS.size() != 0){
+            answer.put("message", listScheduleDTOS);
         }else{
-            answer.put("error", "No confirmed schedule found");
+            answer.put("error", "No schedule found");
         }
         return answer;
     }
@@ -79,16 +83,16 @@ public class PatientService {
         Page<Patient> patients = iPatientRepository.findAll(page);
 
         // map all patients
-        List<PatientDTO> listPatientsDTO = new ArrayList<>();
+        List<PatientDTO> listPatientDTOS = new ArrayList<>();
         for(Patient patient : patients){
             PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
-            listPatientsDTO.add(patientDTO);
+            listPatientDTOS.add(patientDTO);
         }
-        Page<PatientDTO> patientsDTO = new PageImpl<>(listPatientsDTO);
+        Page<PatientDTO> patientDTOS = new PageImpl<>(listPatientDTOS);
 
         // return page of patients
-        if(patientsDTO.getSize() != 0){
-            answer.put("message", patientsDTO);
+        if(patientDTOS.getSize() != 0){
+            answer.put("message", patientDTOS);
         }else {
             answer.put("error", "No patient found");
         }

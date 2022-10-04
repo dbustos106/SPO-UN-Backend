@@ -32,7 +32,7 @@ public class ScheduleService {
 
     private ScheduleMapper scheduleMapper = new ScheduleMapperImpl();
 
-    public Map<String,Object> getAllSchedule (Integer idPage, Integer size){
+    public Map<String,Object> getAllSchedule(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of schedules
@@ -40,16 +40,16 @@ public class ScheduleService {
         Page<Schedule> schedules = iScheduleRepository.findAll(page);
 
         // map all schedules
-        List<ScheduleDTO> listSchedulesDTO = new ArrayList<>();
+        List<ScheduleDTO> listScheduleDTOS = new ArrayList<>();
         for(Schedule schedule : schedules){
             ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
-            listSchedulesDTO.add(scheduleDTO);
+            listScheduleDTOS.add(scheduleDTO);
         }
-        Page<ScheduleDTO> schedulesDTO = new PageImpl<>(listSchedulesDTO);
+        Page<ScheduleDTO> scheduleDTOS = new PageImpl<>(listScheduleDTOS);
 
         // return page of schedules
-        if(schedulesDTO.getSize() != 0){
-            answer.put("message", schedulesDTO);
+        if(scheduleDTOS.getSize() != 0){
+            answer.put("message", scheduleDTOS);
         }else {
             answer.put("error", "No schedule found");
         }

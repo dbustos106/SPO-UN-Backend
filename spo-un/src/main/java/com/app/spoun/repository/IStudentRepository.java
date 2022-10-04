@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,5 +28,10 @@ public interface IStudentRepository extends JpaRepository<Student, Integer>{
 
     @Query(value = "SELECT * FROM student WHERE student.professor_id = ?1", nativeQuery = true)
     Page<Student> findByProfessorId(Integer id, Pageable page);
+
+    @Query(value = "SELECT id, username, password, name, document_type, document_number, professor_id, role_id\n" +
+            "FROM (student INNER JOIN student_appointment ON student.id = student_appointment.student_id)\n" +
+            "WHERE student_appointment.appointment_id = ?1", nativeQuery = true)
+    List<Student> findByAppointment_id(Integer id);
 
 }

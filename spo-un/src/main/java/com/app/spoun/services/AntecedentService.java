@@ -40,16 +40,16 @@ public class AntecedentService {
         Page<Antecedent> antecedents = iAntecedentRepository.findAll(page);
 
         // map all antecedents
-        List<AntecedentDTO> listAntecedentsDTO = new ArrayList<>();
+        List<AntecedentDTO> listAntecedentDTOS = new ArrayList<>();
         for(Antecedent antecedent : antecedents){
             AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
-            listAntecedentsDTO.add(antecedentDTO);
+            listAntecedentDTOS.add(antecedentDTO);
         }
-        Page<AntecedentDTO> antecedentsDTO = new PageImpl<>(listAntecedentsDTO);
+        Page<AntecedentDTO> antecedentDTOS = new PageImpl<>(listAntecedentDTOS);
 
         // return page of antecedents
-        if(antecedentsDTO.getSize() != 0){
-            answer.put("message", antecedentsDTO);
+        if(antecedentDTOS.getSize() != 0){
+            answer.put("message", antecedentDTOS);
         }else {
             answer.put("error", "No antecedent found");
         }

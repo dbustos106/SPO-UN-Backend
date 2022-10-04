@@ -37,16 +37,16 @@ public class RoleService {
         Page<Role> roles = iRoleRepository.findAll(page);
 
         // map all roles
-        List<RoleDTO> listRolesDTO = new ArrayList<>();
+        List<RoleDTO> listRoleDTOS = new ArrayList<>();
         for(Role role : roles){
             RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
-            listRolesDTO.add(roleDTO);
+            listRoleDTOS.add(roleDTO);
         }
-        Page<RoleDTO> rolesDTO = new PageImpl<>(listRolesDTO);
+        Page<RoleDTO> roleDTOS = new PageImpl<>(listRoleDTOS);
 
         // return page of roles
-        if(rolesDTO.getSize() != 0){
-            answer.put("message", rolesDTO);
+        if(roleDTOS.getSize() != 0){
+            answer.put("message", roleDTOS);
         }else {
             answer.put("error", "No role found");
         }
