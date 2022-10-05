@@ -51,11 +51,11 @@ public class PatientService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getPatientScheduleById(Integer id){
+    public Map<String, Object> getPatientScheduleByPatientId(Integer id){
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointments
-        List<Appointment> appointments = iAppointmentRepository.getPatientScheduleById(id);
+        List<Appointment> appointments = iAppointmentRepository.getPatientScheduleByPatientId(id);
 
         // read schedules
         List<Map<String, Object>> listScheduleDTOS = new ArrayList<>();

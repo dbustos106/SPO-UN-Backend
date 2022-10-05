@@ -51,28 +51,32 @@ public class AppointmentService {
 
     private ScheduleMapper scheduleMapper = new ScheduleMapperImpl();
 
-    /*
-    public Map<String,Object> addStudentToAppointment(String username, Integer appointment_id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> confirmAppointmentById(Integer appointmentId, Integer patientId, ScheduleDTO scheduleDTO){
+        Map<String, Object> answer = new TreeMap<>();
 
-        // get student and appointment
-        Student student = iStudentRepository.findByUsername(username).orElse(null);
-        Appointment appointment = iAppointmentRepository.findById(appointment_id).orElse(null);
+        // get appointment
+        Appointment appointment = iAppointmentRepository.findById(appointmentId).orElse(null);
 
-        // add student to appointment
-        if(student != null && appointment != null) {
-            appointment.getStudents().add(student);
-            answer.put("message", "Student added successfully");
+        if(appointment != null){
+            // set start_time and end_time
+            appointment.setStart_time(scheduleDTO.getStart_time());
+            appointment.setEnd_time(scheduleDTO.getEnd_time());
+
+            // get patient
+            Patient patient = iPatientRepository.findById(patientId).orElse(null);
+            appointment.setPatient(patient);
+
+            // save appointment
+            iAppointmentRepository.save(appointment);
+            answer.put("message", "Appointment schedule changed successfully");
         }else{
-            answer.put("error", "Not successful");
+            answer.put("error", "Appointment not found");
         }
 
         return answer;
-
     }
-     */
 
-    public Map<String,Object> getAllAppointment (Integer idPage, Integer size){
+    public Map<String,Object> getAllAppointment(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of appointments
@@ -99,7 +103,7 @@ public class AppointmentService {
     public Map<String,Object> findAppointmentById(Integer id){
         Map<String,Object> answer = new TreeMap<>();
 
-        // create object
+        // create object Appointment_ScheduleDTO
         Appointment_ScheduleDTO appointment_scheduleDTO = new Appointment_ScheduleDTO();
 
         // get appointment
@@ -145,13 +149,14 @@ public class AppointmentService {
 
             // get room and professor
             Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
-            Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
+            Student studentMain = iStudentRepository.findByUsername(students.get(0)).orElse(null);
+            Professor professor = studentMain.getProfessor();
 
             // save appointment
             Appointment appointment = appointmentMapper.appointmentDTOToAppointment(appointmentDTO);
             appointment.setRoom(room);
             appointment.setPatient(null);
-            appointment.setState("Activo");
+            appointment.setState("Active");
             appointment.setProfessor(professor);
             appointment.setStudents(new ArrayList<>());
             appointment.setSchedules(new ArrayList<>());
@@ -164,8 +169,8 @@ public class AppointmentService {
             }
 
             // save students
-            for (String usernameStudent : students) {
-                Student student = iStudentRepository.findByUsername(usernameStudent).orElse(null);
+            for (String studentUsername : students) {
+                Student student = iStudentRepository.findByUsername(studentUsername).orElse(null);
                 appointment_answer.getStudents().add(student);
             }
 
@@ -192,7 +197,8 @@ public class AppointmentService {
 
                 // get room and professor
                 Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
-                Professor professor = iProfessorRepository.findById(appointmentDTO.getProfessor_id()).orElse(null);
+                Student studentMain = iStudentRepository.findByUsername(students.get(0)).orElse(null);
+                Professor professor = studentMain.getProfessor();
 
                 // if patient is null, update procedure type
                 if(appointment.getPatient() == null) {

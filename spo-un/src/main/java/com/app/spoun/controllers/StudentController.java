@@ -17,10 +17,10 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping(value = "/schedule/{id}")
-    public ResponseEntity<?> getStudentScheduleById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> getStudentScheduleByStudentId(@PathVariable("id") Integer id){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.getStudentScheduleById(id);
+            answer = studentService.getStudentScheduleByStudentId(id);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -28,10 +28,10 @@ public class StudentController {
     }
 
     @GetMapping(value = "/unconfirmedSchedule/{id}")
-    public ResponseEntity<?> getUnconfirmedStudentScheduleById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> getStudentUnconfirmedScheduleByStudentId(@PathVariable("id") Integer id){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.getUnconfirmedStudentScheduleById(id);
+            answer = studentService.getStudentUnconfirmedScheduleByStudentId(id);
         }catch(Exception e){
             answer.put("error", e);
         }

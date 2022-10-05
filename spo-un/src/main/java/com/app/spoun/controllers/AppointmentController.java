@@ -1,6 +1,7 @@
 package com.app.spoun.controllers;
 
 import com.app.spoun.dto.Appointment_ScheduleDTO;
+import com.app.spoun.dto.ScheduleDTO;
 import com.app.spoun.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,22 @@ public class AppointmentController{
     @Autowired
     private AppointmentService appointmentService;
 
+    @PutMapping(value = "/confirm/{appointmentId}/{patientId}")
+    public ResponseEntity<?> confirmAppointmentById(
+            @PathVariable("appointmentId") Integer appointmentId,
+            @PathVariable("patientId") Integer patientId,
+            @RequestBody ScheduleDTO scheduleDTO){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = appointmentService.confirmAppointmentById(appointmentId, patientId, scheduleDTO);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllAppointment (
+    public ResponseEntity<?> getAllAppointment(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();

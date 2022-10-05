@@ -17,10 +17,10 @@ public class PatientController {
     private PatientService patientService;
 
     @GetMapping(value = "/schedule/{id}")
-    public ResponseEntity<?> getPatientScheduleById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> getPatientScheduleByPatientId(@PathVariable("id") Integer id){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.getPatientScheduleById(id);
+            answer = patientService.getPatientScheduleByPatientId(id);
         }catch(Exception e){
             answer.put("error", e);
         }

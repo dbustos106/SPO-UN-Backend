@@ -27,6 +27,6 @@ public interface IScheduleRepository extends JpaRepository<Schedule, Integer>{
             "FROM ((student_appointment INNER JOIN appointment ON student_appointment.appointment_id = appointment.id) INNER JOIN\n" +
             "schedule ON schedule.appointment_id = appointment.id)\n" +
             "WHERE student_appointment.student_id = ?1 and appointment.start_time IS NULL and appointment.end_time IS Null", nativeQuery = true)
-    List<Schedule> getUnconfirmedStudentScheduleById(Integer id);
+    List<Schedule> getStudentUnconfirmedScheduleByStudentId(Integer id);
 
 }

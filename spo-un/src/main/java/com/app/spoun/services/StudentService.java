@@ -56,11 +56,11 @@ public class StudentService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getStudentScheduleById(Integer id){
+    public Map<String, Object> getStudentScheduleByStudentId(Integer id){
         Map<String,Object> answer = new TreeMap<>();
 
         // get appointments
-        List<Appointment> appointments = iAppointmentRepository.getStudentScheduleById(id);
+        List<Appointment> appointments = iAppointmentRepository.getStudentScheduleByStudentId(id);
 
         // read schedules
         List<Map<String, Object>> listScheduleDTOS = new ArrayList<>();
@@ -80,11 +80,11 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String, Object> getUnconfirmedStudentScheduleById(Integer id){
+    public Map<String, Object> getStudentUnconfirmedScheduleByStudentId(Integer id){
         Map<String,Object> answer = new TreeMap<>();
 
         // get schedules
-        List<Schedule> schedules = iScheduleRepository.getUnconfirmedStudentScheduleById(id);
+        List<Schedule> schedules = iScheduleRepository.getStudentUnconfirmedScheduleByStudentId(id);
 
         // map schedules
         List<ScheduleDTO> listScheduleDTOS = new ArrayList<>();

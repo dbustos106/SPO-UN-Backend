@@ -21,16 +21,16 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Integ
     @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN student_appointment ON appointment.id = student_appointment.appointment_id)\n" +
             "WHERE student_appointment.student_id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
-    List<Appointment> getStudentScheduleById(Integer id);
+    List<Appointment> getStudentScheduleByStudentId(Integer id);
 
     @Query(value = "SELECT appointment.id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN professor ON professor.id = appointment.professor_id)\n" +
             "WHERE professor.id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
-    List<Appointment> getProfessorScheduleById(Integer id);
+    List<Appointment> getProfessorScheduleByProfessorId(Integer id);
 
     @Query(value = "SELECT appointment.id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN patient ON patient.id = appointment.patient_id)\n" +
             "WHERE patient.id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
-    List<Appointment> getPatientScheduleById(Integer id);
+    List<Appointment> getPatientScheduleByPatientId(Integer id);
 
 }

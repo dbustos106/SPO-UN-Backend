@@ -16,6 +16,17 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
+    @GetMapping(value = "/available")
+    public ResponseEntity<?> getAvailableRooms(){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = roomService.getAvailableRooms();
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllRoom (
             @RequestParam(required = false, defaultValue = "0") Integer page,

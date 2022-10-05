@@ -57,11 +57,11 @@ public class ProfessorService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getProfessorScheduleById(Integer id){
+    public Map<String, Object> getProfessorScheduleByProfessorId(Integer id){
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointments
-        List<Appointment> appointments = iAppointmentRepository.getProfessorScheduleById(id);
+        List<Appointment> appointments = iAppointmentRepository.getProfessorScheduleByProfessorId(id);
 
         // read schedules
         List<Map<String, Object>> listScheduleDTOS = new ArrayList<>();
@@ -117,12 +117,12 @@ public class ProfessorService {
         return answer;
     }
 
-    public Map<String,Object> getStudentsOfTheProfessor(Integer idPage, Integer size, Integer Id){
+    public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Integer Id){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of students
         Pageable page = PageRequest.of(idPage, size);
-        Page<Student> students = iStudentRepository.findByProfessorId(Id, page);
+        Page<Student> students = iStudentRepository.findByProfessor_id(Id, page);
 
         // map all students
         List<StudentDTO> listStudentDTOS = new ArrayList<>();
