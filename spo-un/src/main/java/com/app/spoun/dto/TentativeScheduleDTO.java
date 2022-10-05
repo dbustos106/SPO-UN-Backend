@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ScheduleDTO {
+public class TentativeScheduleDTO {
 
     private Integer id;
 

@@ -13,6 +13,8 @@ public class ProfessorDTO {
 
     private String username;
 
+    private String password;
+
     private String name;
 
     private String document_type;

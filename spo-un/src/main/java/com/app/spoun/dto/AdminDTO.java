@@ -13,6 +13,8 @@ public class AdminDTO {
 
     private String username;
 
+    private String password;
+
     private Integer role_id;
 
 }

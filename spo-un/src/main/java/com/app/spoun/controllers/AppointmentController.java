@@ -1,7 +1,7 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.dto.Appointment_ScheduleDTO;
-import com.app.spoun.dto.ScheduleDTO;
+import com.app.spoun.dto.FullAppointmentDTO;
+import com.app.spoun.dto.TentativeScheduleDTO;
 import com.app.spoun.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +21,10 @@ public class AppointmentController{
     public ResponseEntity<?> confirmAppointmentById(
             @PathVariable("appointmentId") Integer appointmentId,
             @PathVariable("patientId") Integer patientId,
-            @RequestBody ScheduleDTO scheduleDTO){
+            @RequestBody TentativeScheduleDTO tentativeScheduleDTO){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = appointmentService.confirmAppointmentById(appointmentId, patientId, scheduleDTO);
+            answer = appointmentService.confirmAppointmentById(appointmentId, patientId, tentativeScheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -56,10 +56,10 @@ public class AppointmentController{
     }
 
     @PostMapping(value = "/save")
-    public ResponseEntity<?> saveAppointment(@RequestBody Appointment_ScheduleDTO appointment_scheduleDTO){
+    public ResponseEntity<?> saveAppointment(@RequestBody FullAppointmentDTO fullAppointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = appointmentService.saveAppointment(appointment_scheduleDTO);
+            answer = appointmentService.saveAppointment(fullAppointmentDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -67,10 +67,10 @@ public class AppointmentController{
     }
 
     @PutMapping(value = "/edit")
-    public ResponseEntity<?> editAppointment(@RequestBody Appointment_ScheduleDTO appointment_scheduleDTO){
+    public ResponseEntity<?> editAppointment(@RequestBody FullAppointmentDTO fullAppointmentDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = appointmentService.editAppointment(appointment_scheduleDTO);
+            answer = appointmentService.editAppointment(fullAppointmentDTO);
         }catch(Exception e){
             answer.put("error", e);
         }

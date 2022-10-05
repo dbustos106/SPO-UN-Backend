@@ -1,7 +1,7 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.dto.ScheduleDTO;
-import com.app.spoun.services.ScheduleService;
+import com.app.spoun.dto.TentativeScheduleDTO;
+import com.app.spoun.services.TentativeScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,19 +10,19 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @RestController
-@RequestMapping("/schedule")
-public class ScheduleController {
+@RequestMapping("/tentativeSchedule")
+public class TentativeScheduleController {
 
     @Autowired
-    private ScheduleService scheduleService;
+    private TentativeScheduleService tentativeScheduleService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllSchedule (
+    public ResponseEntity<?> getAllTentativeSchedule (
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.getAllSchedule(page, size);
+            answer = tentativeScheduleService.getAllTentativeSchedule(page, size);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -30,10 +30,10 @@ public class ScheduleController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findScheduleById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findTentativeScheduleById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.findScheduleById(id);
+            answer = tentativeScheduleService.findTentativeScheduleById(id);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -41,10 +41,10 @@ public class ScheduleController {
     }
 
     @PostMapping(value = "/save")
-    public ResponseEntity<?> saveSchedule(@RequestBody ScheduleDTO scheduleDTO){
+    public ResponseEntity<?> saveTentativeSchedule(@RequestBody TentativeScheduleDTO tentativeScheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.saveSchedule(scheduleDTO);
+            answer = tentativeScheduleService.saveTentativeSchedule(tentativeScheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -52,10 +52,10 @@ public class ScheduleController {
     }
 
     @PutMapping(value = "/edit")
-    public ResponseEntity<?> editSchedule(@RequestBody ScheduleDTO scheduleDTO){
+    public ResponseEntity<?> editTentativeSchedule(@RequestBody TentativeScheduleDTO tentativeScheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.editSchedule(scheduleDTO);
+            answer = tentativeScheduleService.editTentativeSchedule(tentativeScheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -63,10 +63,10 @@ public class ScheduleController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteSchedule(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteTentativeSchedule(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.deleteSchedule(id);
+            answer = tentativeScheduleService.deleteTentativeSchedule(id);
         }catch(Exception e){
             answer.put("error", e);
         }

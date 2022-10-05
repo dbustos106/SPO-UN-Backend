@@ -1,10 +1,10 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.*;
-import com.app.spoun.dto.ScheduleDTO;
+import com.app.spoun.dto.TentativeScheduleDTO;
 import com.app.spoun.dto.StudentDTO;
-import com.app.spoun.mappers.ScheduleMapper;
-import com.app.spoun.mappers.ScheduleMapperImpl;
+import com.app.spoun.mappers.TentativeScheduleMapper;
+import com.app.spoun.mappers.TentativeScheduleMapperImpl;
 import com.app.spoun.mappers.StudentMapper;
 import com.app.spoun.mappers.StudentMapperImpl;
 import com.app.spoun.repository.*;
@@ -45,14 +45,14 @@ public class StudentService {
     private IRoleRepository iRoleRepository;
 
     @Autowired
-    private IScheduleRepository iScheduleRepository;
+    private ITentativeScheduleRepository iTentativeScheduleRepository;
 
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
 
     private StudentMapper studentMapper = new StudentMapperImpl();
 
-    private ScheduleMapper scheduleMapper = new ScheduleMapperImpl();
+    private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
 
     private final PasswordEncoder passwordEncoder;
 
@@ -84,18 +84,18 @@ public class StudentService {
         Map<String,Object> answer = new TreeMap<>();
 
         // get schedules
-        List<Schedule> schedules = iScheduleRepository.getStudentUnconfirmedScheduleByStudentId(id);
+        List<TentativeSchedule> tentativeSchedules = iTentativeScheduleRepository.getStudentUnconfirmedScheduleByStudentId(id);
 
         // map schedules
-        List<ScheduleDTO> listScheduleDTOS = new ArrayList<>();
-        for(Schedule schedule : schedules){
-            ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
-            listScheduleDTOS.add(scheduleDTO);
+        List<TentativeScheduleDTO> listTentativeScheduleDTOS = new ArrayList<>();
+        for(TentativeSchedule tentativeSchedule : tentativeSchedules){
+            TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
+            listTentativeScheduleDTOS.add(tentativeScheduleDTO);
         }
 
         // return schedules
-        if(listScheduleDTOS.size() != 0){
-            answer.put("message", listScheduleDTOS);
+        if(listTentativeScheduleDTOS.size() != 0){
+            answer.put("message", listTentativeScheduleDTOS);
         }else{
             answer.put("error", "No unconfirmed schedule found");
         }

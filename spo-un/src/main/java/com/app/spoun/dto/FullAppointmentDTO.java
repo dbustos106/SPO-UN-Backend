@@ -9,11 +9,11 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Appointment_ScheduleDTO {
+public class FullAppointmentDTO {
 
     private AppointmentDTO appointment;
 
-    private List<ScheduleDTO> schedules;
+    private List<TentativeScheduleDTO> tentativeSchedules;
 
     private List<String> students;
 

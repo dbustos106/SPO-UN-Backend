@@ -50,7 +50,7 @@ public class Appointment {
     private Professor professor;
 
     @OneToMany(mappedBy = "appointment")
-    private List<Schedule> schedules;
+    private List<TentativeSchedule> tentativeSchedules;
 
     @ManyToMany
     @JoinTable(name = "student_appointment",

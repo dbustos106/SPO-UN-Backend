@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "schedule", schema = "spo-un")
-public class Schedule {
+@Table(name = "tentative_schedule", schema = "spo-un")
+public class TentativeSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
@@ -26,7 +26,7 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return "Schedule{" +
+        return "TentativeSchedule{" +
                 "id=" + id +
                 ", start_time='" + start_time + '\'' +
                 ", end_time='" + end_time + '\'' +
