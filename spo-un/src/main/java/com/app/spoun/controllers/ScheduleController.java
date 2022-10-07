@@ -1,7 +1,7 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.dto.RoomDTO;
-import com.app.spoun.services.RoomService;
+import com.app.spoun.dto.ScheduleDTO;
+import com.app.spoun.services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,19 +10,19 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @RestController
-@RequestMapping("/room")
-public class RoomController {
+@RequestMapping("/schedule")
+public class ScheduleController {
 
     @Autowired
-    private RoomService roomService;
+    private ScheduleService scheduleService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllRoom(
+    public ResponseEntity<?> getAllSchedule(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = roomService.getAllRoom(page, size);
+            answer = scheduleService.getAllSchedule(page, size);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -30,10 +30,10 @@ public class RoomController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findRoomById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findScheduleById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roomService.findRoomById(id);
+            answer = scheduleService.findScheduleById(id);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -41,10 +41,10 @@ public class RoomController {
     }
 
     @PostMapping(value = "/save")
-    public ResponseEntity<?> saveRoom(@RequestBody RoomDTO roomDTO){
+    public ResponseEntity<?> saveSchedule(@RequestBody ScheduleDTO scheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roomService.saveRoom(roomDTO);
+            answer = scheduleService.saveSchedule(scheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -52,10 +52,10 @@ public class RoomController {
     }
 
     @PutMapping(value = "/edit")
-    public ResponseEntity<?> editRoom(@RequestBody RoomDTO roomDTO){
+    public ResponseEntity<?> editSchedule(@RequestBody ScheduleDTO scheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roomService.editRoom(roomDTO);
+            answer = scheduleService.editSchedule(scheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -63,10 +63,10 @@ public class RoomController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteRoom(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteSchedule(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roomService.deleteRoom(id);
+            answer = scheduleService.deleteSchedule(id);
         }catch(Exception e){
             answer.put("error", e);
         }

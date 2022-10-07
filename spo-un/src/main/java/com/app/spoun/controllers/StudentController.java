@@ -39,7 +39,7 @@ public class StudentController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllStudent (
+    public ResponseEntity<?> getAllStudent(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();

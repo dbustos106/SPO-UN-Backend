@@ -31,14 +31,6 @@ public class RoomService {
 
     private RoomMapper roomMapper = new RoomMapperImpl();
 
-    public Map<String, Object> getAvailableRooms(){
-        Map<String, Object> answer = new TreeMap<>();
-
-        // FALTA
-
-        return answer;
-    }
-
     public Map<String,Object> getAllRoom(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 

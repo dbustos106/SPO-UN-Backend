@@ -17,7 +17,7 @@ public class BuildingController {
     private BuildingService buildingService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllBuilding (
+    public ResponseEntity<?> getAllBuilding(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();

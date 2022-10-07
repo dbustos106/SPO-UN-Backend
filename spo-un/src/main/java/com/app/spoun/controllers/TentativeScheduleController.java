@@ -17,7 +17,7 @@ public class TentativeScheduleController {
     private TentativeScheduleService tentativeScheduleService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllTentativeSchedule (
+    public ResponseEntity<?> getAllTentativeSchedule(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();

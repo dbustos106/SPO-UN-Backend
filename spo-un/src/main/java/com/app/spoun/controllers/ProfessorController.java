@@ -28,7 +28,7 @@ public class ProfessorController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllProfessor (
+    public ResponseEntity<?> getAllProfessor(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
