@@ -3,6 +3,7 @@ package com.app.spoun.security;
 import com.app.spoun.filter.CustomAuthenticationFilter;
 import com.app.spoun.filter.CustomAuthoritationFilter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

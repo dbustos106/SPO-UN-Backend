@@ -117,12 +117,12 @@ public class ProfessorService {
         return answer;
     }
 
-    public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Integer Id){
+    public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Integer id){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of students
         Pageable page = PageRequest.of(idPage, size);
-        Page<Student> students = iStudentRepository.findByProfessor_id(Id, page);
+        Page<Student> students = iStudentRepository.findByProfessor_id(id, page);
 
         // map all students
         List<StudentDTO> listStudentDTOS = new ArrayList<>();

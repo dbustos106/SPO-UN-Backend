@@ -2,6 +2,7 @@ package com.app.spoun.controllers;
 
 import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.services.ProfessorService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,19 +17,8 @@ public class ProfessorController {
     @Autowired
     private ProfessorService professorService;
 
-    @GetMapping(value = "/schedule/{id}")
-    public ResponseEntity<?> getProfessorScheduleByProfessorId(@PathVariable("id") Integer id){
-        Map<String, Object> answer = new TreeMap<>();
-        try{
-            answer = professorService.getProfessorScheduleByProfessorId(id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllProfessor (
+    public ResponseEntity<?> getAllProfessor(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
@@ -51,7 +41,18 @@ public class ProfessorController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @GetMapping(value = "/students/{id}")
+    @GetMapping(value = "/{id}/schedule")
+    public ResponseEntity<?> getProfessorScheduleByProfessorId(@PathVariable("id") Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = professorService.getProfessorScheduleByProfessorId(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+    @GetMapping(value = "/{id}/students")
     public ResponseEntity<?> getStudentsByProfessorId(
             @PathVariable("id") Integer id,
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -76,7 +77,7 @@ public class ProfessorController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteProfessor(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

@@ -1,28 +1,29 @@
 package com.app.spoun.controllers;
 
-import com.app.spoun.dto.RoleDTO;
-import com.app.spoun.services.RoleService;
+import com.app.spoun.dto.ScheduleDTO;
+import com.app.spoun.services.ScheduleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 @RestController
-@RequestMapping("/role")
-public class RoleController {
+@RequestMapping("/schedule")
+public class ScheduleController {
 
     @Autowired
-    private RoleService roleService;
+    private ScheduleService scheduleService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllRole(
+    public ResponseEntity<?> getAllSchedule(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = roleService.getAllRole(page, size);
+            answer = scheduleService.getAllSchedule(page, size);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -30,10 +31,10 @@ public class RoleController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findRoleById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findScheduleById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roleService.findRoleById(id);
+            answer = scheduleService.findScheduleById(id);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -41,10 +42,10 @@ public class RoleController {
     }
 
     @PostMapping(value = "/save")
-    public ResponseEntity<?> saveRole(@RequestBody RoleDTO roleDTO){
+    public ResponseEntity<?> saveSchedule(@RequestBody ScheduleDTO scheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roleService.saveRole(roleDTO);
+            answer = scheduleService.saveSchedule(scheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -52,10 +53,10 @@ public class RoleController {
     }
 
     @PutMapping(value = "/edit")
-    public ResponseEntity<?> editRole(@RequestBody RoleDTO roleDTO){
+    public ResponseEntity<?> editSchedule(@RequestBody ScheduleDTO scheduleDTO){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roleService.editRole(roleDTO);
+            answer = scheduleService.editSchedule(scheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -63,10 +64,10 @@ public class RoleController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteRole(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteSchedule(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{
-            answer = roleService.deleteRole(id);
+            answer = scheduleService.deleteSchedule(id);
         }catch(Exception e){
             answer.put("error", e);
         }

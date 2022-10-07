@@ -2,6 +2,7 @@ package com.app.spoun.controllers;
 
 import com.app.spoun.dto.RoomDTO;
 import com.app.spoun.services.RoomService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,19 +17,8 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @GetMapping(value = "/available")
-    public ResponseEntity<?> getAvailableRooms(){
-        Map<String, Object> answer = new TreeMap<>();
-        try{
-            answer = roomService.getAvailableRooms();
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllRoom (
+    public ResponseEntity<?> getAllRoom(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
@@ -73,7 +63,7 @@ public class RoomController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteRoom(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

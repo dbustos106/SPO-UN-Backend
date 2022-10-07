@@ -4,12 +4,15 @@ import com.app.spoun.domain.Admin;
 import com.app.spoun.domain.Patient;
 import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Student;
+
 import com.app.spoun.repository.IAdminRepository;
 import com.app.spoun.repository.IPatientRepository;
 import com.app.spoun.repository.IProfessorRepository;
 import com.app.spoun.repository.IStudentRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

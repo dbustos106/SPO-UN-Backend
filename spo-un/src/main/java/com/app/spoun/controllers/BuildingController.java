@@ -2,6 +2,7 @@ package com.app.spoun.controllers;
 
 import com.app.spoun.dto.BuildingDTO;
 import com.app.spoun.services.BuildingService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class BuildingController {
     private BuildingService buildingService;
 
     @GetMapping(value = "/all")
-    public ResponseEntity<?> getAllBuilding (
+    public ResponseEntity<?> getAllBuilding(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
@@ -62,7 +63,7 @@ public class BuildingController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteBuilding(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

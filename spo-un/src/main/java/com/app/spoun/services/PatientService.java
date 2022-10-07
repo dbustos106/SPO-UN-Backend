@@ -7,8 +7,10 @@ import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.mappers.PatientMapper;
 import com.app.spoun.mappers.PatientMapperImpl;
 import com.app.spoun.repository.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,7 +29,7 @@ import java.util.TreeMap;
 @Transactional
 @Service
 @Slf4j
-public class PatientService {
+public class PatientService{
 
     @Autowired
     private IPatientRepository iPatientRepository;
@@ -149,6 +151,8 @@ public class PatientService {
             // update patient
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
             patient.setRole(role);
+            patient.setAntecedents(new ArrayList<>());
+            patient.setAppointments(new ArrayList<>());
 
             // encrypt password
             patient.setPassword(passwordEncoder.encode(patient.getPassword()));

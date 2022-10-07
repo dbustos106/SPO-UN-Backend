@@ -2,6 +2,7 @@ package com.app.spoun.controllers;
 
 import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.services.PatientService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,17 +16,6 @@ public class PatientController {
 
     @Autowired
     private PatientService patientService;
-
-    @GetMapping(value = "/schedule/{id}")
-    public ResponseEntity<?> getPatientScheduleByPatientId(@PathVariable("id") Integer id){
-        Map<String, Object> answer = new TreeMap<>();
-        try{
-            answer = patientService.getPatientScheduleByPatientId(id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
 
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllPatient(
@@ -51,6 +41,17 @@ public class PatientController {
         return ResponseEntity.ok().body(answer);
     }
 
+    @GetMapping(value = "/{id}/schedule")
+    public ResponseEntity<?> getPatientScheduleByPatientId(@PathVariable("id") Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = patientService.getPatientScheduleByPatientId(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editPatient(@RequestBody PatientDTO patientDTO){
         Map<String,Object> answer = new TreeMap<>();
@@ -62,7 +63,7 @@ public class PatientController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deletePatient(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

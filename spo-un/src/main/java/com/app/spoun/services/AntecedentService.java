@@ -7,6 +7,7 @@ import com.app.spoun.mappers.AntecedentMapper;
 import com.app.spoun.mappers.AntecedentMapperImpl;
 import com.app.spoun.repository.IAntecedentRepository;
 import com.app.spoun.repository.IPatientRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,7 +23,7 @@ import java.util.TreeMap;
 
 @Transactional
 @Service
-public class AntecedentService {
+public class AntecedentService{
 
     @Autowired
     private IAntecedentRepository iAntecedentRepository;

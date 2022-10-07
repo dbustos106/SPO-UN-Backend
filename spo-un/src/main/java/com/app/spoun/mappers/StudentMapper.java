@@ -2,7 +2,8 @@ package com.app.spoun.mappers;
 
 import com.app.spoun.domain.Student;
 import com.app.spoun.dto.StudentDTO;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper
 public interface StudentMapper {

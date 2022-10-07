@@ -7,6 +7,7 @@ import com.app.spoun.mappers.RoomMapper;
 import com.app.spoun.mappers.RoomMapperImpl;
 import com.app.spoun.repository.IBuildingRepository;
 import com.app.spoun.repository.IRoomRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,14 +31,6 @@ public class RoomService {
     private IBuildingRepository iBuildingRepository;
 
     private RoomMapper roomMapper = new RoomMapperImpl();
-
-    public Map<String, Object> getAvailableRooms(){
-        Map<String, Object> answer = new TreeMap<>();
-
-        // FALTA
-
-        return answer;
-    }
 
     public Map<String,Object> getAllRoom(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();

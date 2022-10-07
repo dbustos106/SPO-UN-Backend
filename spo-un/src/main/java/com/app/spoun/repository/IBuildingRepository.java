@@ -1,6 +1,7 @@
 package com.app.spoun.repository;
 
 import com.app.spoun.domain.Building;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

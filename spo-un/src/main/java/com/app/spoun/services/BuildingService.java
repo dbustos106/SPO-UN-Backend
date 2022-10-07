@@ -5,6 +5,7 @@ import com.app.spoun.dto.BuildingDTO;
 import com.app.spoun.mappers.BuildingMapper;
 import com.app.spoun.mappers.BuildingMapperImpl;
 import com.app.spoun.repository.IBuildingRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,7 +18,8 @@ import java.util.*;
 
 @Transactional
 @Service
-public class BuildingService {
+public class BuildingService{
+
     @Autowired
     private IBuildingRepository iBuildingRepository;
 

@@ -8,8 +8,10 @@ import com.app.spoun.mappers.TentativeScheduleMapperImpl;
 import com.app.spoun.mappers.StudentMapper;
 import com.app.spoun.mappers.StudentMapperImpl;
 import com.app.spoun.repository.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -153,8 +155,8 @@ public class StudentService {
 
                 // save student
                 Student student = studentMapper.studentDTOToStudent(studentDTO);
-                student.setProfessor(professor);
                 student.setRole(role);
+                student.setProfessor(professor);
                 student.setAppointments(new ArrayList<>());
 
                 // encrypt password
@@ -178,8 +180,9 @@ public class StudentService {
 
             // update student
             Student student = studentMapper.studentDTOToStudent(studentDTO);
-            student.setProfessor(professor);
             student.setRole(role);
+            student.setProfessor(professor);
+            student.setAppointments(new ArrayList<>());
 
             // encrypt password
             student.setPassword(passwordEncoder.encode(student.getPassword()));

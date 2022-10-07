@@ -6,8 +6,10 @@ import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.mappers.AdminMapper;
 import com.app.spoun.mappers.AdminMapperImpl;
 import com.app.spoun.repository.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +28,8 @@ import java.util.TreeMap;
 @Transactional
 @Service
 @Slf4j
-public class AdminService {
+public class AdminService{
+
     @Autowired
     private IAdminRepository iAdminRepository;
 
