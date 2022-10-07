@@ -1,6 +1,7 @@
 package com.app.spoun.repository;
 
 import com.app.spoun.domain.Student;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface IStudentRepository extends JpaRepository<Student, Integer>{
+
     Page<Student> findAll(Pageable page);
 
     Optional<Student> findById(Integer id);

@@ -16,28 +16,6 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @GetMapping(value = "/schedule/{id}")
-    public ResponseEntity<?> getStudentScheduleByStudentId(@PathVariable("id") Integer id){
-        Map<String, Object> answer = new TreeMap<>();
-        try{
-            answer = studentService.getStudentScheduleByStudentId(id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
-    @GetMapping(value = "/unconfirmedSchedule/{id}")
-    public ResponseEntity<?> getStudentUnconfirmedScheduleByStudentId(@PathVariable("id") Integer id){
-        Map<String, Object> answer = new TreeMap<>();
-        try{
-            answer = studentService.getStudentUnconfirmedScheduleByStudentId(id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllStudent(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -62,6 +40,28 @@ public class StudentController {
         return ResponseEntity.ok().body(answer);
     }
 
+    @GetMapping(value = "/{id}/schedule")
+    public ResponseEntity<?> getStudentScheduleByStudentId(@PathVariable("id") Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = studentService.getStudentScheduleByStudentId(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+    @GetMapping(value = "/{id}/unconfirmedSchedule")
+    public ResponseEntity<?> getStudentUnconfirmedScheduleByStudentId(@PathVariable("id") Integer id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = studentService.getStudentUnconfirmedScheduleByStudentId(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editStudent(@RequestBody StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
@@ -73,7 +73,7 @@ public class StudentController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteStudent(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

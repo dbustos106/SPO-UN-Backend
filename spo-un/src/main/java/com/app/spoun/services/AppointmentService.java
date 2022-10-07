@@ -6,6 +6,7 @@ import com.app.spoun.mappers.*;
 import com.app.spoun.mappers.TentativeScheduleMapperImpl;
 import com.app.spoun.mappers.TentativeScheduleMapper;
 import com.app.spoun.repository.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -49,19 +50,17 @@ public class AppointmentService {
     @Autowired
     private ScheduleService scheduleService;
 
-    private RoomMapper roomMapper = new RoomMapperImpl();
-
     private AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
 
     private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
 
-    public boolean isAvailableSchedule(List<Schedule> schedules, TentativeScheduleDTO tentativeScheduleDTO) throws ParseException{
+    public boolean isAvailableSchedule(List<Schedule> schedules, String start_time, String end_time) throws ParseException{
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         for(Schedule schedule : schedules){
             Date start_schedule = new Date(sdf.parse(schedule.getStart_time()).getTime());
             Date end_schedule = new Date(sdf.parse(schedule.getEnd_time()).getTime());
-            Date start_tentative = new Date(sdf.parse(tentativeScheduleDTO.getStart_time()).getTime());
-            Date end_tentative = new Date(sdf.parse(tentativeScheduleDTO.getEnd_time()).getTime());
+            Date start_tentative = new Date(sdf.parse(start_time).getTime());
+            Date end_tentative = new Date(sdf.parse(end_time).getTime());
             if(!((start_tentative.before(start_schedule) && end_tentative.before(start_schedule)) ||
                     (start_schedule.before(start_tentative) && end_schedule.before(start_tentative)))){
                 return false;
@@ -70,7 +69,7 @@ public class AppointmentService {
         return true;
     }
 
-    public Map<String, Object> confirmAppointmentById(Integer appointmentId, Integer patientId, TentativeScheduleDTO tentativeScheduleDTO) throws ParseException{
+    public Map<String, Object> confirmAppointmentById(Integer appointmentId, Integer patientId, ScheduleDTO scheduleDTO) throws ParseException{
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointment
@@ -80,21 +79,18 @@ public class AppointmentService {
 
             // check if the schedule is available
             List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
-            if(isAvailableSchedule(schedules, tentativeScheduleDTO)){
+            if(isAvailableSchedule(schedules, scheduleDTO.getStart_time(), scheduleDTO.getEnd_time())){
 
                 // set start_time and end_time
-                appointment.setStart_time(tentativeScheduleDTO.getStart_time());
-                appointment.setEnd_time(tentativeScheduleDTO.getEnd_time());
+                appointment.setStart_time(scheduleDTO.getStart_time());
+                appointment.setEnd_time(scheduleDTO.getEnd_time());
 
                 // get patient
                 Patient patient = iPatientRepository.findById(patientId).orElse(null);
                 appointment.setPatient(patient);
 
-                // get room
+                // save schedule
                 Room room = appointment.getRoom();
-                ScheduleDTO scheduleDTO = new ScheduleDTO();
-                scheduleDTO.setStart_time(tentativeScheduleDTO.getStart_time());
-                scheduleDTO.setEnd_time(tentativeScheduleDTO.getEnd_time());
                 scheduleDTO.setRoom_id(room.getId());
                 scheduleService.saveSchedule(scheduleDTO);
 
@@ -149,25 +145,19 @@ public class AppointmentService {
             AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
             fullAppointment_DTO.setAppointment(appointmentDTO);
 
-            // get available schedules
+            // get tentative schedules
             List<TentativeSchedule> tentativeSchedules = iTentativeScheduleRepository.findByAppointment_id(id);
 
-            // map schedules
+            // map available schedules
             List<TentativeScheduleDTO> listTentativeScheduleDTOS = new ArrayList<>();
-            for(TentativeSchedule tentativeSchedule : tentativeSchedules){
-                TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
-                listTentativeScheduleDTOS.add(tentativeScheduleDTO);
-            }
-
-            // remove unavailable schedules
-            List<TentativeScheduleDTO> listAvailableTentativeScheduleDTOS = new ArrayList<>();
             List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
-            for(TentativeScheduleDTO tentativeScheduleDTO : listTentativeScheduleDTOS){
-                if(isAvailableSchedule(schedules, tentativeScheduleDTO)){
-                    listAvailableTentativeScheduleDTOS.add(tentativeScheduleDTO);
+            for(TentativeSchedule tentativeSchedule : tentativeSchedules){
+                if(isAvailableSchedule(schedules, tentativeSchedule.getStart_time(), tentativeSchedule.getEnd_time())){
+                    TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
+                    listTentativeScheduleDTOS.add(tentativeScheduleDTO);
                 }
             }
-            fullAppointment_DTO.setTentativeSchedules(listAvailableTentativeScheduleDTOS);
+            fullAppointment_DTO.setTentativeSchedules(listTentativeScheduleDTOS);
 
             // get students
             List<Student> students = iStudentRepository.findByAppointment_id(id);

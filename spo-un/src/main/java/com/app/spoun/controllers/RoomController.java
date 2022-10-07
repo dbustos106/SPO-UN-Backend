@@ -2,6 +2,7 @@ package com.app.spoun.controllers;
 
 import com.app.spoun.dto.RoomDTO;
 import com.app.spoun.services.RoomService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,7 @@ public class RoomController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteRoom(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

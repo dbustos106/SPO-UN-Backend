@@ -1,8 +1,10 @@
 package com.app.spoun.controllers;
 
 import com.app.spoun.dto.FullAppointmentDTO;
+import com.app.spoun.dto.ScheduleDTO;
 import com.app.spoun.dto.TentativeScheduleDTO;
 import com.app.spoun.services.AppointmentService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +23,10 @@ public class AppointmentController{
     public ResponseEntity<?> confirmAppointmentById(
             @PathVariable("appointmentId") Integer appointmentId,
             @PathVariable("patientId") Integer patientId,
-            @RequestBody TentativeScheduleDTO tentativeScheduleDTO){
+            @RequestBody ScheduleDTO scheduleDTO){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = appointmentService.confirmAppointmentById(appointmentId, patientId, tentativeScheduleDTO);
+            answer = appointmentService.confirmAppointmentById(appointmentId, patientId, scheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -77,7 +79,7 @@ public class AppointmentController{
         return ResponseEntity.ok().body(answer);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteAppointment(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
         try{

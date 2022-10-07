@@ -1,6 +1,7 @@
 package com.app.spoun.repository;
 
 import com.app.spoun.domain.Room;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface IRoomRepository extends JpaRepository<Room, Integer>{
+
     Page<Room> findAll(Pageable page);
     Optional<Room> findById(Integer id);
     Room save(Room room);
