@@ -131,6 +131,30 @@ public class AppointmentService {
         return answer;
     }
 
+    public Map<String, Object> getAvailableAppointment(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
+
+        // get page of appointments
+        Pageable page = PageRequest.of(idPage, size);
+        Page<Appointment> appointments = iAppointmentRepository.findAvailable(page);
+
+        // map all appointments
+        List<AppointmentDTO> listAppointmentDTOS = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
+            listAppointmentDTOS.add(appointmentDTO);
+        }
+        Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
+
+        // return page of appointments
+        if(appointmentDTOS.getSize() != 0){
+            answer.put("message", appointmentDTOS);
+        }else {
+            answer.put("error", "No appointment found");
+        }
+        return answer;
+    }
+
     public Map<String,Object> findAppointmentById(Integer id)  throws ParseException{
         Map<String,Object> answer = new TreeMap<>();
 
