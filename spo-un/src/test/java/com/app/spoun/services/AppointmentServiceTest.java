@@ -5,6 +5,7 @@ import com.app.spoun.domain.Appointment;
 import com.app.spoun.dto.AppointmentDTO;
 import com.app.spoun.dto.FullAppointmentDTO;
 import com.app.spoun.dto.ScheduleDTO;
+import com.app.spoun.dto.TentativeScheduleDTO;
 import com.app.spoun.repository.*;
 import com.app.spoun.repository.IAppointmentRepository;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,9 @@ class AppointmentServiceTest {
     private ScheduleService scheduleService;
 
     @Mock
+    private TentativeScheduleService tentativeScheduleService;
+
+    @Mock
     private Patient patient;
 
     @InjectMocks
@@ -65,7 +69,9 @@ class AppointmentServiceTest {
     private AppointmentDTO appointmentDTO;
 
     @Mock
-    private List<String> students;
+    private TentativeScheduleDTO tentativeScheduleDTO;
+
+    private List<TentativeScheduleDTO> tentativeSchedules;
 
     private FullAppointmentDTO fullAppointmentDTO;
 
@@ -85,6 +91,8 @@ class AppointmentServiceTest {
 
     private ScheduleDTO scheduleDTO;
 
+    private List<String> students;
+
     @BeforeEach
     void setUp() {
 
@@ -94,6 +102,9 @@ class AppointmentServiceTest {
         schedule.setRoom(room);
         schedule.setStart_time("11-11-2022 09:00:00");
         schedule.setEnd_time("11-11-2022 09:30:00");
+
+        tentativeSchedules = new ArrayList<>();
+        tentativeSchedules.add(tentativeScheduleDTO);
 
         tentativeSchedule = new TentativeSchedule();
         tentativeSchedule.setAppointment(appointment);
@@ -106,8 +117,8 @@ class AppointmentServiceTest {
         ArrayList<Student> studentsAL = new ArrayList<Student>();
         studentsAL.add(student);
 
-        ArrayList<TentativeSchedule> tentativeSchedules = new ArrayList<TentativeSchedule>();
-        tentativeSchedules.add(tentativeSchedule);
+        ArrayList<TentativeSchedule> tentativeSchedulesAL = new ArrayList<TentativeSchedule>();
+        tentativeSchedulesAL.add(tentativeSchedule);
 
         schedules = new ArrayList<Schedule>();
         schedules.add(schedule);
@@ -122,8 +133,16 @@ class AppointmentServiceTest {
         scheduleDTO.setStart_time("11-11-2022 09:00:00");
         scheduleDTO.setEnd_time("11-11-2022 09:30:00");
 
+        students = new ArrayList<String>();
+        students.add("usr21");
+
         fullAppointmentDTO = new FullAppointmentDTO();
         fullAppointmentDTO.setAppointment(appointmentDTO);
+        fullAppointmentDTO.setStudents(students);
+        fullAppointmentDTO.setTentativeSchedules(tentativeSchedules);
+
+        students = new ArrayList<String>();
+        students = fullAppointmentDTO.getStudents();
 
         role = new Role();
         role.setName("Student");
@@ -144,7 +163,7 @@ class AppointmentServiceTest {
         appointment.setStudents(studentsAL);
         appointment.setPatient(patient);
         appointment.setState("available");
-        appointment.setTentativeSchedules(tentativeSchedules);
+        appointment.setTentativeSchedules(tentativeSchedulesAL);
 
     }
 
@@ -174,6 +193,7 @@ class AppointmentServiceTest {
 
     @Test
     void saveAppointment(){
+        Mockito.when(iStudentRepository.findByUsername(students.get(0))).thenReturn(Optional.ofNullable(student));
         Mockito.when(iAppointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
         assertNotNull(appointmentService.saveAppointment(fullAppointmentDTO));
     }
