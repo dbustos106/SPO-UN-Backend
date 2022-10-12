@@ -2,7 +2,11 @@ package com.app.spoun.services;
 
 import com.app.spoun.domain.Building;
 import com.app.spoun.domain.Room;
+import com.app.spoun.dto.BuildingDTO;
+import com.app.spoun.dto.FullRoomDTO;
 import com.app.spoun.dto.RoomDTO;
+import com.app.spoun.mappers.BuildingMapper;
+import com.app.spoun.mappers.BuildingMapperImpl;
 import com.app.spoun.mappers.RoomMapper;
 import com.app.spoun.mappers.RoomMapperImpl;
 import com.app.spoun.repository.IBuildingRepository;
@@ -32,24 +36,32 @@ public class RoomService {
 
     private RoomMapper roomMapper = new RoomMapperImpl();
 
+    private BuildingMapper buildingMapper = new BuildingMapperImpl();
+
     public Map<String,Object> getAllRoom(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
+
+        // create list object FullRoomDTO
+        List<FullRoomDTO> listFullRoomDTOS = new ArrayList<>();
 
         // get page of rooms
         Pageable page = PageRequest.of(idPage, size);
         Page<Room> rooms = iRoomRepository.findAll(page);
 
         // map all rooms
-        List<RoomDTO> listRoomDTOS = new ArrayList<>();
         for(Room room : rooms){
+            FullRoomDTO fullRoomDTO = new FullRoomDTO();
             RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
-            listRoomDTOS.add(roomDTO);
+            Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
+            BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
+            fullRoomDTO.setRoomDTO(roomDTO);
+            fullRoomDTO.setBuildingDTO(buildingDTO);
+            listFullRoomDTOS.add(fullRoomDTO);
         }
-        Page<RoomDTO> roomDTOS = new PageImpl<>(listRoomDTOS);
 
         // return page of rooms
-        if(roomDTOS.getSize() != 0){
-            answer.put("message", roomDTOS);
+        if(listFullRoomDTOS.size() != 0){
+            answer.put("message", listFullRoomDTOS);
         }else {
             answer.put("error", "No room found");
         }
