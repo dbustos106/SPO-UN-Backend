@@ -46,6 +46,19 @@ public class AppointmentController{
         return ResponseEntity.ok().body(answer);
     }
 
+    @GetMapping(value = "/available")
+    public ResponseEntity<?> getAvailableAppointment(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = appointmentService.getAvailableAppointment(page, size);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findAppointmentById(@PathVariable("id") Integer id){
         Map<String,Object> answer = new TreeMap<>();
