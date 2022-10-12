@@ -19,6 +19,11 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Integ
     void deleteById(Integer id);
     boolean existsById(Integer id);
 
+    @Query(value = "SELECT *\n" +
+            "FROM appointment\n" +
+            "WHERE start_time IS NULL", nativeQuery = true)
+    Page<Appointment> findAvailable(Pageable page);
+
     @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN student_appointment ON appointment.id = student_appointment.appointment_id)\n" +
             "WHERE student_appointment.student_id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
