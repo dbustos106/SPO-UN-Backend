@@ -76,6 +76,7 @@ public class AppointmentService {
                 // set start_time and end_time
                 appointment.setStart_time(scheduleDTO.getStart_time());
                 appointment.setEnd_time(scheduleDTO.getEnd_time());
+                appointment.setState("Confirmed");
 
                 // get patient
                 Patient patient = iPatientRepository.findById(patientId).orElse(null);
@@ -209,7 +210,7 @@ public class AppointmentService {
             Appointment appointment = appointmentMapper.appointmentDTOToAppointment(appointmentDTO);
             appointment.setRoom(room);
             appointment.setPatient(null);
-            appointment.setState("Active");
+            appointment.setState("Available");
             appointment.setProfessor(professor);
             appointment.setStudents(new ArrayList<>());
             appointment.setTentativeSchedules(new ArrayList<>());

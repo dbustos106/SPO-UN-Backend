@@ -19,7 +19,6 @@ public interface IScheduleRepository extends JpaRepository<Schedule, Long>{
     Schedule save(ScheduleDTO scheduleDTO);
     void deleteById(Long id);
     boolean existsById(Long id);
-
     List<Schedule> findByRoom_id(Long id);
 
 }

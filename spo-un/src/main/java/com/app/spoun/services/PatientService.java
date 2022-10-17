@@ -49,6 +49,22 @@ public class PatientService{
     private final PasswordEncoder passwordEncoder;
 
 
+    public Map<String, Object> cancelAppointmentById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
+
+        // get appointment
+        Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
+
+        if(appointment != null){
+            appointment.setState("Canceled");
+            iAppointmentRepository.save(appointment);
+            answer.put("message", "Appointment canceled successfully");
+        }else{
+            answer.put("error", "No appointment found");
+        }
+        return answer;
+    }
+
     public Map<String, Object> getPatientScheduleByPatientId(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
