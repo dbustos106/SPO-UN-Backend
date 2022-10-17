@@ -71,8 +71,8 @@ class AdminServiceTest {
 
     @Test
     void findByAdminId(){
-        Mockito.when(iAdminRepository.findById(any(Integer.class))).thenReturn(Optional.of(admin));
-        assertNotNull(adminService.findAdminById(1));
+        Mockito.when(iAdminRepository.findById(any(Long.class))).thenReturn(Optional.of(admin));
+        assertNotNull(adminService.findAdminById(1L));
     }
 
     @Test
@@ -88,7 +88,7 @@ class AdminServiceTest {
 
     @Test
     void deleteAdmin(){
-        assertNotNull(adminService.deleteAdmin(1));
+        assertNotNull(adminService.deleteAdmin(1L));
     }
 
 }

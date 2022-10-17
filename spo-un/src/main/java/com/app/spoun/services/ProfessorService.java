@@ -31,33 +31,28 @@ import java.util.TreeMap;
 @Transactional
 @Service
 @Slf4j
-public class ProfessorService {
+public class ProfessorService{
 
     @Autowired
     private IProfessorRepository iProfessorRepository;
-
     @Autowired
     private IStudentRepository iStudentRepository;
-
     @Autowired
     private IPatientRepository iPatientRepository;
-
     @Autowired
     private IAdminRepository iAdminRepository;
-
     @Autowired
     private IRoleRepository iRoleRepository;
-
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
 
     private ProfessorMapper professorMapper = new ProfessorMapperImpl();
-
     private StudentMapper studentMapper = new StudentMapperImpl();
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getProfessorScheduleByProfessorId(Integer id){
+
+    public Map<String, Object> getProfessorScheduleByProfessorId(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointments
@@ -105,7 +100,7 @@ public class ProfessorService {
         return answer;
     }
 
-    public Map<String,Object> findProfessorById(Integer id){
+    public Map<String,Object> findProfessorById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Professor professor = iProfessorRepository.findById(id).orElse(null);
         ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
@@ -117,7 +112,7 @@ public class ProfessorService {
         return answer;
     }
 
-    public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Integer id){
+    public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Long id){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of students
@@ -193,7 +188,7 @@ public class ProfessorService {
         return answer;
     }
 
-    public Map<String,Object> deleteProfessor(Integer id){
+    public Map<String,Object> deleteProfessor(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iProfessorRepository.existsById(id)){
             iProfessorRepository.deleteById(id);

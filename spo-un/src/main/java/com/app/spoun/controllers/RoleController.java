@@ -16,6 +16,7 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllRole(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -30,7 +31,7 @@ public class RoleController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findRoleById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findRoleById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = roleService.findRoleById(id);
@@ -63,7 +64,7 @@ public class RoleController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteRole(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteRole(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = roleService.deleteRole(id);

@@ -30,15 +30,19 @@ import static org.springframework.http.HttpMethod.POST;
 public class SecurityConfig {
 
     @Autowired
+    private JwtIOPropieties jwtIOPropieties;
+    @Autowired
     private UserDetailsService userDetailsService;
-
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
 
+
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean(authenticationConfiguration));
+        CustomAuthenticationFilter customAuthenticationFilter =
+                new CustomAuthenticationFilter(authenticationManagerBean(authenticationConfiguration), jwtIOPropieties);
         customAuthenticationFilter.setFilterProcessesUrl("/auth/login");
+
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/auth/login/**", "/auth/tokenRefresh/**", "/register/patient/**").permitAll();
@@ -49,8 +53,9 @@ public class SecurityConfig {
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(new CustomAuthoritationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthoritationFilter(jwtIOPropieties), UsernamePasswordAuthenticationFilter.class);
         http.authenticationProvider(daoAuthenticationProvider());
+
         return http.build();
     }
 

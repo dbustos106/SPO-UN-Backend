@@ -1,6 +1,6 @@
 package com.app.spoun.filter;
 
-import com.app.spoun.security.JwtIOComponent;
+import com.app.spoun.security.JwtIOPropieties;
 import com.app.spoun.utils.JWTUtil;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class CustomAuthoritationFilter extends OncePerRequestFilter {
 
-    private static String SECRET = JwtIOComponent.SECRET;
+    private final JwtIOPropieties jwtIOPropieties;
+
+    public CustomAuthoritationFilter(JwtIOPropieties jwtIOPropieties){
+        this.jwtIOPropieties = jwtIOPropieties;
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -39,12 +44,12 @@ public class CustomAuthoritationFilter extends OncePerRequestFilter {
                 try {
 
                     String token = authorizationHeader.substring("Bearer ".length());
-                    DecodedJWT decodedJWT = JWTUtil.verifyToken(token, SECRET);
+                    DecodedJWT decodedJWT = JWTUtil.verifyToken(token, jwtIOPropieties.getToken().getSecret());
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
 
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    authorities.add(new SimpleGrantedAuthority(roles[1]));
+                    authorities.add(new SimpleGrantedAuthority(roles[0]));
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);

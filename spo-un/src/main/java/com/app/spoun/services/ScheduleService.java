@@ -27,11 +27,11 @@ public class ScheduleService {
 
     @Autowired
     private IScheduleRepository iScheduleRepository;
-
     @Autowired
     private IRoomRepository iRoomRepository;
 
     private ScheduleMapper scheduleMapper = new ScheduleMapperImpl();
+
 
     public Map<String,Object> getAllSchedule(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
@@ -57,7 +57,7 @@ public class ScheduleService {
         return answer;
     }
 
-    public Map<String,Object> findScheduleById(Integer id){
+    public Map<String,Object> findScheduleById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Schedule schedule = iScheduleRepository.findById(id).orElse(null);
         ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
@@ -103,7 +103,7 @@ public class ScheduleService {
         return answer;
     }
 
-    public Map<String,Object> deleteSchedule(Integer id){
+    public Map<String,Object> deleteSchedule(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iScheduleRepository.existsById(id)){
             iScheduleRepository.deleteById(id);

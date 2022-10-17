@@ -16,6 +16,7 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllStudent(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -30,7 +31,7 @@ public class StudentController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findStudentById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findStudentById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = studentService.findStudentById(id);
@@ -41,7 +42,7 @@ public class StudentController {
     }
 
     @GetMapping(value = "/{id}/schedule")
-    public ResponseEntity<?> getStudentScheduleByStudentId(@PathVariable("id") Integer id){
+    public ResponseEntity<?> getStudentScheduleByStudentId(@PathVariable("id") Long id){
         Map<String, Object> answer = new TreeMap<>();
         try{
             answer = studentService.getStudentScheduleByStudentId(id);
@@ -52,7 +53,7 @@ public class StudentController {
     }
 
     @GetMapping(value = "/{id}/unconfirmedSchedule")
-    public ResponseEntity<?> getStudentUnconfirmedScheduleByStudentId(@PathVariable("id") Integer id){
+    public ResponseEntity<?> getStudentUnconfirmedScheduleByStudentId(@PathVariable("id") Long id){
         Map<String, Object> answer = new TreeMap<>();
         try{
             answer = studentService.getStudentUnconfirmedScheduleByStudentId(id);
@@ -74,7 +75,7 @@ public class StudentController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteStudent(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteStudent(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = studentService.deleteStudent(id);

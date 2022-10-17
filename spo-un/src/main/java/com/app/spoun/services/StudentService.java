@@ -31,34 +31,29 @@ import java.util.TreeMap;
 @Service
 @Slf4j
 public class StudentService {
+
     @Autowired
     private IStudentRepository iStudentRepository;
-
     @Autowired
     private IProfessorRepository iProfessorRepository;
-
     @Autowired
     private IPatientRepository iPatientRepository;
-
     @Autowired
     private IAdminRepository iAdminRepository;
-
     @Autowired
     private IRoleRepository iRoleRepository;
-
     @Autowired
     private ITentativeScheduleRepository iTentativeScheduleRepository;
-
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
 
     private StudentMapper studentMapper = new StudentMapperImpl();
-
     private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getStudentScheduleByStudentId(Integer id){
+
+    public Map<String, Object> getStudentScheduleByStudentId(Long id){
         Map<String,Object> answer = new TreeMap<>();
 
         // get appointments
@@ -82,7 +77,7 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String, Object> getStudentUnconfirmedScheduleByStudentId(Integer id){
+    public Map<String, Object> getStudentUnconfirmedScheduleByStudentId(Long id){
         Map<String,Object> answer = new TreeMap<>();
 
         // get schedules
@@ -129,7 +124,7 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String,Object> findStudentById(Integer id){
+    public Map<String,Object> findStudentById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Student student = iStudentRepository.findById(id).orElse(null);
         StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
@@ -195,7 +190,7 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String,Object> deleteStudent(Integer id){
+    public Map<String,Object> deleteStudent(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iStudentRepository.existsById(id)){
             iStudentRepository.deleteById(id);

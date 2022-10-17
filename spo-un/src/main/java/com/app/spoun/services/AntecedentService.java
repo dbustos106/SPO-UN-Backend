@@ -27,13 +27,13 @@ public class AntecedentService{
 
     @Autowired
     private IAntecedentRepository iAntecedentRepository;
-
     @Autowired
     private IPatientRepository iPatientRepository;
 
     private AntecedentMapper antecedentMapper = new AntecedentMapperImpl();
 
-    public Map<String,Object> getAllAntecedent (Integer idPage, Integer size){
+
+    public Map<String,Object> getAllAntecedent(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of antecedents
@@ -57,7 +57,7 @@ public class AntecedentService{
         return answer;
     }
 
-    public Map<String,Object> findAntecedentById(Integer id){
+    public Map<String,Object> findAntecedentById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Antecedent antecedent = iAntecedentRepository.findById(id).orElse(null);
         AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
@@ -103,7 +103,7 @@ public class AntecedentService{
         return answer;
     }
 
-    public Map<String,Object> deleteAntecedent(Integer id){
+    public Map<String,Object> deleteAntecedent(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iAntecedentRepository.existsById(id)){
             iAntecedentRepository.deleteById(id);

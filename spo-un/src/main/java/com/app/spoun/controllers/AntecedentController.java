@@ -17,6 +17,7 @@ public class AntecedentController {
     @Autowired
     private AntecedentService antecedentService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllAntecedent(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -31,7 +32,7 @@ public class AntecedentController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findAntecedentById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findAntecedentById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = antecedentService.findAntecedentById(id);
@@ -64,7 +65,7 @@ public class AntecedentController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteAntecedent(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteAntecedent(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = antecedentService.deleteAntecedent(id);

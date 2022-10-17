@@ -33,19 +33,14 @@ public class PatientService{
 
     @Autowired
     private IPatientRepository iPatientRepository;
-
     @Autowired
     private IStudentRepository iStudentRepository;
-
     @Autowired
     private IProfessorRepository iProfessorRepository;
-
     @Autowired
     private IAdminRepository iAdminRepository;
-
     @Autowired
     private IRoleRepository iRoleRepository;
-
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
 
@@ -53,7 +48,8 @@ public class PatientService{
 
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, Object> getPatientScheduleByPatientId(Integer id){
+
+    public Map<String, Object> getPatientScheduleByPatientId(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointments
@@ -101,7 +97,7 @@ public class PatientService{
         return answer;
     }
 
-    public Map<String,Object> findPatientById(Integer id){
+    public Map<String,Object> findPatientById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Patient patient = iPatientRepository.findById(id).orElse(null);
         PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
@@ -165,7 +161,7 @@ public class PatientService{
         return answer;
     }
 
-    public Map<String,Object> deletePatient(Integer id){
+    public Map<String,Object> deletePatient(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iPatientRepository.existsById(id)){
             iPatientRepository.deleteById(id);

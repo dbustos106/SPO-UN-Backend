@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IAdminRepository extends JpaRepository<Admin, Integer>{
+public interface IAdminRepository extends JpaRepository<Admin, Long>{
 
     Page<Admin> findAll(Pageable page);
-    Optional<Admin> findById(Integer id);
+    Optional<Admin> findById(Long id);
     Optional<Admin> findByUsername(String username);
     Admin save(Admin admin);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
     boolean existsByUsername(String username);
 
 }

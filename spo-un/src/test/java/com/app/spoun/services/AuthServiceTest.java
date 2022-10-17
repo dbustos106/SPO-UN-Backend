@@ -52,14 +52,14 @@ class AuthServiceTest {
         role = new Role();
 
         admin = new Admin();
-        admin.setId(1);
+        admin.setId(1L);
         admin.setUsername("Admin");
         admin.setPassword("pass");
         role.setName("Admin");
         admin.setRole(role);
 
         patient = new Patient();
-        patient.setId(1);
+        patient.setId(1L);
         patient.setUsername("Laura");
         patient.setPassword("pass");
         patient.setName("Laura Jimenez");
@@ -70,7 +70,7 @@ class AuthServiceTest {
         patient.setRole(role);
 
         professor = new Professor();
-        professor.setId(1);
+        professor.setId(1L);
         professor.setPassword("pass");
         professor.setName("Juana");
         professor.setDocument_type("cc");
@@ -79,7 +79,7 @@ class AuthServiceTest {
         professor.setRole(role);
 
         student = new Student();
-        student.setId(1);
+        student.setId(1L);
         student.setPassword("pass");
         student.setName("Julian");
         student.setDocument_type("cc");

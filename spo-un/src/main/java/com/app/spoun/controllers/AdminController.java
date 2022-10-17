@@ -17,6 +17,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllAdmin(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -31,7 +32,7 @@ public class AdminController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findAdminById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findAdminById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = adminService.findAdminById(id);
@@ -53,7 +54,7 @@ public class AdminController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteAdmin(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteAdmin(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = adminService.deleteAdmin(id);

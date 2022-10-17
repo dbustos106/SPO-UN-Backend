@@ -9,12 +9,12 @@ import lombok.ToString;
 @ToString
 public class TentativeScheduleDTO {
 
-    private Integer id;
+    private Long id;
 
     private String start_time;
 
     private String end_time;
 
-    private Integer appointment_id;
+    private Long appointment_id;
 
 }

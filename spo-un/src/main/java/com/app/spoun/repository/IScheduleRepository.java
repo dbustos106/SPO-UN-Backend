@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IScheduleRepository extends JpaRepository<Schedule, Integer>{
+public interface IScheduleRepository extends JpaRepository<Schedule, Long>{
 
     Page<Schedule> findAll(Pageable page);
-    Optional<Schedule> findById(Integer id);
+    Optional<Schedule> findById(Long id);
     Schedule save(ScheduleDTO scheduleDTO);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
 
-    List<Schedule> findByRoom_id(Integer id);
+    List<Schedule> findByRoom_id(Long id);
 
 }

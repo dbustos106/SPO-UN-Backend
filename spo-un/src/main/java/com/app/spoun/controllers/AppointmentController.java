@@ -2,7 +2,6 @@ package com.app.spoun.controllers;
 
 import com.app.spoun.dto.FullAppointmentDTO;
 import com.app.spoun.dto.ScheduleDTO;
-import com.app.spoun.dto.TentativeScheduleDTO;
 import com.app.spoun.services.AppointmentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,11 @@ public class AppointmentController{
     @Autowired
     private AppointmentService appointmentService;
 
+
     @PutMapping(value = "/confirm/{appointmentId}/{patientId}")
     public ResponseEntity<?> confirmAppointmentById(
-            @PathVariable("appointmentId") Integer appointmentId,
-            @PathVariable("patientId") Integer patientId,
+            @PathVariable("appointmentId") Long appointmentId,
+            @PathVariable("patientId") Long patientId,
             @RequestBody ScheduleDTO scheduleDTO){
         Map<String, Object> answer = new TreeMap<>();
         try{
@@ -60,7 +60,7 @@ public class AppointmentController{
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findAppointmentById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findAppointmentById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = appointmentService.findAppointmentById(id);
@@ -93,7 +93,7 @@ public class AppointmentController{
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteAppointment(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteAppointment(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = appointmentService.deleteAppointment(id);

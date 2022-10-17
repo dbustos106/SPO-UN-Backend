@@ -17,6 +17,7 @@ public class ProfessorController {
     @Autowired
     private ProfessorService professorService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllProfessor(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -31,7 +32,7 @@ public class ProfessorController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findProfessorById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findProfessorById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = professorService.findProfessorById(id);
@@ -42,7 +43,7 @@ public class ProfessorController {
     }
 
     @GetMapping(value = "/{id}/schedule")
-    public ResponseEntity<?> getProfessorScheduleByProfessorId(@PathVariable("id") Integer id){
+    public ResponseEntity<?> getProfessorScheduleByProfessorId(@PathVariable("id") Long id){
         Map<String, Object> answer = new TreeMap<>();
         try{
             answer = professorService.getProfessorScheduleByProfessorId(id);
@@ -54,7 +55,7 @@ public class ProfessorController {
 
     @GetMapping(value = "/{id}/students")
     public ResponseEntity<?> getStudentsByProfessorId(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") Long id,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
@@ -78,7 +79,7 @@ public class ProfessorController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteProfessor(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteProfessor(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = professorService.deleteProfessor(id);

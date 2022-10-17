@@ -27,11 +27,11 @@ public class TentativeScheduleService {
 
     @Autowired
     private ITentativeScheduleRepository iTentativeScheduleRepository;
-
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
 
     private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
+
 
     public Map<String,Object> getAllTentativeSchedule(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
@@ -57,7 +57,7 @@ public class TentativeScheduleService {
         return answer;
     }
 
-    public Map<String,Object> findTentativeScheduleById(Integer id){
+    public Map<String,Object> findTentativeScheduleById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         TentativeSchedule tentativeSchedule = iTentativeScheduleRepository.findById(id).orElse(null);
         TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
@@ -103,7 +103,7 @@ public class TentativeScheduleService {
         return answer;
     }
 
-    public Map<String,Object> deleteTentativeSchedule(Integer id){
+    public Map<String,Object> deleteTentativeSchedule(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iTentativeScheduleRepository.existsById(id)){
             iTentativeScheduleRepository.deleteById(id);

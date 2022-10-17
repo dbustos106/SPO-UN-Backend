@@ -25,34 +25,26 @@ public class AppointmentService {
 
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
-
     @Autowired
     private IRoomRepository iRoomRepository;
-
     @Autowired
     private IPatientRepository iPatientRepository;
-
     @Autowired
     private IProfessorRepository iProfessorRepository;
-
     @Autowired
     private IStudentRepository iStudentRepository;
-
     @Autowired
     private ITentativeScheduleRepository iTentativeScheduleRepository;
-
     @Autowired
     private IScheduleRepository iScheduleRepository;
-
     @Autowired
     private TentativeScheduleService tentativeScheduleService;
-
     @Autowired
     private ScheduleService scheduleService;
 
     private AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
-
     private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
+
 
     public boolean isAvailableSchedule(List<Schedule> schedules, String start_time, String end_time) throws ParseException{
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -69,7 +61,7 @@ public class AppointmentService {
         return true;
     }
 
-    public Map<String, Object> confirmAppointmentById(Integer appointmentId, Integer patientId, ScheduleDTO scheduleDTO) throws ParseException{
+    public Map<String, Object> confirmAppointmentById(Long appointmentId, Long patientId, ScheduleDTO scheduleDTO) throws ParseException{
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointment
@@ -155,7 +147,7 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String,Object> findAppointmentById(Integer id)  throws ParseException{
+    public Map<String,Object> findAppointmentById(Long id)  throws ParseException{
         Map<String,Object> answer = new TreeMap<>();
 
         // create object Appointment_ScheduleDTO
@@ -298,7 +290,7 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String,Object> deleteAppointment(Integer id){
+    public Map<String,Object> deleteAppointment(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iAppointmentRepository.existsById(id)){
             iAppointmentRepository.deleteById(id);

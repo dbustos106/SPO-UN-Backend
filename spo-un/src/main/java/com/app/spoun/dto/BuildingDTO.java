@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class BuildingDTO {
 
-    private Integer id;
+    private Long id;
 
     private String name;
 

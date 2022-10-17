@@ -17,6 +17,7 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllPatient(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -31,7 +32,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findPatientById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findPatientById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = patientService.findPatientById(id);
@@ -42,7 +43,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/{id}/schedule")
-    public ResponseEntity<?> getPatientScheduleByPatientId(@PathVariable("id") Integer id){
+    public ResponseEntity<?> getPatientScheduleByPatientId(@PathVariable("id") Long id){
         Map<String, Object> answer = new TreeMap<>();
         try{
             answer = patientService.getPatientScheduleByPatientId(id);
@@ -64,7 +65,7 @@ public class PatientController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deletePatient(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deletePatient(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = patientService.deletePatient(id);

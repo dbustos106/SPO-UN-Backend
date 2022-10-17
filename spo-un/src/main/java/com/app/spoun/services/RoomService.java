@@ -28,15 +28,15 @@ import java.util.TreeMap;
 @Transactional
 @Service
 public class RoomService {
+
     @Autowired
     private IRoomRepository iRoomRepository;
-
     @Autowired
     private IBuildingRepository iBuildingRepository;
 
     private RoomMapper roomMapper = new RoomMapperImpl();
-
     private BuildingMapper buildingMapper = new BuildingMapperImpl();
+
 
     public Map<String,Object> getAllRoom(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
@@ -68,7 +68,7 @@ public class RoomService {
         return answer;
     }
 
-    public Map<String,Object> findRoomById(Integer id){
+    public Map<String,Object> findRoomById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Room room = iRoomRepository.findById(id).orElse(null);
         RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
@@ -116,7 +116,7 @@ public class RoomService {
         return answer;
     }
 
-    public Map<String,Object> deleteRoom(Integer id){
+    public Map<String,Object> deleteRoom(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iRoomRepository.existsById(id)){
             iRoomRepository.deleteById(id);

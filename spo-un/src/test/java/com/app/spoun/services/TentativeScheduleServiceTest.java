@@ -56,8 +56,8 @@ class TentativeScheduleServiceTest {
 
     @Test
     void findTentativeScheduleById(){
-        Mockito.when(iTentativeScheduleRepository.findById(any(Integer.class))).thenReturn(Optional.of(tentativeSchedule));
-        assertNotNull(tentativeScheduleService.findTentativeScheduleById(1));
+        Mockito.when(iTentativeScheduleRepository.findById(any(Long.class))).thenReturn(Optional.of(tentativeSchedule));
+        assertNotNull(tentativeScheduleService.findTentativeScheduleById(1L));
     }
 
     @Test
@@ -70,5 +70,5 @@ class TentativeScheduleServiceTest {
     void editTentativeSchedule(){ assertNotNull(tentativeScheduleService.editTentativeSchedule(new TentativeScheduleDTO())); }
 
     @Test
-    void deleteTentativeSchedule(){ assertNotNull(tentativeScheduleService.deleteTentativeSchedule(1)); }
+    void deleteTentativeSchedule(){ assertNotNull(tentativeScheduleService.deleteTentativeSchedule(1L)); }
 }

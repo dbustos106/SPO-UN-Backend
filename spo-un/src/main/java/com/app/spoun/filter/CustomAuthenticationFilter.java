@@ -1,6 +1,7 @@
 package com.app.spoun.filter;
 
-import com.app.spoun.security.JwtIOComponent;
+import com.app.spoun.security.ApplicationUser;
+import com.app.spoun.security.JwtIOPropieties;
 import com.app.spoun.utils.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -25,16 +25,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private static String ISSUER = JwtIOComponent.ISSUER;
-    private static String SECRET = JwtIOComponent.SECRET;
-    private static int ACCESS_EXPIRES_IN = JwtIOComponent.ACCESS_EXPIRES_IN;
-    private static int REFRESH_EXPIRES_IN = JwtIOComponent.REFRESH_EXPIRES_IN;
-
+    private final JwtIOPropieties jwtIOPropieties;
     private final AuthenticationManager authenticationManager;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager){
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtIOPropieties jwtIOPropieties){
         this.authenticationManager = authenticationManager;
+        this.jwtIOPropieties = jwtIOPropieties;
     }
+
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -46,10 +44,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        User user = (User) authentication.getPrincipal();
+        ApplicationUser user = (ApplicationUser) authentication.getPrincipal();
 
-        String access_token = JWTUtil.createToken(user, SECRET, ISSUER, ACCESS_EXPIRES_IN);
-        String refresh_token = JWTUtil.createToken(user, SECRET, ISSUER, REFRESH_EXPIRES_IN);
+        String access_token = JWTUtil.createToken(user, jwtIOPropieties.getToken().getSecret(),
+                jwtIOPropieties.getIssuer(), jwtIOPropieties.getToken().getAccess_expires_in());
+        String refresh_token = JWTUtil.createToken(user, jwtIOPropieties.getToken().getSecret(),
+                jwtIOPropieties.getIssuer(), jwtIOPropieties.getToken().getRefresh_expires_in());
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);

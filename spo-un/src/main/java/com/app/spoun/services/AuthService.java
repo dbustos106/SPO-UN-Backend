@@ -10,12 +10,12 @@ import com.app.spoun.repository.IPatientRepository;
 import com.app.spoun.repository.IProfessorRepository;
 import com.app.spoun.repository.IStudentRepository;
 
+import com.app.spoun.security.ApplicationUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,15 +33,13 @@ public class AuthService implements UserDetailsService {
 
     @Autowired
     private IStudentRepository iStudentRepository;
-
     @Autowired
     private IProfessorRepository iProfessorRepository;
-
     @Autowired
     private IPatientRepository iPatientRepository;
-
     @Autowired
     private IAdminRepository iAdminRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -49,27 +47,27 @@ public class AuthService implements UserDetailsService {
 
         Patient patient = iPatientRepository.findByUsername(username).orElse(null);
         if(patient != null){
-            authorities.add(new SimpleGrantedAuthority(patient.getId().toString()));
             authorities.add(new SimpleGrantedAuthority(patient.getRole().getName()));
-            return new User(patient.getUsername(), patient.getPassword(), authorities);
+            return new ApplicationUser(patient.getId(), patient.getUsername(), patient.getPassword(), authorities,
+                    true, true, true, true);
         }else{
             Student student = iStudentRepository.findByUsername(username).orElse(null);
             if(student != null){
-                authorities.add(new SimpleGrantedAuthority(student.getId().toString()));
                 authorities.add(new SimpleGrantedAuthority(student.getRole().getName()));
-                return new User(student.getUsername(), student.getPassword(), authorities);
+                return new ApplicationUser(student.getId(), student.getUsername(), student.getPassword(), authorities,
+                        true, true, true, true);
             }else{
                 Professor professor = iProfessorRepository.findByUsername(username).orElse(null);
                 if(professor != null){
-                    authorities.add(new SimpleGrantedAuthority(professor.getId().toString()));
                     authorities.add(new SimpleGrantedAuthority(professor.getRole().getName()));
-                    return new User(professor.getUsername(), professor.getPassword(), authorities);
+                    return new ApplicationUser(professor.getId(), professor.getUsername(), professor.getPassword(), authorities,
+                            true, true, true, true);
                 }else{
                     Admin admin = iAdminRepository.findByUsername(username).orElse(null);
                     if(admin != null){
-                        authorities.add(new SimpleGrantedAuthority(admin.getId().toString()));
                         authorities.add(new SimpleGrantedAuthority(admin.getRole().getName()));
-                        return new User(admin.getUsername(), admin.getPassword(), authorities);
+                        return new ApplicationUser(admin.getId(), admin.getUsername(), admin.getPassword(), authorities,
+                                true, true, true, true);
                     }else{
                         throw new UsernameNotFoundException("User not found in the database");
                     }

@@ -25,15 +25,13 @@ public class RegisterController {
 
     @Autowired
     private StudentService studentService;
-
     @Autowired
     private ProfessorService professorService;
-
     @Autowired
     private PatientService patientService;
-
     @Autowired
     private AdminService adminService;
+
 
     @PostMapping(value = "/student")
     public ResponseEntity<?> saveStudent(@RequestBody StudentDTO studentDTO){

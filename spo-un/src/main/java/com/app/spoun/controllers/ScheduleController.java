@@ -17,6 +17,7 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllSchedule(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -31,7 +32,7 @@ public class ScheduleController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findScheduleById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findScheduleById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = scheduleService.findScheduleById(id);
@@ -64,7 +65,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteSchedule(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteSchedule(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = scheduleService.deleteSchedule(id);

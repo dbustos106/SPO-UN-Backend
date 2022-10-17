@@ -85,8 +85,8 @@ class StudentServiceTest {
 
     @Test
     void findStudentById(){
-        Mockito.when(iStudentRepository.findById(any(Integer.class))).thenReturn(Optional.of(student));
-        assertNotNull(studentService.findStudentById(1));
+        Mockito.when(iStudentRepository.findById(any(Long.class))).thenReturn(Optional.of(student));
+        assertNotNull(studentService.findStudentById(1L));
     }
 
     @Test
@@ -102,7 +102,7 @@ class StudentServiceTest {
 
     @Test
     void deleteStudent(){
-        assertNotNull(studentService.deleteStudent(1));
+        assertNotNull(studentService.deleteStudent(1L));
     }
 
 }

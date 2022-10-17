@@ -9,10 +9,10 @@ import lombok.ToString;
 @ToString
 public class RoomDTO {
 
-    private Integer id;
+    private Long id;
 
     private String name;
 
-    private Integer building_id;
+    private Long building_id;
 
 }

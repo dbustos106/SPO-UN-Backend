@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IProfessorRepository extends JpaRepository<Professor, Integer>{
+public interface IProfessorRepository extends JpaRepository<Professor, Long>{
 
     Page<Professor> findAll(Pageable page);
-    Optional<Professor> findById(Integer id);
+    Optional<Professor> findById(Long id);
     Optional<Professor> findByUsername(String username);
     Professor save(Professor professor);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
     boolean existsByUsername(String username);
 
 }

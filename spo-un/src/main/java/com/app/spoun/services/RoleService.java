@@ -31,7 +31,8 @@ public class RoleService {
 
     private RoleMapper roleMapper = new RoleMapperImpl();
 
-    public Map<String,Object> getAllRole (Integer idPage, Integer size){
+
+    public Map<String,Object> getAllRole(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of roles
@@ -55,7 +56,7 @@ public class RoleService {
         return answer;
     }
 
-    public Map<String,Object> findRoleById(Integer id){
+    public Map<String,Object> findRoleById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Role role = iRoleRepository.findById(id).orElse(null);
         RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
@@ -103,7 +104,7 @@ public class RoleService {
         return answer;
     }
 
-    public Map<String,Object> deleteRole(Integer id){
+    public Map<String,Object> deleteRole(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iRoleRepository.existsById(id)){
             iRoleRepository.deleteById(id);

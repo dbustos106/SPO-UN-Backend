@@ -17,6 +17,7 @@ public class BuildingController {
     @Autowired
     private BuildingService buildingService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllBuilding(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -31,7 +32,7 @@ public class BuildingController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findBuildingById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findBuildingById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = buildingService.findBuildingById(id);
@@ -64,7 +65,7 @@ public class BuildingController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteBuilding(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteBuilding(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = buildingService.deleteBuilding(id);

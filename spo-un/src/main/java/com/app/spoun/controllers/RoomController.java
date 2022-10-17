@@ -17,6 +17,7 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllRoom(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -31,7 +32,7 @@ public class RoomController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findRoomById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findRoomById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = roomService.findRoomById(id);
@@ -64,7 +65,7 @@ public class RoomController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteRoom(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteRoom(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = roomService.deleteRoom(id);

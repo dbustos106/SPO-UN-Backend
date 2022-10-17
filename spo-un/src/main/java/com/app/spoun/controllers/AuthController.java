@@ -1,12 +1,12 @@
 package com.app.spoun.controllers;
 
+import com.app.spoun.security.ApplicationUser;
+import com.app.spoun.security.JwtIOPropieties;
 import com.app.spoun.services.AuthService;
 import com.app.spoun.utils.JWTUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,15 +26,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Value("${jms.jwt.issuer:none}")
-    private String ISSUER;
-    @Value("${jms.jwt.token.secret:secret}")
-    private String SECRET;
-    @Value("${jms.jwt.token.access_expires_in:600000}")
-    private int ACCESS_EXPIRES_IN;
-
     @Autowired
     private AuthService authService;
+    @Autowired
+    private JwtIOPropieties jwtIOPropieties;
+
 
     @GetMapping(value = "/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -42,10 +38,12 @@ public class AuthController {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
-                String username = JWTUtil.verifyToken(refresh_token, SECRET).getSubject();
+                String subject = JWTUtil.verifyToken(refresh_token, jwtIOPropieties.getToken().getSecret()).getSubject();
+                String username = subject.substring(0 , subject.indexOf(","));
 
-                UserDetails user = authService.loadUserByUsername(username);
-                String access_token = JWTUtil.createToken(user, SECRET, ISSUER, ACCESS_EXPIRES_IN);
+                ApplicationUser user = (ApplicationUser) authService.loadUserByUsername(username);
+                String access_token = JWTUtil.createToken(user, jwtIOPropieties.getToken().getSecret(),
+                        jwtIOPropieties.getIssuer(), jwtIOPropieties.getToken().getAccess_expires_in());
 
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);

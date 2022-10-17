@@ -12,27 +12,27 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IStudentRepository extends JpaRepository<Student, Integer>{
+public interface IStudentRepository extends JpaRepository<Student, Long>{
 
     Page<Student> findAll(Pageable page);
 
-    Optional<Student> findById(Integer id);
+    Optional<Student> findById(Long id);
 
     Optional<Student> findByUsername(String username);
 
     Student save(Student student);
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
-    boolean existsById(Integer id);
+    boolean existsById(Long id);
 
     boolean existsByUsername(String username);
 
-    Page<Student> findByProfessor_id(Integer id, Pageable page);
+    Page<Student> findByProfessor_id(Long id, Pageable page);
 
     @Query(value = "SELECT id, username, password, name, document_type, document_number, professor_id, role_id\n" +
             "FROM (student INNER JOIN student_appointment ON student.id = student_appointment.student_id)\n" +
             "WHERE student_appointment.appointment_id = ?1", nativeQuery = true)
-    List<Student> findByAppointment_id(Integer id);
+    List<Student> findByAppointment_id(Long id);
 
 }

@@ -76,8 +76,8 @@ class PatientServiceTest {
 
     @Test
     void findByPatientId(){
-        Mockito.when(iPatientRepository.findById(any(Integer.class))).thenReturn(Optional.of(patient));
-        assertNotNull(patientService.findPatientById(1));
+        Mockito.when(iPatientRepository.findById(any(Long.class))).thenReturn(Optional.of(patient));
+        assertNotNull(patientService.findPatientById(1L));
     }
 
     @Test
@@ -93,7 +93,7 @@ class PatientServiceTest {
 
     @Test
     void deletePatient(){
-        assertNotNull(patientService.deletePatient(1));
+        assertNotNull(patientService.deletePatient(1L));
     }
 
 }

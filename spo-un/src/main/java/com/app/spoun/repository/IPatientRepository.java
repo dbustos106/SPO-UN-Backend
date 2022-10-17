@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IPatientRepository extends JpaRepository<Patient, Integer>{
+public interface IPatientRepository extends JpaRepository<Patient, Long>{
     Page<Patient> findAll(Pageable page);
-    Optional<Patient> findById(Integer id);
+    Optional<Patient> findById(Long id);
     Optional<Patient> findByUsername(String username);
     Patient save(Patient patient);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
     boolean existsByUsername(String username);
 
 }

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IAntecedentRepository extends JpaRepository<Antecedent, Integer>{
+public interface IAntecedentRepository extends JpaRepository<Antecedent, Long>{
     Page<Antecedent> findAll(Pageable page);
-    Optional<Antecedent> findById(Integer id);
+    Optional<Antecedent> findById(Long id);
     Antecedent save(Antecedent antecedent);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
 
 }

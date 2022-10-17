@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class PatientDTO {
 
-    private Integer id;
+    private Long id;
 
     private String username;
 
@@ -29,6 +29,6 @@ public class PatientDTO {
 
     private String blood_type;
 
-    private Integer role_id;
+    private Long role_id;
 
 }

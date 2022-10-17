@@ -10,11 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IBuildingRepository extends JpaRepository<Building, Integer>{
+public interface IBuildingRepository extends JpaRepository<Building, Long>{
     Page<Building> findAll(Pageable page);
-    Optional<Building> findById(Integer id);
+    Optional<Building> findById(Long id);
     Building save(Building building);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
 
 }

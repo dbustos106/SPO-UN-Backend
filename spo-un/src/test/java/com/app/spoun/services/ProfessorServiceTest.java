@@ -77,15 +77,15 @@ class ProfessorServiceTest {
 
     @Test
     void findProfessorById(){
-        Mockito.when(iProfessorRepository.findById(any(Integer.class))).thenReturn(Optional.of(professor));
-        assertNotNull(professorService.findProfessorById(1));
+        Mockito.when(iProfessorRepository.findById(any(Long.class))).thenReturn(Optional.of(professor));
+        assertNotNull(professorService.findProfessorById(1L));
     }
 
     @Test
     void findStudentsByProfessorId(){
         Page<Student> students = new PageImpl<>(Arrays.asList(student));;
-        Mockito.when(iStudentRepository.findByProfessor_id(any(Integer.class), any(Pageable.class))).thenReturn(students);
-        assertNotNull(professorService.getStudentsByProfessorId(0, 10, 1));
+        Mockito.when(iStudentRepository.findByProfessor_id(any(Long.class), any(Pageable.class))).thenReturn(students);
+        assertNotNull(professorService.getStudentsByProfessorId(0, 10,1L));
     }
 
 
@@ -102,7 +102,7 @@ class ProfessorServiceTest {
 
     @Test
     void deleteProfessor(){
-        assertNotNull(professorService.deleteProfessor(1));
+        assertNotNull(professorService.deleteProfessor(1L));
     }
 
 }

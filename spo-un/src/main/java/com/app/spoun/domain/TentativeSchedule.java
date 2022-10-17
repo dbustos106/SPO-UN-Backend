@@ -12,7 +12,7 @@ public class TentativeSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "start_time")
     private String start_time;

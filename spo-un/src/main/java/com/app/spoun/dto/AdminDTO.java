@@ -9,12 +9,12 @@ import lombok.ToString;
 @ToString
 public class AdminDTO {
 
-    private Integer id;
+    private Long id;
 
     private String username;
 
     private String password;
 
-    private Integer role_id;
+    private Long role_id;
 
 }

@@ -187,8 +187,8 @@ class AppointmentServiceTest {
 
     @Test
     void findAppointmentById() throws ParseException {
-        Mockito.when(iAppointmentRepository.findById(any(Integer.class))).thenReturn(Optional.of(appointment));
-        assertNotNull(appointmentService.findAppointmentById(1));
+        Mockito.when(iAppointmentRepository.findById(any(Long.class))).thenReturn(Optional.of(appointment));
+        assertNotNull(appointmentService.findAppointmentById(1L));
     }
 
     @Test
@@ -202,5 +202,6 @@ class AppointmentServiceTest {
     void editAppointment(){ assertNotNull(appointmentService.editAppointment(fullAppointmentDTO)); }
 
     @Test
-    void deleteAppointment(){ assertNotNull(appointmentService.deleteAppointment(1)); }
+    void deleteAppointment(){ assertNotNull(appointmentService.deleteAppointment(1L)); }
+
 }

@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IAppointmentRepository extends JpaRepository<Appointment, Integer>{
+public interface IAppointmentRepository extends JpaRepository<Appointment, Long>{
     Page<Appointment> findAll(Pageable page);
-    Optional<Appointment> findById(Integer id);
+    Optional<Appointment> findById(Long id);
     Appointment save(Appointment appointment);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
 
     @Query(value = "SELECT *\n" +
             "FROM appointment\n" +
@@ -27,16 +27,16 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Integ
     @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN student_appointment ON appointment.id = student_appointment.appointment_id)\n" +
             "WHERE student_appointment.student_id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
-    List<Appointment> getStudentScheduleByStudentId(Integer id);
+    List<Appointment> getStudentScheduleByStudentId(Long id);
 
     @Query(value = "SELECT appointment.id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN professor ON professor.id = appointment.professor_id)\n" +
             "WHERE professor.id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
-    List<Appointment> getProfessorScheduleByProfessorId(Integer id);
+    List<Appointment> getProfessorScheduleByProfessorId(Long id);
 
     @Query(value = "SELECT appointment.id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN patient ON patient.id = appointment.patient_id)\n" +
             "WHERE patient.id = ?1 and appointment.start_time IS NOT NULL and appointment.end_time IS NOT NULL;", nativeQuery = true)
-    List<Appointment> getPatientScheduleByPatientId(Integer id);
+    List<Appointment> getPatientScheduleByPatientId(Long id);
 
 }

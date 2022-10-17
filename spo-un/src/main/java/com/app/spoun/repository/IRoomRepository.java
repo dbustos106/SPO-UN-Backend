@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IRoomRepository extends JpaRepository<Room, Integer>{
+public interface IRoomRepository extends JpaRepository<Room, Long>{
 
     Page<Room> findAll(Pageable page);
-    Optional<Room> findById(Integer id);
+    Optional<Room> findById(Long id);
     Room save(Room room);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
 
 }

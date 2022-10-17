@@ -32,22 +32,19 @@ public class AdminService{
 
     @Autowired
     private IAdminRepository iAdminRepository;
-
     @Autowired
     private IProfessorRepository iProfessorRepository;
-
     @Autowired
     private IStudentRepository iStudentRepository;
-
     @Autowired
     private IPatientRepository iPatientRepository;
-
     @Autowired
     private IRoleRepository iRoleRepository;
 
     private AdminMapper adminMapper = new AdminMapperImpl();
 
     private final PasswordEncoder passwordEncoder;
+
 
     public Map<String,Object> getAllAdmin(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
@@ -73,7 +70,7 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String,Object> findAdminById(Integer id){
+    public Map<String,Object> findAdminById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Admin admin = iAdminRepository.findById(id).orElse(null);
         AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
@@ -133,7 +130,7 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String,Object> deleteAdmin(Integer id){
+    public Map<String,Object> deleteAdmin(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iAdminRepository.existsById(id)){
             iAdminRepository.deleteById(id);

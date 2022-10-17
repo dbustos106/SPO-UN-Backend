@@ -9,12 +9,12 @@ import lombok.ToString;
 @ToString
 public class AntecedentDTO {
 
-    private Integer id;
+    private Long id;
 
     private String type;
 
     private String description;
 
-    private Integer patient_id;
+    private Long patient_id;
 
 }

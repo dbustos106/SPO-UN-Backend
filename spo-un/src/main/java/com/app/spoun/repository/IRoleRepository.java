@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IRoleRepository  extends JpaRepository<Role, Integer>{
+public interface IRoleRepository  extends JpaRepository<Role, Long>{
 
     Page<Role> findAll(Pageable page);
-    Optional<Role> findById(Integer id);
+    Optional<Role> findById(Long id);
     Optional<Role> findByName(String name);
     Role save(Role role);
-    void deleteById(Integer id);
-    boolean existsById(Integer id);
+    void deleteById(Long id);
+    boolean existsById(Long id);
 
 }
 

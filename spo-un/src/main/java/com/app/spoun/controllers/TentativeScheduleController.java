@@ -17,6 +17,7 @@ public class TentativeScheduleController {
     @Autowired
     private TentativeScheduleService tentativeScheduleService;
 
+
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllTentativeSchedule(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -31,7 +32,7 @@ public class TentativeScheduleController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> findTentativeScheduleById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> findTentativeScheduleById(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = tentativeScheduleService.findTentativeScheduleById(id);
@@ -64,7 +65,7 @@ public class TentativeScheduleController {
     }
 
     @DeleteMapping(value = "/{id}/delete")
-    public ResponseEntity<?> deleteTentativeSchedule(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteTentativeSchedule(@PathVariable("id") Long id){
         Map<String,Object> answer = new TreeMap<>();
         try{
             answer = tentativeScheduleService.deleteTentativeSchedule(id);

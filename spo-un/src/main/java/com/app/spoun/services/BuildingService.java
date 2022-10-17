@@ -25,7 +25,8 @@ public class BuildingService{
 
     private BuildingMapper buildingMapper = new BuildingMapperImpl();
 
-    public Map<String,Object> getAllBuilding (Integer idPage, Integer size){
+
+    public Map<String,Object> getAllBuilding(Integer idPage, Integer size){
         Map<String,Object> answer = new TreeMap<>();
 
         // get page of buildings
@@ -49,7 +50,7 @@ public class BuildingService{
         return answer;
     }
 
-    public Map<String,Object> findBuildingById(Integer id){
+    public Map<String,Object> findBuildingById(Long id){
         Map<String,Object> answer = new TreeMap<>();
         Building building = iBuildingRepository.findById(id).orElse(null);
         BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
@@ -88,7 +89,7 @@ public class BuildingService{
         return answer;
     }
 
-    public Map<String,Object> deleteBuilding(Integer id){
+    public Map<String,Object> deleteBuilding(Long id){
         Map<String,Object> answer = new TreeMap<>();
         if(iBuildingRepository.existsById(id)){
             iBuildingRepository.deleteById(id);

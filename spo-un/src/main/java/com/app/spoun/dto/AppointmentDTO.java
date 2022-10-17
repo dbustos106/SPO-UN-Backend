@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class AppointmentDTO {
 
-    private Integer id;
+    private Long id;
 
     private String start_time;
 
@@ -25,10 +25,10 @@ public class AppointmentDTO {
 
     private String patient_feedback;
 
-    private Integer room_id;
+    private Long room_id;
 
-    private Integer patient_id;
+    private Long patient_id;
 
-    private Integer professor_id;
+    private Long professor_id;
 
 }
