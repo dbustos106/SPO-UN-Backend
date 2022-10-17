@@ -19,7 +19,7 @@ public class AppointmentController{
     private AppointmentService appointmentService;
 
 
-    @PutMapping(value = "/confirm/{appointmentId}/{patientId}")
+    @PutMapping(value = "/{appointmentId}/confirmPatient/{patientId}")
     public ResponseEntity<?> confirmAppointmentById(
             @PathVariable("appointmentId") Long appointmentId,
             @PathVariable("patientId") Long patientId,

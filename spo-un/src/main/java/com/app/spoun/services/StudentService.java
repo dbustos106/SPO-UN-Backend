@@ -1,12 +1,10 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.*;
+import com.app.spoun.dto.AppointmentDTO;
 import com.app.spoun.dto.TentativeScheduleDTO;
 import com.app.spoun.dto.StudentDTO;
-import com.app.spoun.mappers.TentativeScheduleMapper;
-import com.app.spoun.mappers.TentativeScheduleMapperImpl;
-import com.app.spoun.mappers.StudentMapper;
-import com.app.spoun.mappers.StudentMapperImpl;
+import com.app.spoun.mappers.*;
 import com.app.spoun.repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +47,7 @@ public class StudentService {
 
     private StudentMapper studentMapper = new StudentMapperImpl();
     private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
+    private AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
 
     private final PasswordEncoder passwordEncoder;
 
@@ -78,7 +77,7 @@ public class StudentService {
     }
 
     public Map<String, Object> getStudentUnconfirmedScheduleByStudentId(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
 
         // get schedules
         List<TentativeSchedule> tentativeSchedules = iTentativeScheduleRepository.getStudentUnconfirmedScheduleByStudentId(id);
@@ -100,8 +99,32 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String,Object> getAllStudent(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAppointmentsByStudentId(Integer idPage, Integer size, Long id){
+        Map<String, Object> answer = new TreeMap<>();
+
+        // get page of appointments
+        Pageable page = PageRequest.of(idPage, size);
+        Page<Appointment> appointments = iAppointmentRepository.findByStudentId(id, page);
+
+        // map all appointments
+        List<AppointmentDTO> listAppointmentDTOS = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
+            listAppointmentDTOS.add(appointmentDTO);
+        }
+        Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
+
+        // return page of appointments
+        if(appointmentDTOS.getSize() != 0){
+            answer.put("message", appointmentDTOS);
+        }else {
+            answer.put("error", "No appointment found");
+        }
+        return answer;
+    }
+
+    public Map<String, Object> getAllStudent(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of students
         Pageable page = PageRequest.of(idPage, size);

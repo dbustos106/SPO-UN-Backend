@@ -63,6 +63,20 @@ public class StudentController {
         return ResponseEntity.ok().body(answer);
     }
 
+    @GetMapping(value = "/{id}/appointments")
+    public ResponseEntity<?> getAppointmentsByStudentId(
+            @PathVariable("id") Long id,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = studentService.getAppointmentsByStudentId(page, size, id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editStudent(@RequestBody StudentDTO studentDTO){
         Map<String,Object> answer = new TreeMap<>();
