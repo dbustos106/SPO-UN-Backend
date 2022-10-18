@@ -5,6 +5,7 @@ import com.app.spoun.domain.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -19,6 +20,8 @@ public interface IPatientRepository extends JpaRepository<Patient, Long>{
     void deleteById(Long id);
     boolean existsById(Long id);
     boolean existsByUsername(String username);
+
+    @Query(value = "SELECT * FROM patient WHERE patient.verification_code = ?1", nativeQuery = true)
     Optional<Patient> findByVerification_code(String code);
 
 }

@@ -18,17 +18,6 @@ public class PatientController {
     private PatientService patientService;
 
 
-    @PutMapping(value = "/cancelAppointment")
-    public ResponseEntity<?> cancelAppointmentById(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
-        try{
-            answer = patientService.cancelAppointmentById(id);
-        }catch(Exception e){
-            answer.put("error", e);
-        }
-        return ResponseEntity.ok().body(answer);
-    }
-
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllPatient(
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -58,6 +47,17 @@ public class PatientController {
         Map<String, Object> answer = new TreeMap<>();
         try{
             answer = patientService.getPatientScheduleByPatientId(id);
+        }catch(Exception e){
+            answer.put("error", e);
+        }
+        return ResponseEntity.ok().body(answer);
+    }
+
+    @PutMapping(value = "/cancelAppointment/{id}")
+    public ResponseEntity<?> cancelAppointmentById(@PathVariable("id") Long id){
+        Map<String, Object> answer = new TreeMap<>();
+        try{
+            answer = patientService.cancelAppointmentById(id);
         }catch(Exception e){
             answer.put("error", e);
         }

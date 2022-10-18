@@ -80,7 +80,7 @@ class AdminServiceTest {
     @Test
     void saveAdmin() throws UnsupportedEncodingException, MessagingException {
         Mockito.when(iAdminRepository.save(any(Admin.class))).thenReturn(admin);
-        assertNotNull(adminService.saveAdmin(new AdminDTO()));
+        assertNotNull(adminService.saveAdmin(new AdminDTO(), "siteUrl"));
     }
 
     @Test

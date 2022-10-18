@@ -94,7 +94,7 @@ class ProfessorServiceTest {
     @Test
     void saveProfessor() throws UnsupportedEncodingException, MessagingException {
         Mockito.when(iProfessorRepository.save(any(Professor.class))).thenReturn(professor);
-        assertNotNull(professorService.saveProfessor(new ProfessorDTO()));
+        assertNotNull(professorService.saveProfessor(new ProfessorDTO(), "siteUrl"));
     }
 
     @Test

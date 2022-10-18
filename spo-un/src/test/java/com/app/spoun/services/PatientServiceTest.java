@@ -85,7 +85,7 @@ class PatientServiceTest {
     @Test
     void savePatient() throws UnsupportedEncodingException, MessagingException {
         Mockito.when(iPatientRepository.save(any(Patient.class))).thenReturn(patient);
-        assertNotNull(patientService.savePatient(new PatientDTO()));
+        assertNotNull(patientService.savePatient(new PatientDTO(), "siteUrl"));
     }
 
     @Test

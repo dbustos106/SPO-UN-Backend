@@ -22,9 +22,11 @@ public interface IStudentRepository extends JpaRepository<Student, Long>{
     boolean existsById(Long id);
     boolean existsByUsername(String username);
     Page<Student> findByProfessor_id(Long id, Pageable page);
+
+    @Query(value = "SELECT * FROM student WHERE student.verification_code = ?1", nativeQuery = true)
     Optional<Student> findByVerification_code(String code);
 
-    @Query(value = "SELECT id, username, password, name, document_type, document_number, professor_id, role_id\n" +
+    @Query(value = "SELECT id, username, password, name, email, document_type, document_number, verification_code, enabled, professor_id, role_id\n" +
             "FROM (student INNER JOIN student_appointment ON student.id = student_appointment.student_id)\n" +
             "WHERE student_appointment.appointment_id = ?1", nativeQuery = true)
     List<Student> findByAppointment_id(Long id);

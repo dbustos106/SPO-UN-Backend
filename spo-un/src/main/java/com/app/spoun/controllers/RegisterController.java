@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,18 +35,19 @@ public class RegisterController {
 
 
     @PostMapping(value = "/student")
-    public ResponseEntity<?> saveStudent(@RequestBody StudentDTO studentDTO)
+    public ResponseEntity<?> saveStudent(@RequestBody StudentDTO studentDTO, HttpServletRequest request)
             throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.saveStudent(studentDTO);
+            String siteUrl = request.getRequestURL().toString().replace(request.getServletPath(), "");
+            answer = studentService.saveStudent(studentDTO, siteUrl);
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping(value = "/student/verifyAccount")
+    @PutMapping(value = "/verifyAccount/student")
     public ResponseEntity<?> verifyStudent(@Param("code") String code){
         Map<String, Object> answer = new TreeMap<>();
         try{
@@ -57,18 +59,19 @@ public class RegisterController {
     }
 
     @PostMapping(value = "/professor")
-    public ResponseEntity<?> saveProfessor(@RequestBody ProfessorDTO professorDTO)
+    public ResponseEntity<?> saveProfessor(@RequestBody ProfessorDTO professorDTO, HttpServletRequest request)
             throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = professorService.saveProfessor(professorDTO);
+            String siteUrl = request.getRequestURL().toString().replace(request.getServletPath(), "");
+            answer = professorService.saveProfessor(professorDTO, siteUrl);
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping(value = "/professor/verifyAccount")
+    @PutMapping(value = "/verifyAccount/professor")
     public ResponseEntity<?> verifyProfessor(@Param("code") String code){
         Map<String, Object> answer = new TreeMap<>();
         try{
@@ -80,18 +83,19 @@ public class RegisterController {
     }
 
     @PostMapping(value = "/patient")
-    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO)
+    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO, HttpServletRequest request)
             throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.savePatient(patientDTO);
+            String siteUrl = request.getRequestURL().toString().replace(request.getServletPath(), "");
+            answer = patientService.savePatient(patientDTO, siteUrl);
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping(value = "/patient/verifyAccount")
+    @PutMapping(value = "/verifyAccount/patient")
     public ResponseEntity<?> verifyPatient(@Param("code") String code){
         Map<String, Object> answer = new TreeMap<>();
         try{
@@ -103,18 +107,19 @@ public class RegisterController {
     }
 
     @PostMapping(value = "/admin")
-    public ResponseEntity<?> saveAdmin(@RequestBody AdminDTO adminDTO)
+    public ResponseEntity<?> saveAdmin(@RequestBody AdminDTO adminDTO, HttpServletRequest request)
             throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = adminService.saveAdmin(adminDTO);
+            String siteUrl = request.getRequestURL().toString().replace(request.getServletPath(), "");
+            answer = adminService.saveAdmin(adminDTO, siteUrl);
         }catch(Exception e){
             answer.put("error", e);
         }
         return ResponseEntity.ok().body(answer);
     }
 
-    @PostMapping(value = "/admin/verifyAccount")
+    @PutMapping(value = "/verifyAccount/admin")
     public ResponseEntity<?> verifyAdmin(@Param("code") String code){
         Map<String, Object> answer = new TreeMap<>();
         try{

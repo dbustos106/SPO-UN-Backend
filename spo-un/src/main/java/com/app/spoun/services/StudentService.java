@@ -182,7 +182,7 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String,Object> saveStudent(StudentDTO studentDTO) throws UnsupportedEncodingException, MessagingException {
+    public Map<String,Object> saveStudent(StudentDTO studentDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
         Map<String,Object> answer = new TreeMap<>();
 
         if(studentDTO == null){
@@ -222,8 +222,8 @@ public class StudentService {
                     + "Gracias,<br>"
                     + "Spo-un.";
             String subject = "Verifique su registro";
-            String verifyURL = "http://localhost:8080/verify?code=" + student.getVerification_code();
-            content = content.replace("[[name]]", student.getEmail());
+            String verifyURL = siteUrl + "/student/verify?code=" + student.getVerification_code();
+            content = content.replace("[[name]]", student.getName());
             content = content.replace("[[URL]]", verifyURL);
             emailSenderService.send(student.getEmail(), subject, content);
         }

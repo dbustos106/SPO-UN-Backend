@@ -23,7 +23,7 @@ public class EmailSenderService{
 
     @Async
     public void send(String toEmail, String subject, String content) throws MessagingException, UnsupportedEncodingException {
-        try {
+        try{
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper =
                     new MimeMessageHelper(mimeMessage, "utf-8");
@@ -33,7 +33,7 @@ public class EmailSenderService{
 
             helper.setText(content, true);
             mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
+        }catch (MessagingException e){
             LOGGER.error("failed to send email", e);
             throw new IllegalStateException("failed to send email");
         }

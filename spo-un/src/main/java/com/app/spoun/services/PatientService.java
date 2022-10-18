@@ -132,7 +132,7 @@ public class PatientService{
         return answer;
     }
 
-    public Map<String, Object> savePatient(PatientDTO patientDTO)  throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> savePatient(PatientDTO patientDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(patientDTO == null){
@@ -171,8 +171,8 @@ public class PatientService{
                     + "Gracias,<br>"
                     + "Spo-un.";
             String subject = "Verifique su registro";
-            String verifyURL = "http://localhost:8080/verify?code=" + patient.getVerification_code();
-            content = content.replace("[[name]]", patient.getEmail());
+            String verifyURL = siteUrl + "/patient/verify?code=" + patient.getVerification_code();
+            content = content.replace("[[name]]", patient.getName());
             content = content.replace("[[URL]]", verifyURL);
             emailSenderService.send(patient.getEmail(), subject, content);
         }
