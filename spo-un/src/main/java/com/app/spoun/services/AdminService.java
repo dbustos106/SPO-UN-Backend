@@ -1,6 +1,7 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.Admin;
+import com.app.spoun.domain.Patient;
 import com.app.spoun.domain.Role;
 import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.mappers.AdminMapper;
@@ -10,6 +11,7 @@ import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +44,10 @@ public class AdminService{
     private IPatientRepository iPatientRepository;
     @Autowired
     private IRoleRepository iRoleRepository;
+    @Autowired
+    private EmailValidatorService emailValidatorService;
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     private AdminMapper adminMapper = new AdminMapperImpl();
 
@@ -82,36 +90,78 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String,Object> saveAdmin(AdminDTO adminDTO){
+    public Map<String,Object> saveAdmin(AdminDTO adminDTO) throws UnsupportedEncodingException, MessagingException {
         Map<String,Object> answer = new TreeMap<>();
-        if(adminDTO != null){
-            if(iProfessorRepository.existsByUsername(adminDTO.getUsername()) ||
+
+        if(adminDTO == null){
+            answer.put("error", "Admin not saved");
+        }else if(iProfessorRepository.existsByUsername(adminDTO.getUsername()) ||
                     iPatientRepository.existsByUsername(adminDTO.getUsername()) ||
                     iStudentRepository.existsByUsername(adminDTO.getUsername())){
-                answer.put("error", "Repeated username");
-            }else {
-                // get role
-                Role role = iRoleRepository.findByName("Admin").orElse(null);
-
-                // save admin
-                Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
-                admin.setRole(role);
-
-                // encrypt password
-                admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-
-                iAdminRepository.save(admin);
-                answer.put("message", "Admin saved successfully");
-            }
+            answer.put("error", "Repeated username");
+        }else if(!emailValidatorService.test(adminDTO.getEmail())){
+            answer.put("error", "Email not valid");
         }else{
-            answer.put("error", "Admin not saved");
+            // get role
+            Role role = iRoleRepository.findByName("Admin").orElse(null);
+
+            // map admin
+            Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
+            admin.setRole(role);
+
+            // encrypt password
+            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+
+            // create verification code and disable account
+            String randomCode = RandomString.make(64);
+            admin.setVerification_code(randomCode);
+            admin.setEnabled(false);
+
+            // save admin
+            iAdminRepository.save(admin);
+            answer.put("message", "Admin saved successfully");
+
+            String content = "Querido [[name]],<br>"
+                    + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
+                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                    + "Gracias,<br>"
+                    + "Spo-un.";
+            String subject = "Verifique su registro";
+            String verifyURL = "http://localhost:8080/verify?code=" + admin.getVerification_code();
+            content = content.replace("[[name]]", admin.getEmail());
+            content = content.replace("[[URL]]", verifyURL);
+            emailSenderService.send(admin.getEmail(), subject, content);
+        }
+        return answer;
+    }
+
+    public Map<String, Object> verifyAdmin(String code){
+        Map<String, Object> answer = new TreeMap<>();
+        Admin admin = iAdminRepository.findByVerification_code(code).orElse(null);
+
+        if(admin == null || admin.isEnabled()){
+            answer.put("error", "verify fail");
+        }else{
+            admin.setVerification_code(null);
+            admin.setEnabled(true);
+            iAdminRepository.save(admin);
+            answer.put("message", "verify success");
         }
         return answer;
     }
 
     public Map<String,Object> editAdmin(AdminDTO adminDTO){
         Map<String,Object> answer = new TreeMap<>();
-        if(adminDTO != null && adminDTO.getId() != null && iAdminRepository.existsById(adminDTO.getId())){
+
+        if(adminDTO == null){
+            answer.put("error", "Admin not found");
+        }else if(iProfessorRepository.existsByUsername(adminDTO.getUsername()) ||
+                    iPatientRepository.existsByUsername(adminDTO.getUsername()) ||
+                    iStudentRepository.existsByUsername(adminDTO.getUsername())){
+            answer.put("error", "Repeated username");
+        }else if(!emailValidatorService.test(adminDTO.getEmail())){
+            answer.put("error", "Email not valid");
+        }else{
             // get role
             Role role = iRoleRepository.findByName("Admin").orElse(null);
 
@@ -124,8 +174,6 @@ public class AdminService{
 
             iAdminRepository.save(admin);
             answer.put("message", "Admin updated successfully");
-        }else{
-            answer.put("error", "Admin not found");
         }
         return answer;
     }

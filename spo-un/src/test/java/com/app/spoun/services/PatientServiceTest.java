@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -81,7 +83,7 @@ class PatientServiceTest {
     }
 
     @Test
-    void savePatient() {
+    void savePatient() throws UnsupportedEncodingException, MessagingException {
         Mockito.when(iPatientRepository.save(any(Patient.class))).thenReturn(patient);
         assertNotNull(patientService.savePatient(new PatientDTO()));
     }

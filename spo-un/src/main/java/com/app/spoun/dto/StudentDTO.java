@@ -17,9 +17,15 @@ public class StudentDTO {
 
     private String name;
 
+    private String email;
+
     private String document_type;
 
     private String document_number;
+
+    private String verification_code;
+
+    private boolean enabled;
 
     private Long professor_id;
 

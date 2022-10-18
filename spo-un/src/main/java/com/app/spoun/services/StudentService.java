@@ -10,6 +10,7 @@ import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,10 @@ public class StudentService {
     private ITentativeScheduleRepository iTentativeScheduleRepository;
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
+    @Autowired
+    private EmailValidatorService emailValidatorService;
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     private StudentMapper studentMapper = new StudentMapperImpl();
     private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
@@ -175,39 +182,80 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String,Object> saveStudent(StudentDTO studentDTO){
+    public Map<String,Object> saveStudent(StudentDTO studentDTO) throws UnsupportedEncodingException, MessagingException {
         Map<String,Object> answer = new TreeMap<>();
-        if(studentDTO != null){
-            if(iProfessorRepository.existsByUsername(studentDTO.getUsername()) ||
+
+        if(studentDTO == null){
+            answer.put("error", "Student not saved");
+        }else if(iProfessorRepository.existsByUsername(studentDTO.getUsername()) ||
                     iPatientRepository.existsByUsername(studentDTO.getUsername()) ||
                     iAdminRepository.existsByUsername(studentDTO.getUsername())){
-                answer.put("error", "Repeated username");
-            }else {
-                // get role and professor
-                Role role = iRoleRepository.findByName("Student").orElse(null);
-                Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
-
-                // save student
-                Student student = studentMapper.studentDTOToStudent(studentDTO);
-                student.setRole(role);
-                student.setProfessor(professor);
-                student.setAppointments(new ArrayList<>());
-
-                // encrypt password
-                student.setPassword(passwordEncoder.encode(student.getPassword()));
-
-                iStudentRepository.save(student);
-                answer.put("message", "Student saved successfully");
-            }
+            answer.put("error", "Repeated username");
+        }else if(!emailValidatorService.test(studentDTO.getEmail())){
+            answer.put("error", "Email not valid");
         }else{
-            answer.put("error", "Student not saved");
+            // get role and professor
+            Role role = iRoleRepository.findByName("Student").orElse(null);
+            Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
+
+            // map student
+            Student student = studentMapper.studentDTOToStudent(studentDTO);
+            student.setRole(role);
+            student.setProfessor(professor);
+            student.setAppointments(new ArrayList<>());
+
+            // encrypt password
+            student.setPassword(passwordEncoder.encode(student.getPassword()));
+
+            // create verification code and disable account
+            String randomCode = RandomString.make(64);
+            student.setVerification_code(randomCode);
+            student.setEnabled(false);
+
+            // save student
+            iStudentRepository.save(student);
+            answer.put("message", "Student saved successfully");
+
+            String content = "Querido [[name]],<br>"
+                    + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
+                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                    + "Gracias,<br>"
+                    + "Spo-un.";
+            String subject = "Verifique su registro";
+            String verifyURL = "http://localhost:8080/verify?code=" + student.getVerification_code();
+            content = content.replace("[[name]]", student.getEmail());
+            content = content.replace("[[URL]]", verifyURL);
+            emailSenderService.send(student.getEmail(), subject, content);
         }
         return answer;
     }
 
-    public Map<String,Object> editStudent(StudentDTO studentDTO){
-        Map<String,Object> answer = new TreeMap<>();
-        if(studentDTO.getId() != null && iStudentRepository.existsById(studentDTO.getId())){
+    public Map<String, Object> verifyStudent(String code){
+        Map<String, Object> answer = new TreeMap<>();
+        Student student = iStudentRepository.findByVerification_code(code).orElse(null);
+
+        if(student == null || student.isEnabled()){
+            answer.put("error", "verify fail");
+        }else{
+            student.setVerification_code(null);
+            student.setEnabled(true);
+            iStudentRepository.save(student);
+            answer.put("message", "verify success");
+        }
+        return answer;
+    }
+
+    public Map<String, Object> editStudent(StudentDTO studentDTO){
+        Map<String, Object> answer = new TreeMap<>();
+        if(studentDTO == null){
+            answer.put("error", "Student not found");
+        }else if(iProfessorRepository.existsByUsername(studentDTO.getUsername()) ||
+                iPatientRepository.existsByUsername(studentDTO.getUsername()) ||
+                iAdminRepository.existsByUsername(studentDTO.getUsername())){
+            answer.put("error", "Repeated username");
+        }else if(!emailValidatorService.test(studentDTO.getEmail())){
+            answer.put("error", "Email not valid");
+        }else{
             // get role and professor
             Role role = iRoleRepository.findByName("Student").orElse(null);
             Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
@@ -223,8 +271,6 @@ public class StudentService {
 
             iStudentRepository.save(student);
             answer.put("message", "Student updated successfully");
-        }else{
-            answer.put("error", "Student not found");
         }
         return answer;
     }

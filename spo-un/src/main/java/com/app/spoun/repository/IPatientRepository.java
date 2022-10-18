@@ -18,5 +18,6 @@ public interface IPatientRepository extends JpaRepository<Patient, Long>{
     void deleteById(Long id);
     boolean existsById(Long id);
     boolean existsByUsername(String username);
+    Optional<Patient> findByVerification_code(String code);
 
 }

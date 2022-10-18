@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -76,7 +78,7 @@ class AdminServiceTest {
     }
 
     @Test
-    void saveAdmin(){
+    void saveAdmin() throws UnsupportedEncodingException, MessagingException {
         Mockito.when(iAdminRepository.save(any(Admin.class))).thenReturn(admin);
         assertNotNull(adminService.saveAdmin(new AdminDTO()));
     }

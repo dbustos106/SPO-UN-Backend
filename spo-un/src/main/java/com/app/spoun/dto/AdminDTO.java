@@ -15,6 +15,12 @@ public class AdminDTO {
 
     private String password;
 
+    private String email;
+
+    private String verification_code;
+
+    private boolean enabled;
+
     private Long role_id;
 
 }

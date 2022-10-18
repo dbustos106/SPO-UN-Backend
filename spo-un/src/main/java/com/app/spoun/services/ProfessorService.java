@@ -13,6 +13,7 @@ import com.app.spoun.mappers.StudentMapperImpl;
 import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,7 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,10 @@ public class ProfessorService{
     private IRoleRepository iRoleRepository;
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
+    @Autowired
+    private EmailValidatorService emailValidatorService;
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     private ProfessorMapper professorMapper = new ProfessorMapperImpl();
     private StudentMapper studentMapper = new StudentMapperImpl();
@@ -136,54 +143,94 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String,Object> saveProfessor(ProfessorDTO professorDTO){
+    public Map<String,Object> saveProfessor(ProfessorDTO professorDTO) throws UnsupportedEncodingException, MessagingException {
         Map<String,Object> answer = new TreeMap<>();
-        if(professorDTO != null){
-            if(iStudentRepository.existsByUsername(professorDTO.getUsername()) ||
+
+        if(professorDTO == null){
+            answer.put("error", "Professor not saved");
+        }else if(iStudentRepository.existsByUsername(professorDTO.getUsername()) ||
                     iPatientRepository.existsByUsername(professorDTO.getUsername()) ||
                     iAdminRepository.existsByUsername(professorDTO.getUsername())){
-                answer.put("error", "Repeated username");
-            }else {
-                // get role
-                Role role = iRoleRepository.findByName("Professor").orElse(null);
-
-                // save professor
-                Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
-                professor.setRole(role);
-                professor.setStudents(new ArrayList<>());
-                professor.setAppointments(new ArrayList<>());
-
-                // encrypt password
-                professor.setPassword(passwordEncoder.encode(professor.getPassword()));
-
-                iProfessorRepository.save(professor);
-                answer.put("message", "Professor saved successfully");
-            }
+            answer.put("error", "Repeated username");
+        }else if(!emailValidatorService.test(professorDTO.getEmail())){
+            answer.put("error", "Email not valid");
         }else{
-            answer.put("error", "Professor not saved");
+            // get role
+            Role role = iRoleRepository.findByName("Professor").orElse(null);
+
+            // map professor
+            Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+            professor.setStudents(new ArrayList<>());
+            professor.setAppointments(new ArrayList<>());
+            professor.setRole(role);
+
+            // encrypt password
+            professor.setPassword(passwordEncoder.encode(professor.getPassword()));
+
+            // create verification code and disable account
+            String randomCode = RandomString.make(64);
+            professor.setVerification_code(randomCode);
+            professor.setEnabled(false);
+
+            // save professor
+            iProfessorRepository.save(professor);
+            answer.put("message", "Professor saved successfully");
+
+            String content = "Querido [[name]],<br>"
+                    + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
+                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                    + "Gracias,<br>"
+                    + "Spo-un.";
+            String subject = "Verifique su registro";
+            String verifyURL = "http://localhost:8080/verify?code=" + professor.getVerification_code();
+            content = content.replace("[[name]]", professor.getEmail());
+            content = content.replace("[[URL]]", verifyURL);
+            emailSenderService.send(professor.getEmail(), subject, content);
+        }
+        return answer;
+    }
+
+    public Map<String, Object> verifyProfessor(String code){
+        Map<String, Object> answer = new TreeMap<>();
+        Professor professor = iProfessorRepository.findByVerification_code(code).orElse(null);
+
+        if(professor == null || professor.isEnabled()){
+            answer.put("error", "verify fail");
+        }else{
+            professor.setVerification_code(null);
+            professor.setEnabled(true);
+            iProfessorRepository.save(professor);
+            answer.put("message", "verify success");
         }
         return answer;
     }
 
     public Map<String,Object> editProfessor(ProfessorDTO professorDTO){
         Map<String,Object> answer = new TreeMap<>();
-        if(professorDTO.getId() != null && iProfessorRepository.existsById(professorDTO.getId())){
+
+        if(professorDTO == null){
+            answer.put("error", "Professor not found");
+        }else if(iStudentRepository.existsByUsername(professorDTO.getUsername()) ||
+                iPatientRepository.existsByUsername(professorDTO.getUsername()) ||
+                iAdminRepository.existsByUsername(professorDTO.getUsername())){
+            answer.put("error", "Repeated username");
+        }else if(!emailValidatorService.test(professorDTO.getEmail())){
+            answer.put("error", "Email not valid");
+        }else{
             // get role
             Role role = iRoleRepository.findByName("Professor").orElse(null);
 
             // update professor
             Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
-            professor.setRole(role);
             professor.setStudents(new ArrayList<>());
             professor.setAppointments(new ArrayList<>());
+            professor.setRole(role);
 
             // encrypt password
             professor.setPassword(passwordEncoder.encode(professor.getPassword()));
 
             iProfessorRepository.save(professor);
             answer.put("message", "Professor updated successfully");
-        }else{
-            answer.put("error", "Professor not found");
         }
         return answer;
     }

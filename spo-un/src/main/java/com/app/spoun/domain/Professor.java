@@ -25,11 +25,20 @@ public class Professor {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "document_type")
     private String document_type;
 
     @Column(name = "document_number")
     private String document_number;
+
+    @Column(name = "verification_code")
+    private String verification_code;
+
+    @Column(name = "enabled")
+    private boolean enabled;
 
     @JoinColumn(name = "role_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,8 +57,11 @@ public class Professor {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 ", document_type='" + document_type + '\'' +
                 ", document_number='" + document_number + '\'' +
+                ", verification_code='" + verification_code + '\'' +
+                ", enabled='" + enabled + '\'' +
                 ", role=" + role +
                 '}';
     }

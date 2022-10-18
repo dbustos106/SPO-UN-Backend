@@ -19,5 +19,6 @@ public interface IProfessorRepository extends JpaRepository<Professor, Long>{
     void deleteById(Long id);
     boolean existsById(Long id);
     boolean existsByUsername(String username);
+    Optional<Professor> findByVerification_code(String code);
 
 }

@@ -11,6 +11,7 @@ import com.app.spoun.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +46,10 @@ public class PatientService{
     private IRoleRepository iRoleRepository;
     @Autowired
     private IAppointmentRepository iAppointmentRepository;
+    @Autowired
+    private EmailValidatorService emailValidatorService;
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     private PatientMapper patientMapper = new PatientMapperImpl();
 
@@ -89,8 +96,8 @@ public class PatientService{
         return answer;
     }
 
-    public Map<String,Object> getAllPatient(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllPatient(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of patients
         Pageable page = PageRequest.of(idPage, size);
@@ -107,14 +114,14 @@ public class PatientService{
         // return page of patients
         if(patientDTOS.getSize() != 0){
             answer.put("message", patientDTOS);
-        }else {
+        }else{
             answer.put("error", "No patient found");
         }
         return answer;
     }
 
-    public Map<String,Object> findPatientById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findPatientById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Patient patient = iPatientRepository.findById(id).orElse(null);
         PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
         if(patientDTO != null){
@@ -125,60 +132,100 @@ public class PatientService{
         return answer;
     }
 
-    public Map<String,Object> savePatient(PatientDTO patientDTO){
-        Map<String,Object> answer = new TreeMap<>();
-        if(patientDTO != null){
-            if(iProfessorRepository.existsByUsername(patientDTO.getUsername()) ||
+    public Map<String, Object> savePatient(PatientDTO patientDTO)  throws UnsupportedEncodingException, MessagingException {
+        Map<String, Object> answer = new TreeMap<>();
+
+        if(patientDTO == null){
+            answer.put("error", "Patient not saved");
+        }else if(iProfessorRepository.existsByUsername(patientDTO.getUsername()) ||
                     iStudentRepository.existsByUsername(patientDTO.getUsername()) ||
                     iAdminRepository.existsByUsername(patientDTO.getUsername())){
-                answer.put("error", "Repeated username");
-            }else {
-                // get role
-                Role role = iRoleRepository.findByName("Patient").orElse(null);
-
-                // save patient
-                Patient patient = patientMapper.patientDTOToPatient(patientDTO);
-                patient.setRole(role);
-                patient.setAntecedents(new ArrayList<>());
-                patient.setAppointments(new ArrayList<>());
-
-                // encrypt password
-                patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-
-                iPatientRepository.save(patient);
-                answer.put("message", "Patient saved successfully");
-            }
+            answer.put("error", "Repeated username");
+        }else if(!emailValidatorService.test(patientDTO.getEmail())){
+            answer.put("error", "Email not valid");
         }else{
-            answer.put("error", "Patient not saved");
+            // get role
+            Role role = iRoleRepository.findByName("Patient").orElse(null);
+
+            // map patient
+            Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+            patient.setAntecedents(new ArrayList<>());
+            patient.setAppointments(new ArrayList<>());
+            patient.setRole(role);
+
+            // encrypt password
+            patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+
+            // create verification code and disable account
+            String randomCode = RandomString.make(64);
+            patient.setVerification_code(randomCode);
+            patient.setEnabled(false);
+
+            // save patient
+            iPatientRepository.save(patient);
+            answer.put("message", "Patient saved successfully");
+
+            String content = "Querido [[name]],<br>"
+                    + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
+                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                    + "Gracias,<br>"
+                    + "Spo-un.";
+            String subject = "Verifique su registro";
+            String verifyURL = "http://localhost:8080/verify?code=" + patient.getVerification_code();
+            content = content.replace("[[name]]", patient.getEmail());
+            content = content.replace("[[URL]]", verifyURL);
+            emailSenderService.send(patient.getEmail(), subject, content);
         }
         return answer;
     }
 
-    public Map<String,Object> editPatient(PatientDTO patientDTO){
-        Map<String,Object> answer = new TreeMap<>();
-        if(patientDTO.getId() != null && iPatientRepository.existsById(patientDTO.getId())){
+    public Map<String, Object> verifyPatient(String code){
+        Map<String, Object> answer = new TreeMap<>();
+        Patient patient = iPatientRepository.findByVerification_code(code).orElse(null);
+
+        if(patient == null || patient.isEnabled()){
+            answer.put("error", "verify fail");
+        }else{
+            patient.setVerification_code(null);
+            patient.setEnabled(true);
+            iPatientRepository.save(patient);
+            answer.put("message", "verify success");
+        }
+        return answer;
+    }
+
+    public Map<String, Object> editPatient(PatientDTO patientDTO){
+        Map<String, Object> answer = new TreeMap<>();
+
+        if(patientDTO == null){
+            answer.put("error", "Patient not found");
+        }else if(iProfessorRepository.existsByUsername(patientDTO.getUsername()) ||
+                iStudentRepository.existsByUsername(patientDTO.getUsername()) ||
+                iAdminRepository.existsByUsername(patientDTO.getUsername())){
+            answer.put("error", "Repeated username");
+        }else if(!emailValidatorService.test(patientDTO.getEmail())){
+            answer.put("error", "Email not valid");
+        }else{
             // get role
             Role role = iRoleRepository.findByName("Patient").orElse(null);
 
             // update patient
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
-            patient.setRole(role);
             patient.setAntecedents(new ArrayList<>());
             patient.setAppointments(new ArrayList<>());
+            patient.setRole(role);
 
             // encrypt password
             patient.setPassword(passwordEncoder.encode(patient.getPassword()));
 
             iPatientRepository.save(patient);
             answer.put("message", "Patient updated successfully");
-        }else{
-            answer.put("error", "Patient not found");
         }
         return answer;
     }
 
-    public Map<String,Object> deletePatient(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deletePatient(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iPatientRepository.existsById(id)){
             iPatientRepository.deleteById(id);
             answer.put("message", "Patient deleted successfully");

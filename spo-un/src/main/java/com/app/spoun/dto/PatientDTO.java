@@ -29,6 +29,10 @@ public class PatientDTO {
 
     private String blood_type;
 
+    private String verification_code;
+
+    private boolean enabled;
+
     private Long role_id;
 
 }

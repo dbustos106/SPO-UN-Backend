@@ -30,6 +30,8 @@ public interface IStudentRepository extends JpaRepository<Student, Long>{
 
     Page<Student> findByProfessor_id(Long id, Pageable page);
 
+    Optional<Student> findByVerification_code(String code);
+
     @Query(value = "SELECT id, username, password, name, document_type, document_number, professor_id, role_id\n" +
             "FROM (student INNER JOIN student_appointment ON student.id = student_appointment.student_id)\n" +
             "WHERE student_appointment.appointment_id = ?1", nativeQuery = true)

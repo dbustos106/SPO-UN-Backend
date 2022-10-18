@@ -43,6 +43,12 @@ public class Patient {
     @Column(name = "blood_type")
     private String blood_type;
 
+    @Column(name = "verification_code")
+    private String verification_code;
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
     @JoinColumn(name = "role_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Role role;
@@ -66,6 +72,8 @@ public class Patient {
                 ", age=" + age +
                 ", gender='" + gender + '\'' +
                 ", blood_type='" + blood_type + '\'' +
+                ", verification_code='" + verification_code + '\'' +
+                ", enabled='" + enabled + '\'' +
                 ", role='" + role + '\'' +
                 '}';
     }

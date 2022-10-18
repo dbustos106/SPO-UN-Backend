@@ -19,5 +19,6 @@ public interface IAdminRepository extends JpaRepository<Admin, Long>{
     void deleteById(Long id);
     boolean existsById(Long id);
     boolean existsByUsername(String username);
+    Optional<Admin> findByVerification_code(String code);
 
 }
