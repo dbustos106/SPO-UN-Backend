@@ -15,21 +15,13 @@ import java.util.Optional;
 public interface IStudentRepository extends JpaRepository<Student, Long>{
 
     Page<Student> findAll(Pageable page);
-
     Optional<Student> findById(Long id);
-
     Optional<Student> findByUsername(String username);
-
     Student save(Student student);
-
     void deleteById(Long id);
-
     boolean existsById(Long id);
-
     boolean existsByUsername(String username);
-
     Page<Student> findByProfessor_id(Long id, Pageable page);
-
     Optional<Student> findByVerification_code(String code);
 
     @Query(value = "SELECT id, username, password, name, document_type, document_number, professor_id, role_id\n" +

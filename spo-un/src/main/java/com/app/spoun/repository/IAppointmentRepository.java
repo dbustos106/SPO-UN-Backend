@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface IAppointmentRepository extends JpaRepository<Appointment, Long>{
+
     Page<Appointment> findAll(Pageable page);
     Optional<Appointment> findById(Long id);
     Appointment save(Appointment appointment);

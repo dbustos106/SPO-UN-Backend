@@ -61,7 +61,7 @@ public class AppointmentController{
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findAppointmentById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = appointmentService.findAppointmentById(id);
         }catch(Exception e){
@@ -72,7 +72,7 @@ public class AppointmentController{
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveAppointment(@RequestBody FullAppointmentDTO fullAppointmentDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = appointmentService.saveAppointment(fullAppointmentDTO);
         }catch(Exception e){
@@ -83,7 +83,7 @@ public class AppointmentController{
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editAppointment(@RequestBody FullAppointmentDTO fullAppointmentDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = appointmentService.editAppointment(fullAppointmentDTO);
         }catch(Exception e){
@@ -94,7 +94,7 @@ public class AppointmentController{
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteAppointment(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = appointmentService.deleteAppointment(id);
         }catch(Exception e){

@@ -33,7 +33,7 @@ public class RoomController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findRoomById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = roomService.findRoomById(id);
         }catch(Exception e){
@@ -44,7 +44,7 @@ public class RoomController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveRoom(@RequestBody RoomDTO roomDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = roomService.saveRoom(roomDTO);
         }catch(Exception e){
@@ -55,7 +55,7 @@ public class RoomController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editRoom(@RequestBody RoomDTO roomDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = roomService.editRoom(roomDTO);
         }catch(Exception e){
@@ -66,7 +66,7 @@ public class RoomController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteRoom(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = roomService.deleteRoom(id);
         }catch(Exception e){

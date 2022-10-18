@@ -33,7 +33,7 @@ public class AdminController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findAdminById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = adminService.findAdminById(id);
         }catch(Exception e){
@@ -44,7 +44,7 @@ public class AdminController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editAdmin(@RequestBody AdminDTO adminDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = adminService.editAdmin(adminDTO);
         }catch(Exception e){
@@ -55,7 +55,7 @@ public class AdminController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteAdmin(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = adminService.deleteAdmin(id);
         }catch(Exception e){

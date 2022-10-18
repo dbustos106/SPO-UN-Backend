@@ -33,7 +33,7 @@ public class AntecedentController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findAntecedentById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = antecedentService.findAntecedentById(id);
         }catch(Exception e){
@@ -44,7 +44,7 @@ public class AntecedentController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveAntecedent(@RequestBody AntecedentDTO antecedentDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = antecedentService.saveAntecedent(antecedentDTO);
         }catch(Exception e){
@@ -55,7 +55,7 @@ public class AntecedentController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editAntecedent(@RequestBody AntecedentDTO antecedentDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = antecedentService.editAntecedent(antecedentDTO);
         }catch(Exception e){
@@ -66,7 +66,7 @@ public class AntecedentController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteAntecedent(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = antecedentService.deleteAntecedent(id);
         }catch(Exception e){

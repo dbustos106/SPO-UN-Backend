@@ -19,7 +19,7 @@ public class StudentController {
 
     @PutMapping(value = "/cancelAppointment")
     public ResponseEntity<?> cancelAppointmentById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = studentService.cancelAppointmentById(id);
         }catch(Exception e){
@@ -43,7 +43,7 @@ public class StudentController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findStudentById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = studentService.findStudentById(id);
         }catch(Exception e){
@@ -90,7 +90,7 @@ public class StudentController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editStudent(@RequestBody StudentDTO studentDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = studentService.editStudent(studentDTO);
         }catch(Exception e){
@@ -101,7 +101,7 @@ public class StudentController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteStudent(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = studentService.deleteStudent(id);
         }catch(Exception e){

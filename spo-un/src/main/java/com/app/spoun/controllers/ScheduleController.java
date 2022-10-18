@@ -33,7 +33,7 @@ public class ScheduleController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findScheduleById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = scheduleService.findScheduleById(id);
         }catch(Exception e){
@@ -44,7 +44,7 @@ public class ScheduleController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveSchedule(@RequestBody ScheduleDTO scheduleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = scheduleService.saveSchedule(scheduleDTO);
         }catch(Exception e){
@@ -55,7 +55,7 @@ public class ScheduleController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editSchedule(@RequestBody ScheduleDTO scheduleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = scheduleService.editSchedule(scheduleDTO);
         }catch(Exception e){
@@ -66,7 +66,7 @@ public class ScheduleController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteSchedule(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = scheduleService.deleteSchedule(id);
         }catch(Exception e){

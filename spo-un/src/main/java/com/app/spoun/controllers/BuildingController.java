@@ -33,7 +33,7 @@ public class BuildingController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findBuildingById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = buildingService.findBuildingById(id);
         }catch(Exception e){
@@ -44,7 +44,7 @@ public class BuildingController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveBuilding(@RequestBody BuildingDTO buildingDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = buildingService.saveBuilding(buildingDTO);
         }catch(Exception e){
@@ -55,7 +55,7 @@ public class BuildingController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editBuilding(@RequestBody BuildingDTO buildingDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = buildingService.editBuilding(buildingDTO);
         }catch(Exception e){
@@ -66,7 +66,7 @@ public class BuildingController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteBuilding(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = buildingService.deleteBuilding(id);
         }catch(Exception e){

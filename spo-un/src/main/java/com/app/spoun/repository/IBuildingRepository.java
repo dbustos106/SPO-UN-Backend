@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface IBuildingRepository extends JpaRepository<Building, Long>{
+
     Page<Building> findAll(Pageable page);
     Optional<Building> findById(Long id);
     Building save(Building building);

@@ -33,7 +33,7 @@ public class ProfessorController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findProfessorById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = professorService.findProfessorById(id);
         }catch(Exception e){
@@ -69,7 +69,7 @@ public class ProfessorController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editProfessor(@RequestBody ProfessorDTO professorDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = professorService.editProfessor(professorDTO);
         }catch(Exception e){
@@ -80,7 +80,7 @@ public class ProfessorController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteProfessor(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = professorService.deleteProfessor(id);
         }catch(Exception e){

@@ -32,7 +32,7 @@ public class RoleController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findRoleById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = roleService.findRoleById(id);
         }catch(Exception e){
@@ -43,7 +43,7 @@ public class RoleController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveRole(@RequestBody RoleDTO roleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = roleService.saveRole(roleDTO);
         }catch(Exception e){
@@ -54,7 +54,7 @@ public class RoleController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editRole(@RequestBody RoleDTO roleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = roleService.editRole(roleDTO);
         }catch(Exception e){
@@ -65,7 +65,7 @@ public class RoleController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteRole(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = roleService.deleteRole(id);
         }catch(Exception e){

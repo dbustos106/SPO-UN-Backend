@@ -33,7 +33,7 @@ public class TentativeScheduleController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findTentativeScheduleById(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = tentativeScheduleService.findTentativeScheduleById(id);
         }catch(Exception e){
@@ -44,7 +44,7 @@ public class TentativeScheduleController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveTentativeSchedule(@RequestBody TentativeScheduleDTO tentativeScheduleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = tentativeScheduleService.saveTentativeSchedule(tentativeScheduleDTO);
         }catch(Exception e){
@@ -55,7 +55,7 @@ public class TentativeScheduleController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editTentativeSchedule(@RequestBody TentativeScheduleDTO tentativeScheduleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = tentativeScheduleService.editTentativeSchedule(tentativeScheduleDTO);
         }catch(Exception e){
@@ -66,7 +66,7 @@ public class TentativeScheduleController {
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteTentativeSchedule(@PathVariable("id") Long id){
-        Map<String,Object> answer = new TreeMap<>();
+        Map<String, Object> answer = new TreeMap<>();
         try{
             answer = tentativeScheduleService.deleteTentativeSchedule(id);
         }catch(Exception e){

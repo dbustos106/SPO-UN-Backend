@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface IAntecedentRepository extends JpaRepository<Antecedent, Long>{
+
     Page<Antecedent> findAll(Pageable page);
     Optional<Antecedent> findById(Long id);
     Antecedent save(Antecedent antecedent);
