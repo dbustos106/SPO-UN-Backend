@@ -212,8 +212,8 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String,Object> findStudentById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findStudentById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Student student = iStudentRepository.findById(id).orElse(null);
         StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
         if(studentDTO != null){
@@ -224,8 +224,8 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String,Object> saveStudent(StudentDTO studentDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveStudent(StudentDTO studentDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
+        Map<String, Object> answer = new TreeMap<>();
 
         if(studentDTO == null){
             answer.put("error", "Student not saved");
@@ -317,8 +317,8 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String,Object> deleteStudent(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteStudent(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iStudentRepository.existsById(id)){
             iStudentRepository.deleteById(id);
             answer.put("message", "Student deleted successfully");

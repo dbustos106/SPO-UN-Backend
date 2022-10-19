@@ -33,8 +33,8 @@ public class TentativeScheduleService {
     private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
 
 
-    public Map<String,Object> getAllTentativeSchedule(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllTentativeSchedule(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of tentative schedules
         Pageable page = PageRequest.of(idPage, size);
@@ -57,8 +57,8 @@ public class TentativeScheduleService {
         return answer;
     }
 
-    public Map<String,Object> findTentativeScheduleById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findTentativeScheduleById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         TentativeSchedule tentativeSchedule = iTentativeScheduleRepository.findById(id).orElse(null);
         TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
         if(tentativeScheduleDTO != null){
@@ -69,8 +69,8 @@ public class TentativeScheduleService {
         return answer;
     }
 
-    public Map<String,Object> saveTentativeSchedule(TentativeScheduleDTO tentativeScheduleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveTentativeSchedule(TentativeScheduleDTO tentativeScheduleDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(tentativeScheduleDTO != null){
             // get appointment
             Appointment appointment = iAppointmentRepository.findById(tentativeScheduleDTO.getAppointment_id()).orElse(null);
@@ -86,8 +86,8 @@ public class TentativeScheduleService {
         return answer;
     }
 
-    public Map<String,Object> editTentativeSchedule(TentativeScheduleDTO tentativeScheduleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editTentativeSchedule(TentativeScheduleDTO tentativeScheduleDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(tentativeScheduleDTO.getId() != null && iTentativeScheduleRepository.existsById(tentativeScheduleDTO.getId())){
             // get appointment
             Appointment appointment = iAppointmentRepository.findById(tentativeScheduleDTO.getAppointment_id()).orElse(null);
@@ -103,8 +103,8 @@ public class TentativeScheduleService {
         return answer;
     }
 
-    public Map<String,Object> deleteTentativeSchedule(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteTentativeSchedule(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iTentativeScheduleRepository.existsById(id)){
             iTentativeScheduleRepository.deleteById(id);
             answer.put("message", "Tentative schedule deleted successfully");

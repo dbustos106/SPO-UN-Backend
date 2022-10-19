@@ -1,7 +1,6 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.Admin;
-import com.app.spoun.domain.Patient;
 import com.app.spoun.domain.Role;
 import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.mappers.AdminMapper;
@@ -53,8 +52,8 @@ public class AdminService{
     private final PasswordEncoder passwordEncoder;
 
 
-    public Map<String,Object> getAllAdmin(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllAdmin(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of admins
         Pageable page = PageRequest.of(idPage, size);
@@ -77,8 +76,8 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String,Object> findAdminById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findAdminById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Admin admin = iAdminRepository.findById(id).orElse(null);
         AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
         if(adminDTO != null){
@@ -89,8 +88,8 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String,Object> saveAdmin(AdminDTO adminDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveAdmin(AdminDTO adminDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
+        Map<String, Object> answer = new TreeMap<>();
 
         if(adminDTO == null){
             answer.put("error", "Admin not saved");
@@ -149,8 +148,8 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String,Object> editAdmin(AdminDTO adminDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editAdmin(AdminDTO adminDTO){
+        Map<String, Object> answer = new TreeMap<>();
 
         if(adminDTO == null){
             answer.put("error", "Admin not found");
@@ -177,8 +176,8 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String,Object> deleteAdmin(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteAdmin(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iAdminRepository.existsById(id)){
             iAdminRepository.deleteById(id);
             answer.put("message", "Admin deleted successfully");

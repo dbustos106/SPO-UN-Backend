@@ -32,8 +32,8 @@ public class RoleService {
     private RoleMapper roleMapper = new RoleMapperImpl();
 
 
-    public Map<String,Object> getAllRole(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllRole(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of roles
         Pageable page = PageRequest.of(idPage, size);
@@ -56,8 +56,8 @@ public class RoleService {
         return answer;
     }
 
-    public Map<String,Object> findRoleById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findRoleById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Role role = iRoleRepository.findById(id).orElse(null);
         RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
         if(roleDTO != null){
@@ -68,8 +68,8 @@ public class RoleService {
         return answer;
     }
 
-    public Map<String,Object> saveRole(RoleDTO roleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveRole(RoleDTO roleDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(roleDTO != null){
             // save role
             Role role = roleMapper.roleDTOToRole(roleDTO);
@@ -86,8 +86,8 @@ public class RoleService {
         return answer;
     }
 
-    public Map<String,Object> editRole(RoleDTO roleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editRole(RoleDTO roleDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(roleDTO.getId() != null && iRoleRepository.existsById(roleDTO.getId())){
             // update role
             Role role = roleMapper.roleDTOToRole(roleDTO);
@@ -104,8 +104,8 @@ public class RoleService {
         return answer;
     }
 
-    public Map<String,Object> deleteRole(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteRole(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iRoleRepository.existsById(id)){
             iRoleRepository.deleteById(id);
             answer.put("message", "Role deleted successfully");

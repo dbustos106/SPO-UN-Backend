@@ -100,8 +100,8 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String,Object> getAllAppointment(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllAppointment(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of appointments
         Pageable page = PageRequest.of(idPage, size);
@@ -148,8 +148,8 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String,Object> findAppointmentById(Long id)  throws ParseException{
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findAppointmentById(Long id)  throws ParseException{
+        Map<String, Object> answer = new TreeMap<>();
 
         // create object Appointment_ScheduleDTO
         FullAppointmentDTO fullAppointment_DTO = new FullAppointmentDTO();
@@ -192,8 +192,8 @@ public class AppointmentService {
 
     }
 
-    public Map<String,Object> saveAppointment(FullAppointmentDTO fullAppointment_DTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveAppointment(FullAppointmentDTO fullAppointment_DTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(fullAppointment_DTO != null){
 
             // extract objects in Appointment_scheduleDTO
@@ -235,8 +235,8 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String,Object> editAppointment(FullAppointmentDTO fullAppointment_DTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editAppointment(FullAppointmentDTO fullAppointment_DTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(fullAppointment_DTO != null){
 
             // extract objects in fullAppointmentDTO
@@ -291,8 +291,8 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String,Object> deleteAppointment(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteAppointment(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iAppointmentRepository.existsById(id)){
             iAppointmentRepository.deleteById(id);
             answer.put("message", "Appointment deleted successfully");

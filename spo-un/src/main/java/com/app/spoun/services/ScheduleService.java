@@ -33,8 +33,8 @@ public class ScheduleService {
     private ScheduleMapper scheduleMapper = new ScheduleMapperImpl();
 
 
-    public Map<String,Object> getAllSchedule(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllSchedule(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of schedules
         Pageable page = PageRequest.of(idPage, size);
@@ -57,8 +57,8 @@ public class ScheduleService {
         return answer;
     }
 
-    public Map<String,Object> findScheduleById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findScheduleById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Schedule schedule = iScheduleRepository.findById(id).orElse(null);
         ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
         if(scheduleDTO != null){
@@ -69,8 +69,8 @@ public class ScheduleService {
         return answer;
     }
 
-    public Map<String,Object> saveSchedule(ScheduleDTO scheduleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveSchedule(ScheduleDTO scheduleDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(scheduleDTO != null){
             // get room
             Room room = iRoomRepository.findById(scheduleDTO.getRoom_id()).orElse(null);
@@ -86,8 +86,8 @@ public class ScheduleService {
         return answer;
     }
 
-    public Map<String,Object> editSchedule(ScheduleDTO scheduleDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editSchedule(ScheduleDTO scheduleDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(scheduleDTO.getId() != null && iScheduleRepository.existsById(scheduleDTO.getId())){
             // get room
             Room room = iRoomRepository.findById(scheduleDTO.getRoom_id()).orElse(null);
@@ -103,8 +103,8 @@ public class ScheduleService {
         return answer;
     }
 
-    public Map<String,Object> deleteSchedule(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteSchedule(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iScheduleRepository.existsById(id)){
             iScheduleRepository.deleteById(id);
             answer.put("message", "Schedule deleted successfully");

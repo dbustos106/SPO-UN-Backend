@@ -16,10 +16,11 @@ import java.io.UnsupportedEncodingException;
 @Service
 public class EmailSenderService{
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmailSenderService.class);
-
     @Autowired
     private JavaMailSender mailSender;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmailSenderService.class);
+
 
     @Async
     public void send(String toEmail, String subject, String content) throws MessagingException, UnsupportedEncodingException {

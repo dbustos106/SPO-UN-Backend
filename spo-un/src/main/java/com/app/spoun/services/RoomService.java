@@ -14,7 +14,6 @@ import com.app.spoun.repository.IRoomRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,8 +37,8 @@ public class RoomService {
     private BuildingMapper buildingMapper = new BuildingMapperImpl();
 
 
-    public Map<String,Object> getAllRoom(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllRoom(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // create list object FullRoomDTO
         List<FullRoomDTO> listFullRoomDTOS = new ArrayList<>();
@@ -68,8 +67,8 @@ public class RoomService {
         return answer;
     }
 
-    public Map<String,Object> findRoomById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findRoomById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Room room = iRoomRepository.findById(id).orElse(null);
         RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
         if(roomDTO != null){
@@ -80,8 +79,8 @@ public class RoomService {
         return answer;
     }
 
-    public Map<String,Object> saveRoom(RoomDTO roomDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveRoom(RoomDTO roomDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(roomDTO != null){
             // get building
             Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
@@ -99,8 +98,8 @@ public class RoomService {
         return answer;
     }
 
-    public Map<String,Object> editRoom(RoomDTO roomDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editRoom(RoomDTO roomDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(roomDTO.getId() != null && iRoomRepository.existsById(roomDTO.getId())){
             // get building
             Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
@@ -116,8 +115,8 @@ public class RoomService {
         return answer;
     }
 
-    public Map<String,Object> deleteRoom(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteRoom(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iRoomRepository.existsById(id)){
             iRoomRepository.deleteById(id);
             answer.put("message", "Room deleted successfully");

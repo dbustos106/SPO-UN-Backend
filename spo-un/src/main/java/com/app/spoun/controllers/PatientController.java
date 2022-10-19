@@ -53,7 +53,7 @@ public class PatientController {
         return ResponseEntity.ok().body(answer);
     }
 
-    @PutMapping(value = "/cancelAppointment/{id}")
+    @PutMapping(value = "/{id}/cancelAppointment")
     public ResponseEntity<?> cancelAppointmentByAppointmentId(@PathVariable("id") Long id){
         Map<String, Object> answer = new TreeMap<>();
         try{

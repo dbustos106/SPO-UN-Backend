@@ -11,9 +11,11 @@ import com.app.spoun.mappers.ProfessorMapperImpl;
 import com.app.spoun.mappers.StudentMapper;
 import com.app.spoun.mappers.StudentMapperImpl;
 import com.app.spoun.repository.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -82,8 +84,8 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String,Object> getAllProfessor(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllProfessor(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of professors
         Pageable page = PageRequest.of(idPage, size);
@@ -106,8 +108,8 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String,Object> findProfessorById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findProfessorById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Professor professor = iProfessorRepository.findById(id).orElse(null);
         ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
         if(professorDTO != null){
@@ -118,8 +120,8 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String,Object> getStudentsByProfessorId(Integer idPage, Integer size, Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getStudentsByProfessorId(Integer idPage, Integer size, Long id){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of students
         Pageable page = PageRequest.of(idPage, size);
@@ -142,8 +144,8 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String,Object> saveProfessor(ProfessorDTO professorDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveProfessor(ProfessorDTO professorDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
+        Map<String, Object> answer = new TreeMap<>();
 
         if(professorDTO == null){
             answer.put("error", "Professor not saved");
@@ -204,8 +206,8 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String,Object> editProfessor(ProfessorDTO professorDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editProfessor(ProfessorDTO professorDTO){
+        Map<String, Object> answer = new TreeMap<>();
 
         if(professorDTO == null){
             answer.put("error", "Professor not found");
@@ -234,8 +236,8 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String,Object> deleteProfessor(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteProfessor(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iProfessorRepository.existsById(id)){
             iProfessorRepository.deleteById(id);
             answer.put("message", "Professor deleted successfully");

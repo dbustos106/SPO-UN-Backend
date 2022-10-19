@@ -33,8 +33,8 @@ public class AntecedentService{
     private AntecedentMapper antecedentMapper = new AntecedentMapperImpl();
 
 
-    public Map<String,Object> getAllAntecedent(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllAntecedent(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of antecedents
         Pageable page = PageRequest.of(idPage, size);
@@ -57,8 +57,8 @@ public class AntecedentService{
         return answer;
     }
 
-    public Map<String,Object> findAntecedentById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findAntecedentById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Antecedent antecedent = iAntecedentRepository.findById(id).orElse(null);
         AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
         if(antecedentDTO != null){
@@ -69,8 +69,8 @@ public class AntecedentService{
         return answer;
     }
 
-    public Map<String,Object> saveAntecedent(AntecedentDTO antecedentDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveAntecedent(AntecedentDTO antecedentDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(antecedentDTO != null){
             // get patient
             Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
@@ -86,8 +86,8 @@ public class AntecedentService{
         return answer;
     }
 
-    public Map<String,Object> editAntecedent(AntecedentDTO antecedentDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editAntecedent(AntecedentDTO antecedentDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(antecedentDTO != null && antecedentDTO.getId() != null && iAntecedentRepository.existsById(antecedentDTO.getId())){
             // get patient
             Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);

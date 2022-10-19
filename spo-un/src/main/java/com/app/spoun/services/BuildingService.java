@@ -26,8 +26,8 @@ public class BuildingService{
     private BuildingMapper buildingMapper = new BuildingMapperImpl();
 
 
-    public Map<String,Object> getAllBuilding(Integer idPage, Integer size){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> getAllBuilding(Integer idPage, Integer size){
+        Map<String, Object> answer = new TreeMap<>();
 
         // get page of buildings
         Pageable page = PageRequest.of(idPage, size);
@@ -50,8 +50,8 @@ public class BuildingService{
         return answer;
     }
 
-    public Map<String,Object> findBuildingById(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> findBuildingById(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         Building building = iBuildingRepository.findById(id).orElse(null);
         BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
         if(buildingDTO != null){
@@ -62,8 +62,8 @@ public class BuildingService{
         return answer;
     }
 
-    public Map<String,Object> saveBuilding(BuildingDTO buildingDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> saveBuilding(BuildingDTO buildingDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(buildingDTO != null){
             // save building
             Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
@@ -76,8 +76,8 @@ public class BuildingService{
         return answer;
     }
 
-    public Map<String,Object> editBuilding(BuildingDTO buildingDTO){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> editBuilding(BuildingDTO buildingDTO){
+        Map<String, Object> answer = new TreeMap<>();
         if(buildingDTO.getId() != null && iBuildingRepository.existsById(buildingDTO.getId())){
             // update building
             Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
@@ -89,8 +89,8 @@ public class BuildingService{
         return answer;
     }
 
-    public Map<String,Object> deleteBuilding(Long id){
-        Map<String,Object> answer = new TreeMap<>();
+    public Map<String, Object> deleteBuilding(Long id){
+        Map<String, Object> answer = new TreeMap<>();
         if(iBuildingRepository.existsById(id)){
             iBuildingRepository.deleteById(id);
             answer.put("message", "Building deleted successfully");
