@@ -81,11 +81,10 @@ class PatientServiceTest {
         assertNotNull(patientService.findPatientById(1L));
     }
 
-    /*@Test
+    @Test
     void savePatient() throws UnsupportedEncodingException, MessagingException {
-        Mockito.when(iPatientRepository.save(any(Patient.class))).thenReturn(patient);
         assertNotNull(patientService.savePatient(new PatientDTO(), "siteUrl"));
-    }*/
+    }
 
     @Test
     void editPatient(){

@@ -7,7 +7,9 @@ import com.app.spoun.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -76,11 +78,10 @@ class AdminServiceTest {
         assertNotNull(adminService.findAdminById(1L));
     }
 
-    /*@Test
+    @Test
     void saveAdmin() throws UnsupportedEncodingException, MessagingException {
-        Mockito.when(iAdminRepository.save(any(Admin.class))).thenReturn(admin);
         assertNotNull(adminService.saveAdmin(new AdminDTO(), "siteUrl"));
-    }*/
+    }
 
     @Test
     void editAdmin(){

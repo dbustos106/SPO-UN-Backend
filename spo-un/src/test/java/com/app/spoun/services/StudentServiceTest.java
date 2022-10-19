@@ -89,11 +89,10 @@ class StudentServiceTest {
         assertNotNull(studentService.findStudentById(1L));
     }
 
-    /*@Test
+    @Test
     void saveStudent() throws UnsupportedEncodingException, MessagingException {
-        Mockito.when(iStudentRepository.save(any(Student.class))).thenReturn(student);
         assertNotNull(studentService.saveStudent(new StudentDTO(), "siteUrl"));
-    }*/
+    }
 
     @Test
     void editStudent(){
