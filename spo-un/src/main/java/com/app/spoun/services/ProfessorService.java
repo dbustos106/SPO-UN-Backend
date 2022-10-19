@@ -55,7 +55,6 @@ public class ProfessorService{
 
     private ProfessorMapper professorMapper = new ProfessorMapperImpl();
     private StudentMapper studentMapper = new StudentMapperImpl();
-
     private final PasswordEncoder passwordEncoder;
 
 

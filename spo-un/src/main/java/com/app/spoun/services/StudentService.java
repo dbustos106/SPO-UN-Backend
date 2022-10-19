@@ -55,11 +55,10 @@ public class StudentService {
     private StudentMapper studentMapper = new StudentMapperImpl();
     private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
     private AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
-
     private final PasswordEncoder passwordEncoder;
 
 
-    public Map<String, Object> cancelAppointmentById(Long id){
+    public Map<String, Object> cancelAppointmentByAppointmentId(Long id) throws MessagingException, UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointment
@@ -69,6 +68,49 @@ public class StudentService {
             appointment.setState("Canceled");
             iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment canceled successfully");
+
+            // get professor
+            Professor professor = appointment.getProfessor();
+            String emailProfessor = "Querid@ [[name]],<br>"
+                    + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
+                    + "Si tiene algúna queja o comentario, comuníquese con los estudiantes a cargo:<br>";
+
+            // get patient
+            Patient patient = appointment.getPatient();
+            String emailPatient = "Querid@ [[name]],<br>"
+                    + "Su cita número [[id]] ha sido cancelada por los estudiantes a cargo de atenderl@.<br>"
+                    + "Si tiene algúna queja o comentario, comuníquese con ellos:<br>";
+
+            // get students
+            List<Student> students = iStudentRepository.findByAppointment_id(id);
+            for(Student student : students){
+                String emailStudent = "Querid@ [[name]],<br>"
+                        + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
+                        + "Gracias,<br>"
+                        + "Spo-un.";
+                String subjectStudent = "Su cita ha sido cancelada";
+                emailStudent = emailStudent.replace("[[name]]", student.getName());
+                emailStudent = emailStudent.replace("[[id]]", id.toString());
+                emailSenderService.send(student.getEmail(), subjectStudent, emailStudent);
+
+                emailProfessor += student.getName() + ":" + student.getEmail() + ".<br>";
+                emailPatient += student.getName() + ":" + student.getEmail() + ".<br>";
+            }
+
+            // send email to professor
+            emailProfessor += "Gracias,<br>" + "Spo-un.";
+            String subjectProfessor = "Su cita ha sido cancelada";
+            emailProfessor = emailProfessor.replace("[[name]]", professor.getName());
+            emailProfessor = emailProfessor.replace("[[id]]", id.toString());
+            emailSenderService.send(professor.getEmail(), subjectProfessor, emailProfessor);
+
+            // send email to patient
+            emailPatient += "Gracias,<br>" + "Spo-un.";
+            String subjectPatient = "Su cita ha sido cancelada";
+            emailPatient = emailPatient.replace("[[name]]", patient.getName());
+            emailPatient = emailPatient.replace("[[id]]", id.toString());
+            emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
+
         }else{
             answer.put("error", "No appointment found");
         }

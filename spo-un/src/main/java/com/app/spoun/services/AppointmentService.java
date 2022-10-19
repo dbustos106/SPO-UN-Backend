@@ -61,7 +61,7 @@ public class AppointmentService {
         return true;
     }
 
-    public Map<String, Object> confirmAppointmentById(Long appointmentId, Long patientId, ScheduleDTO scheduleDTO) throws ParseException{
+    public Map<String, Object> confirmAppointmentByAppointmentId(Long appointmentId, Long patientId, ScheduleDTO scheduleDTO) throws ParseException{
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointment
@@ -124,12 +124,12 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String, Object> getAvailableAppointment(Integer idPage, Integer size){
+    public Map<String, Object> getAllAvailableAppointment(Integer idPage, Integer size){
         Map<String, Object> answer = new TreeMap<>();
 
         // get page of appointments
         Pageable page = PageRequest.of(idPage, size);
-        Page<Appointment> appointments = iAppointmentRepository.findAvailable(page);
+        Page<Appointment> appointments = iAppointmentRepository.findAllAvailable(page);
 
         // map all appointments
         List<AppointmentDTO> listAppointmentDTOS = new ArrayList<>();

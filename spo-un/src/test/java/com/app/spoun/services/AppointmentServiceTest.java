@@ -31,28 +31,20 @@ class AppointmentServiceTest {
 
     @Mock
     private IAppointmentRepository iAppointmentRepository;
-
     @Mock
     private ITentativeScheduleRepository iTentativeScheduleRepository;
-
     @Mock
     private IScheduleRepository iScheduleRepository;
-
     @Mock
     private IStudentRepository iStudentRepository;
-
     @Mock
     private IPatientRepository iPatientRepository;
-
     @Mock
     private IRoomRepository iRoomRepository;
-
     @Mock
     private ScheduleService scheduleService;
-
     @Mock
     private TentativeScheduleService tentativeScheduleService;
-
     @Mock
     private Patient patient;
 
@@ -61,18 +53,13 @@ class AppointmentServiceTest {
 
     @Mock
     private Building building;
-
     @Mock
     private Professor professor;
-
     @Mock
     private AppointmentDTO appointmentDTO;
-
     @Mock
     private TentativeScheduleDTO tentativeScheduleDTO;
-
     private List<TentativeScheduleDTO> tentativeSchedules;
-
     private FullAppointmentDTO fullAppointmentDTO;
 
     private Room room;
@@ -175,7 +162,7 @@ class AppointmentServiceTest {
     @Test
     void confirmAppointmentById() throws ParseException {
         Mockito.when(iAppointmentRepository.findById(appointment.getId())).thenReturn(Optional.of(appointment));
-        assertNotNull(appointmentService.confirmAppointmentById(room.getId(), patient.getId(), scheduleDTO));
+        assertNotNull(appointmentService.confirmAppointmentByAppointmentId(room.getId(), patient.getId(), scheduleDTO));
     }
 
     @Test

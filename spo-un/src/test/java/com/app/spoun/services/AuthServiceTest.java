@@ -5,6 +5,7 @@ import com.app.spoun.repository.IAdminRepository;
 import com.app.spoun.repository.IPatientRepository;
 import com.app.spoun.repository.IProfessorRepository;
 import com.app.spoun.repository.IStudentRepository;
+import com.app.spoun.security.JwtIOPropieties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,15 +23,14 @@ class AuthServiceTest {
 
     @Mock
     private IStudentRepository iStudentRepository;
-
     @Mock
     private IProfessorRepository iProfessorRepository;
-
     @Mock
     private IPatientRepository iPatientRepository;
-
     @Mock
     private IAdminRepository iAdminRepository;
+    @Mock
+    private JwtIOPropieties jwtIOPropieties;
 
     @InjectMocks
     private AuthService authService;
@@ -66,6 +66,7 @@ class AuthServiceTest {
         patient.setAge(34);
         patient.setAntecedents(new ArrayList<>());
         patient.setAppointments(new ArrayList<>());
+        patient.setEnabled(true);
         role.setName("Patient");
         patient.setRole(role);
 

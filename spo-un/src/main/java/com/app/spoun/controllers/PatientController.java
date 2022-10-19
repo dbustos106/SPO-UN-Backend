@@ -54,10 +54,10 @@ public class PatientController {
     }
 
     @PutMapping(value = "/cancelAppointment/{id}")
-    public ResponseEntity<?> cancelAppointmentById(@PathVariable("id") Long id){
+    public ResponseEntity<?> cancelAppointmentByAppointmentId(@PathVariable("id") Long id){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.cancelAppointmentById(id);
+            answer = patientService.cancelAppointmentByAppointmentId(id);
         }catch(Exception e){
             answer.put("error", e);
         }

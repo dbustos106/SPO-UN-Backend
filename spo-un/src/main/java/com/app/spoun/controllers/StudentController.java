@@ -78,10 +78,10 @@ public class StudentController {
     }
 
     @PutMapping(value = "/cancelAppointment/{id}")
-    public ResponseEntity<?> cancelAppointmentById(@PathVariable("id") Long id){
+    public ResponseEntity<?> cancelAppointmentByAppointmentId(@PathVariable("id") Long id){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.cancelAppointmentById(id);
+            answer = studentService.cancelAppointmentByAppointmentId(id);
         }catch(Exception e){
             answer.put("error", e);
         }

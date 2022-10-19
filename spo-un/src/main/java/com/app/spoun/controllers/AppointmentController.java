@@ -20,13 +20,13 @@ public class AppointmentController{
 
 
     @PutMapping(value = "/{appointmentId}/confirmPatient/{patientId}")
-    public ResponseEntity<?> confirmAppointmentById(
+    public ResponseEntity<?> confirmAppointmentByAppointmentId(
             @PathVariable("appointmentId") Long appointmentId,
             @PathVariable("patientId") Long patientId,
             @RequestBody ScheduleDTO scheduleDTO){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = appointmentService.confirmAppointmentById(appointmentId, patientId, scheduleDTO);
+            answer = appointmentService.confirmAppointmentByAppointmentId(appointmentId, patientId, scheduleDTO);
         }catch(Exception e){
             answer.put("error", e);
         }
@@ -47,12 +47,12 @@ public class AppointmentController{
     }
 
     @GetMapping(value = "/available")
-    public ResponseEntity<?> getAvailableAppointment(
+    public ResponseEntity<?> getAllAvailableAppointment(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
         Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = appointmentService.getAvailableAppointment(page, size);
+            answer = appointmentService.getAllAvailableAppointment(page, size);
         }catch(Exception e){
             answer.put("error", e);
         }

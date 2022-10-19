@@ -50,7 +50,6 @@ public class AdminService{
     private EmailSenderService emailSenderService;
 
     private AdminMapper adminMapper = new AdminMapperImpl();
-
     private final PasswordEncoder passwordEncoder;
 
 
