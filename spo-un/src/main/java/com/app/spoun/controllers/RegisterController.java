@@ -24,14 +24,21 @@ import java.util.TreeMap;
 @RequestMapping("/register")
 public class RegisterController {
 
-    @Autowired
     private StudentService studentService;
-    @Autowired
     private ProfessorService professorService;
-    @Autowired
     private PatientService patientService;
-    @Autowired
     private AdminService adminService;
+
+    @Autowired
+    public RegisterController(StudentService studentService,
+                              ProfessorService professorService,
+                              PatientService patientService,
+                              AdminService adminService){
+        this.studentService = studentService;
+        this.professorService = professorService;
+        this.patientService = patientService;
+        this.adminService = adminService;
+    }
 
 
     @PostMapping(value = "/student")

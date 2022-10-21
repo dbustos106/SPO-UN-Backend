@@ -3,7 +3,6 @@ package com.app.spoun.services;
 import com.app.spoun.domain.Role;
 import com.app.spoun.dto.RoleDTO;
 import com.app.spoun.mappers.RoleMapper;
-import com.app.spoun.mappers.RoleMapperImpl;
 import com.app.spoun.repository.IRoleRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +25,15 @@ import java.util.TreeMap;
 @Slf4j
 public class RoleService {
 
-    @Autowired
     private IRoleRepository iRoleRepository;
+    private RoleMapper roleMapper;
 
-    private RoleMapper roleMapper = new RoleMapperImpl();
+    @Autowired
+    public RoleService(IRoleRepository iRoleRepository,
+                       RoleMapper roleMapper){
+        this.iRoleRepository = iRoleRepository;
+        this.roleMapper = roleMapper;
+    }
 
 
     public Map<String, Object> getAllRole(Integer idPage, Integer size){

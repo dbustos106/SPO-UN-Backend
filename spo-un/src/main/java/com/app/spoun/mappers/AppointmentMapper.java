@@ -5,7 +5,7 @@ import com.app.spoun.dto.AppointmentDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AppointmentMapper {
 
     @Mapping(source = "room.id", target = "room_id")

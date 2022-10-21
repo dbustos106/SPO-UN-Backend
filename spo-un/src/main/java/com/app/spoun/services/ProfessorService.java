@@ -7,9 +7,7 @@ import com.app.spoun.domain.Student;
 import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.dto.StudentDTO;
 import com.app.spoun.mappers.ProfessorMapper;
-import com.app.spoun.mappers.ProfessorMapperImpl;
 import com.app.spoun.mappers.StudentMapper;
-import com.app.spoun.mappers.StudentMapperImpl;
 import com.app.spoun.repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -38,26 +36,42 @@ import java.util.TreeMap;
 @Slf4j
 public class ProfessorService{
 
-    @Autowired
     private IProfessorRepository iProfessorRepository;
-    @Autowired
     private IStudentRepository iStudentRepository;
-    @Autowired
     private IPatientRepository iPatientRepository;
-    @Autowired
     private IAdminRepository iAdminRepository;
-    @Autowired
     private IRoleRepository iRoleRepository;
-    @Autowired
     private IAppointmentRepository iAppointmentRepository;
-    @Autowired
     private EmailValidatorService emailValidatorService;
-    @Autowired
     private EmailSenderService emailSenderService;
+    private ProfessorMapper professorMapper;
+    private StudentMapper studentMapper;
+    private PasswordEncoder passwordEncoder;
 
-    private ProfessorMapper professorMapper = new ProfessorMapperImpl();
-    private StudentMapper studentMapper = new StudentMapperImpl();
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    public ProfessorService(IProfessorRepository iProfessorRepository,
+                            IStudentRepository iStudentRepository,
+                            IPatientRepository iPatientRepository,
+                            IAdminRepository iAdminRepository,
+                            IRoleRepository iRoleRepository,
+                            IAppointmentRepository iAppointmentRepository,
+                            EmailValidatorService emailValidatorService,
+                            EmailSenderService emailSenderService,
+                            ProfessorMapper professorMapper,
+                            StudentMapper studentMapper,
+                            PasswordEncoder passwordEncoder){
+        this.iProfessorRepository = iProfessorRepository;
+        this.iStudentRepository = iStudentRepository;
+        this.iPatientRepository = iPatientRepository;
+        this.iAdminRepository = iAdminRepository;
+        this.iRoleRepository = iRoleRepository;
+        this.iAppointmentRepository = iAppointmentRepository;
+        this.emailValidatorService = emailValidatorService;
+        this.emailSenderService = emailSenderService;
+        this.professorMapper = professorMapper;
+        this.studentMapper = studentMapper;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public Map<String, Object> getProfessorScheduleByProfessorId(Long id){

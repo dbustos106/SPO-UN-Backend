@@ -4,7 +4,7 @@ import com.app.spoun.domain.Building;
 import com.app.spoun.dto.BuildingDTO;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BuildingMapper {
 
     public BuildingDTO buildingToBuildingDTO(Building building);

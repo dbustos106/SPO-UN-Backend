@@ -14,8 +14,12 @@ import java.util.TreeMap;
 @RequestMapping("/professor")
 public class ProfessorController {
 
-    @Autowired
     private ProfessorService professorService;
+
+    @Autowired
+    public ProfessorController(ProfessorService professorService){
+        this.professorService = professorService;
+    }
 
 
     @GetMapping(value = "/all")

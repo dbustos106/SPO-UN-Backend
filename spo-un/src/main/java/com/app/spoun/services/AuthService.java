@@ -43,16 +43,24 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class AuthService implements UserDetailsService {
 
-    @Autowired
     private IStudentRepository iStudentRepository;
-    @Autowired
     private IProfessorRepository iProfessorRepository;
-    @Autowired
     private IPatientRepository iPatientRepository;
-    @Autowired
     private IAdminRepository iAdminRepository;
-    @Autowired
     private JwtIOPropieties jwtIOPropieties;
+
+    @Autowired
+    public AuthService(IStudentRepository iStudentRepository,
+                       IProfessorRepository iProfessorRepository,
+                       IPatientRepository iPatientRepository,
+                       IAdminRepository iAdminRepository,
+                       JwtIOPropieties jwtIOPropieties){
+        this.iStudentRepository = iStudentRepository;
+        this.iProfessorRepository = iProfessorRepository;
+        this.iPatientRepository = iPatientRepository;
+        this.iAdminRepository = iAdminRepository;
+        this.jwtIOPropieties = jwtIOPropieties;
+    }
 
 
     @Override

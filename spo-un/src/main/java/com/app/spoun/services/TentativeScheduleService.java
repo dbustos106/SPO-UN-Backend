@@ -4,7 +4,6 @@ import com.app.spoun.domain.Appointment;
 import com.app.spoun.domain.TentativeSchedule;
 import com.app.spoun.dto.TentativeScheduleDTO;
 import com.app.spoun.mappers.TentativeScheduleMapper;
-import com.app.spoun.mappers.TentativeScheduleMapperImpl;
 import com.app.spoun.repository.IAppointmentRepository;
 import com.app.spoun.repository.ITentativeScheduleRepository;
 
@@ -25,12 +24,18 @@ import java.util.TreeMap;
 @Service
 public class TentativeScheduleService {
 
-    @Autowired
     private ITentativeScheduleRepository iTentativeScheduleRepository;
-    @Autowired
     private IAppointmentRepository iAppointmentRepository;
+    private TentativeScheduleMapper tentativeScheduleMapper;
 
-    private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
+    @Autowired
+    public TentativeScheduleService(ITentativeScheduleRepository iTentativeScheduleRepository,
+                                    IAppointmentRepository iAppointmentRepository,
+                                    TentativeScheduleMapper tentativeScheduleMapper){
+        this.iTentativeScheduleRepository = iTentativeScheduleRepository;
+        this.iAppointmentRepository = iAppointmentRepository;
+        this.tentativeScheduleMapper = tentativeScheduleMapper;
+    }
 
 
     public Map<String, Object> getAllTentativeSchedule(Integer idPage, Integer size){

@@ -15,8 +15,12 @@ import java.util.TreeMap;
 @RequestMapping("/appointment")
 public class AppointmentController{
 
-    @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    public AppointmentController(AppointmentService appointmentService){
+        this.appointmentService = appointmentService;
+    }
 
 
     @PutMapping(value = "/{appointmentId}/confirmPatient/{patientId}")
@@ -46,7 +50,7 @@ public class AppointmentController{
         return ResponseEntity.ok().body(answer);
     }
 
-    @GetMapping(value = "/available")
+    @GetMapping(value = "/allAvailable")
     public ResponseEntity<?> getAllAvailableAppointment(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){

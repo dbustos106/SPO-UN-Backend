@@ -5,7 +5,7 @@ import com.app.spoun.dto.ScheduleDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ScheduleMapper {
 
     @Mapping(source = "room.id", target = "room_id")

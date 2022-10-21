@@ -1,6 +1,5 @@
 package com.app.spoun.services;
 
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,14 @@ import java.io.UnsupportedEncodingException;
 @Service
 public class EmailSenderService{
 
-    @Autowired
     private JavaMailSender mailSender;
+    private static Logger LOGGER;
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmailSenderService.class);
+    @Autowired
+    public EmailSenderService(JavaMailSender mailSender){
+        this.mailSender = mailSender;
+        LOGGER = LoggerFactory.getLogger(EmailSenderService.class);
+    }
 
 
     @Async

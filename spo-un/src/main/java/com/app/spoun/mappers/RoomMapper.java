@@ -5,7 +5,7 @@ import com.app.spoun.dto.RoomDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface RoomMapper {
 
     @Mapping(source = "building.id", target = "building_id")

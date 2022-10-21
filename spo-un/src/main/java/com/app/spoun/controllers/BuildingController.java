@@ -14,8 +14,12 @@ import java.util.TreeMap;
 @RequestMapping("/building")
 public class BuildingController {
 
-    @Autowired
     private BuildingService buildingService;
+
+    @Autowired
+    public BuildingController(BuildingService buildingService){
+        this.buildingService = buildingService;
+    }
 
 
     @GetMapping(value = "/all")

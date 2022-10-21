@@ -5,7 +5,7 @@ import com.app.spoun.dto.AntecedentDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AntecedentMapper {
 
     @Mapping(source = "patient.id", target = "patient_id")

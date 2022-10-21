@@ -14,8 +14,12 @@ import java.util.TreeMap;
 @RequestMapping("/antecedent")
 public class AntecedentController {
 
-    @Autowired
     private AntecedentService antecedentService;
+
+    @Autowired
+    public AntecedentController(AntecedentService antecedentService){
+        this.antecedentService = antecedentService;
+    }
 
 
     @GetMapping(value = "/all")

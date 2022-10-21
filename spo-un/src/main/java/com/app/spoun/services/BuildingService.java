@@ -3,7 +3,6 @@ package com.app.spoun.services;
 import com.app.spoun.domain.Building;
 import com.app.spoun.dto.BuildingDTO;
 import com.app.spoun.mappers.BuildingMapper;
-import com.app.spoun.mappers.BuildingMapperImpl;
 import com.app.spoun.repository.IBuildingRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,15 @@ import java.util.*;
 @Service
 public class BuildingService{
 
-    @Autowired
     private IBuildingRepository iBuildingRepository;
+    private BuildingMapper buildingMapper;
 
-    private BuildingMapper buildingMapper = new BuildingMapperImpl();
+    @Autowired
+    public BuildingService(IBuildingRepository iBuildingRepository,
+                           BuildingMapper buildingMapper){
+        this.iBuildingRepository = iBuildingRepository;
+        this.buildingMapper = buildingMapper;
+    }
 
 
     public Map<String, Object> getAllBuilding(Integer idPage, Integer size){

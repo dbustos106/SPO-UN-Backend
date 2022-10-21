@@ -5,7 +5,7 @@ import com.app.spoun.dto.AdminDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AdminMapper {
 
     @Mapping(source = "role.id", target = "role_id")

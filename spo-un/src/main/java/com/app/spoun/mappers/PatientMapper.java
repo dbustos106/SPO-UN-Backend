@@ -5,7 +5,7 @@ import com.app.spoun.dto.PatientDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PatientMapper {
 
     @Mapping(source = "role.id", target = "role_id")

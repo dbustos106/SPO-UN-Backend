@@ -13,8 +13,12 @@ import java.util.*;
 @RequestMapping("/role")
 public class RoleController {
 
-    @Autowired
     private RoleService roleService;
+
+    @Autowired
+    public RoleController(RoleService roleService){
+        this.roleService = roleService;
+    }
 
 
     @GetMapping(value = "/all")

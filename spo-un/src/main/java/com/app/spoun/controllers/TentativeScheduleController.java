@@ -14,8 +14,12 @@ import java.util.TreeMap;
 @RequestMapping("/tentativeSchedule")
 public class TentativeScheduleController {
 
-    @Autowired
     private TentativeScheduleService tentativeScheduleService;
+
+    @Autowired
+    public TentativeScheduleController(TentativeScheduleService tentativeScheduleService){
+        this.tentativeScheduleService = tentativeScheduleService;
+    }
 
 
     @GetMapping(value = "/all")

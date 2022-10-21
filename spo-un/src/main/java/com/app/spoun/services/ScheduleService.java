@@ -4,7 +4,6 @@ import com.app.spoun.domain.Room;
 import com.app.spoun.domain.Schedule;
 import com.app.spoun.dto.ScheduleDTO;
 import com.app.spoun.mappers.ScheduleMapper;
-import com.app.spoun.mappers.ScheduleMapperImpl;
 import com.app.spoun.repository.IRoomRepository;
 import com.app.spoun.repository.IScheduleRepository;
 
@@ -25,12 +24,18 @@ import java.util.TreeMap;
 @Service
 public class ScheduleService {
 
-    @Autowired
     private IScheduleRepository iScheduleRepository;
-    @Autowired
     private IRoomRepository iRoomRepository;
+    private ScheduleMapper scheduleMapper;
 
-    private ScheduleMapper scheduleMapper = new ScheduleMapperImpl();
+    @Autowired
+    public ScheduleService(IScheduleRepository iScheduleRepository,
+                           IRoomRepository iRoomRepository,
+                           ScheduleMapper scheduleMapper){
+        this.iScheduleRepository = iScheduleRepository;
+        this.iRoomRepository = iRoomRepository;
+        this.scheduleMapper = scheduleMapper;
+    }
 
 
     public Map<String, Object> getAllSchedule(Integer idPage, Integer size){

@@ -3,7 +3,6 @@ package com.app.spoun.services;
 import com.app.spoun.domain.*;
 import com.app.spoun.dto.*;
 import com.app.spoun.mappers.*;
-import com.app.spoun.mappers.TentativeScheduleMapperImpl;
 import com.app.spoun.mappers.TentativeScheduleMapper;
 import com.app.spoun.repository.*;
 
@@ -23,27 +22,39 @@ import java.util.*;
 @Service
 public class AppointmentService {
 
-    @Autowired
     private IAppointmentRepository iAppointmentRepository;
-    @Autowired
     private IRoomRepository iRoomRepository;
-    @Autowired
     private IPatientRepository iPatientRepository;
-    @Autowired
-    private IProfessorRepository iProfessorRepository;
-    @Autowired
     private IStudentRepository iStudentRepository;
-    @Autowired
     private ITentativeScheduleRepository iTentativeScheduleRepository;
-    @Autowired
     private IScheduleRepository iScheduleRepository;
-    @Autowired
+    private AppointmentMapper appointmentMapper;
+    private TentativeScheduleMapper tentativeScheduleMapper;
     private TentativeScheduleService tentativeScheduleService;
-    @Autowired
     private ScheduleService scheduleService;
 
-    private AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
-    private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
+    @Autowired
+    public AppointmentService(IAppointmentRepository iAppointmentRepository,
+                              IRoomRepository iRoomRepository,
+                              IPatientRepository iPatientRepository,
+                              IStudentRepository iStudentRepository,
+                              ITentativeScheduleRepository iTentativeScheduleRepository,
+                              IScheduleRepository iScheduleRepository,
+                              AppointmentMapper appointmentMapper,
+                              TentativeScheduleMapper tentativeScheduleMapper,
+                              TentativeScheduleService tentativeScheduleService,
+                              ScheduleService scheduleService){
+        this.iAppointmentRepository = iAppointmentRepository;
+        this.iRoomRepository = iRoomRepository;
+        this.iPatientRepository = iPatientRepository;
+        this.iStudentRepository = iStudentRepository;
+        this.iTentativeScheduleRepository = iTentativeScheduleRepository;
+        this.iScheduleRepository = iScheduleRepository;
+        this.appointmentMapper = appointmentMapper;
+        this.tentativeScheduleMapper = tentativeScheduleMapper;
+        this.tentativeScheduleService = tentativeScheduleService;
+        this.scheduleService = scheduleService;
+    }
 
 
     public boolean isAvailableSchedule(List<Schedule> schedules, String start_time, String end_time) throws ParseException{

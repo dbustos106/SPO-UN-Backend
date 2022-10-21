@@ -16,8 +16,12 @@ import java.io.IOException;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
     private AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService){
+        this.authService = authService;
+    }
 
 
     @GetMapping(value = "/refreshToken")

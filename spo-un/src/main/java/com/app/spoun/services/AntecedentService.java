@@ -4,7 +4,6 @@ import com.app.spoun.domain.Antecedent;
 import com.app.spoun.domain.Patient;
 import com.app.spoun.dto.AntecedentDTO;
 import com.app.spoun.mappers.AntecedentMapper;
-import com.app.spoun.mappers.AntecedentMapperImpl;
 import com.app.spoun.repository.IAntecedentRepository;
 import com.app.spoun.repository.IPatientRepository;
 
@@ -25,12 +24,18 @@ import java.util.TreeMap;
 @Service
 public class AntecedentService{
 
-    @Autowired
     private IAntecedentRepository iAntecedentRepository;
-    @Autowired
     private IPatientRepository iPatientRepository;
+    private AntecedentMapper antecedentMapper;
 
-    private AntecedentMapper antecedentMapper = new AntecedentMapperImpl();
+    @Autowired
+    public AntecedentService(IAntecedentRepository iAntecedentRepository,
+                             IPatientRepository iPatientRepository,
+                             AntecedentMapper antecedentMapper){
+        this.iAntecedentRepository = iAntecedentRepository;
+        this.iPatientRepository = iPatientRepository;
+        this.antecedentMapper = antecedentMapper;
+    }
 
 
     public Map<String, Object> getAllAntecedent(Integer idPage, Integer size){

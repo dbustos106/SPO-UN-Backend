@@ -4,7 +4,6 @@ import com.app.spoun.domain.Admin;
 import com.app.spoun.domain.Role;
 import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.mappers.AdminMapper;
-import com.app.spoun.mappers.AdminMapperImpl;
 import com.app.spoun.repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -33,23 +32,36 @@ import java.util.TreeMap;
 @Slf4j
 public class AdminService{
 
-    @Autowired
     private IAdminRepository iAdminRepository;
-    @Autowired
     private IProfessorRepository iProfessorRepository;
-    @Autowired
     private IStudentRepository iStudentRepository;
-    @Autowired
     private IPatientRepository iPatientRepository;
-    @Autowired
     private IRoleRepository iRoleRepository;
-    @Autowired
     private EmailValidatorService emailValidatorService;
-    @Autowired
     private EmailSenderService emailSenderService;
+    private AdminMapper adminMapper;
+    private PasswordEncoder passwordEncoder;
 
-    private AdminMapper adminMapper = new AdminMapperImpl();
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    public AdminService(IAdminRepository iAdminRepository,
+                        IProfessorRepository iProfessorRepository,
+                        IStudentRepository iStudentRepository,
+                        IPatientRepository iPatientRepository,
+                        IRoleRepository iRoleRepository,
+                        EmailValidatorService emailValidatorService,
+                        EmailSenderService emailSenderService,
+                        AdminMapper adminMapper,
+                        PasswordEncoder passwordEncoder){
+        this.iAdminRepository = iAdminRepository;
+        this.iProfessorRepository = iProfessorRepository;
+        this.iStudentRepository = iStudentRepository;
+        this.iPatientRepository = iPatientRepository;
+        this.iRoleRepository = iRoleRepository;
+        this.emailValidatorService = emailValidatorService;
+        this.emailSenderService = emailSenderService;
+        this.adminMapper = adminMapper;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public Map<String, Object> getAllAdmin(Integer idPage, Integer size){

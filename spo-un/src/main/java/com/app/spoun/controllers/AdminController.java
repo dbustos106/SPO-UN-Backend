@@ -14,8 +14,12 @@ import java.util.TreeMap;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
     private AdminService adminService;
+
+    @Autowired
+    public AdminController(AdminService adminService){
+        this.adminService = adminService;
+    }
 
 
     @GetMapping(value = "/all")

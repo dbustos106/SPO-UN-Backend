@@ -3,7 +3,6 @@ package com.app.spoun.services;
 import com.app.spoun.domain.*;
 import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.mappers.PatientMapper;
-import com.app.spoun.mappers.PatientMapperImpl;
 import com.app.spoun.repository.*;
 
 import lombok.RequiredArgsConstructor;
@@ -32,25 +31,39 @@ import java.util.TreeMap;
 @Slf4j
 public class PatientService{
 
-    @Autowired
     private IPatientRepository iPatientRepository;
-    @Autowired
     private IStudentRepository iStudentRepository;
-    @Autowired
     private IProfessorRepository iProfessorRepository;
-    @Autowired
     private IAdminRepository iAdminRepository;
-    @Autowired
     private IRoleRepository iRoleRepository;
-    @Autowired
     private IAppointmentRepository iAppointmentRepository;
-    @Autowired
     private EmailValidatorService emailValidatorService;
-    @Autowired
     private EmailSenderService emailSenderService;
+    private PatientMapper patientMapper;
+    private PasswordEncoder passwordEncoder;
 
-    private PatientMapper patientMapper = new PatientMapperImpl();
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    public PatientService(IPatientRepository iPatientRepository,
+                          IStudentRepository iStudentRepository,
+                          IProfessorRepository iProfessorRepository,
+                          IAdminRepository iAdminRepository,
+                          IRoleRepository iRoleRepository,
+                          IAppointmentRepository iAppointmentRepository,
+                          EmailValidatorService emailValidatorService,
+                          EmailSenderService emailSenderService,
+                          PatientMapper patientMapper,
+                          PasswordEncoder passwordEncoder){
+        this.iPatientRepository = iPatientRepository;
+        this.iStudentRepository = iStudentRepository;
+        this.iProfessorRepository = iProfessorRepository;
+        this.iAdminRepository = iAdminRepository;
+        this.iRoleRepository = iRoleRepository;
+        this.iAppointmentRepository = iAppointmentRepository;
+        this.emailValidatorService = emailValidatorService;
+        this.emailSenderService = emailSenderService;
+        this.patientMapper = patientMapper;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public Map<String, Object> cancelAppointmentByAppointmentId(Long id) throws MessagingException, UnsupportedEncodingException {
@@ -172,7 +185,8 @@ public class PatientService{
         return answer;
     }
 
-    public Map<String, Object> savePatient(PatientDTO patientDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> savePatient(PatientDTO patientDTO, String siteUrl)
+            throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(patientDTO == null){

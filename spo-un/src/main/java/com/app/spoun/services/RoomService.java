@@ -6,9 +6,7 @@ import com.app.spoun.dto.BuildingDTO;
 import com.app.spoun.dto.FullRoomDTO;
 import com.app.spoun.dto.RoomDTO;
 import com.app.spoun.mappers.BuildingMapper;
-import com.app.spoun.mappers.BuildingMapperImpl;
 import com.app.spoun.mappers.RoomMapper;
-import com.app.spoun.mappers.RoomMapperImpl;
 import com.app.spoun.repository.IBuildingRepository;
 import com.app.spoun.repository.IRoomRepository;
 
@@ -28,13 +26,21 @@ import java.util.TreeMap;
 @Service
 public class RoomService {
 
-    @Autowired
     private IRoomRepository iRoomRepository;
-    @Autowired
     private IBuildingRepository iBuildingRepository;
+    private RoomMapper roomMapper;
+    private BuildingMapper buildingMapper;
 
-    private RoomMapper roomMapper = new RoomMapperImpl();
-    private BuildingMapper buildingMapper = new BuildingMapperImpl();
+    @Autowired
+    public RoomService(IRoomRepository iRoomRepository,
+                       IBuildingRepository iBuildingRepository,
+                       RoomMapper roomMapper,
+                       BuildingMapper buildingMapper){
+        this.iRoomRepository = iRoomRepository;
+        this.iBuildingRepository = iBuildingRepository;
+        this.roomMapper = roomMapper;
+        this.buildingMapper = buildingMapper;
+    }
 
 
     public Map<String, Object> getAllRoom(Integer idPage, Integer size){

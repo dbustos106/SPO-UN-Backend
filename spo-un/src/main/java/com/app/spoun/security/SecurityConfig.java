@@ -29,18 +29,23 @@ import static org.springframework.http.HttpMethod.POST;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Autowired
     private JwtIOPropieties jwtIOPropieties;
-    @Autowired
     private UserDetailsService userDetailsService;
-    @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
+
+    @Autowired
+    public SecurityConfig(JwtIOPropieties jwtIOPropieties,
+                          UserDetailsService userDetailsService,
+                          AuthenticationConfiguration authenticationConfiguration){
+        this.jwtIOPropieties = jwtIOPropieties;
+        this.userDetailsService = userDetailsService;
+        this.authenticationConfiguration = authenticationConfiguration;
+    }
 
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter =
-                new CustomAuthenticationFilter(authenticationManagerBean(authenticationConfiguration), jwtIOPropieties);
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean(authenticationConfiguration), jwtIOPropieties);
         customAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
         http.cors().and().csrf().disable();

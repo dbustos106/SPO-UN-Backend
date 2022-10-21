@@ -33,29 +33,48 @@ import java.util.TreeMap;
 @Slf4j
 public class StudentService {
 
-    @Autowired
     private IStudentRepository iStudentRepository;
-    @Autowired
     private IProfessorRepository iProfessorRepository;
-    @Autowired
     private IPatientRepository iPatientRepository;
-    @Autowired
     private IAdminRepository iAdminRepository;
-    @Autowired
     private IRoleRepository iRoleRepository;
-    @Autowired
     private ITentativeScheduleRepository iTentativeScheduleRepository;
-    @Autowired
     private IAppointmentRepository iAppointmentRepository;
-    @Autowired
     private EmailValidatorService emailValidatorService;
-    @Autowired
     private EmailSenderService emailSenderService;
+    private StudentMapper studentMapper;
+    private TentativeScheduleMapper tentativeScheduleMapper;
+    private AppointmentMapper appointmentMapper;
+    private PasswordEncoder passwordEncoder;
 
-    private StudentMapper studentMapper = new StudentMapperImpl();
-    private TentativeScheduleMapper tentativeScheduleMapper = new TentativeScheduleMapperImpl();
-    private AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    public StudentService(IStudentRepository iStudentRepository,
+                          IProfessorRepository iProfessorRepository,
+                          IPatientRepository iPatientRepository,
+                          IAdminRepository iAdminRepository,
+                          IRoleRepository iRoleRepository,
+                          ITentativeScheduleRepository iTentativeScheduleRepository,
+                          IAppointmentRepository iAppointmentRepository,
+                          EmailValidatorService emailValidatorService,
+                          EmailSenderService emailSenderService,
+                          StudentMapper studentMapper,
+                          TentativeScheduleMapper tentativeScheduleMapper,
+                          AppointmentMapper appointmentMapper,
+                          PasswordEncoder passwordEncoder){
+        this.iStudentRepository = iStudentRepository;
+        this.iProfessorRepository = iProfessorRepository;
+        this.iPatientRepository = iPatientRepository;
+        this.iAdminRepository = iAdminRepository;
+        this.iRoleRepository = iRoleRepository;
+        this.iTentativeScheduleRepository = iTentativeScheduleRepository;
+        this.iAppointmentRepository = iAppointmentRepository;
+        this.emailValidatorService = emailValidatorService;
+        this.emailSenderService = emailSenderService;
+        this.studentMapper = studentMapper;
+        this.tentativeScheduleMapper = tentativeScheduleMapper;
+        this.appointmentMapper = appointmentMapper;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public Map<String, Object> cancelAppointmentByAppointmentId(Long id) throws MessagingException, UnsupportedEncodingException {
