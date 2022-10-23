@@ -191,7 +191,7 @@ public class ProfessorService{
             iProfessorRepository.save(professor);
             answer.put("message", "Professor saved successfully");
 
-            String content = "Querido [[name]],<br>"
+            String content = "Querid@ [[name]],<br>"
                     + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
                     + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
                     + "Gracias,<br>"
