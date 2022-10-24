@@ -83,7 +83,7 @@ class PatientServiceTest {
 
     @Test
     void savePatient() throws UnsupportedEncodingException, MessagingException {
-        assertNotNull(patientService.savePatient(new PatientDTO(), "siteUrl"));
+        assertNotNull(patientService.savePatient(new PatientDTO()));
     }
 
     @Test

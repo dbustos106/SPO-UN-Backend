@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/admin")
@@ -26,46 +25,42 @@ public class AdminController {
     public ResponseEntity<?> getAllAdmin(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = adminService.getAllAdmin(page, size);
+            Map<String, Object> answer = adminService.getAllAdmin(page, size);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findAdminById(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = adminService.findAdminById(id);
+            Map<String, Object> answer = adminService.findAdminById(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editAdmin(@RequestBody AdminDTO adminDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = adminService.editAdmin(adminDTO);
+            Map<String, Object> answer = adminService.editAdmin(adminDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteAdmin(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = adminService.deleteAdmin(id);
+            Map<String, Object> answer = adminService.deleteAdmin(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
 }

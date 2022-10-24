@@ -86,6 +86,7 @@ public class ProfessorService{
             Map<String,Object> schedule = new TreeMap<>();
             schedule.put("start_time", appointment.getStart_time());
             schedule.put("end_time", appointment.getEnd_time());
+            schedule.put("appointment_id", appointment.getId());
             listScheduleDTOS.add(schedule);
         }
 
@@ -158,7 +159,7 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String, Object> saveProfessor(ProfessorDTO professorDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> saveProfessor(ProfessorDTO professorDTO) throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(professorDTO == null){
@@ -197,7 +198,7 @@ public class ProfessorService{
                     + "Gracias,<br>"
                     + "Spo-un.";
             String subject = "Verifique su registro";
-            String verifyURL = siteUrl + "/professor/verify?code=" + professor.getVerification_code();
+            String verifyURL = "http://localhost:8080/verifyAccount/professor/" + professor.getVerification_code();
             content = content.replace("[[name]]", professor.getName());
             content = content.replace("[[URL]]", verifyURL);
             emailSenderService.send(professor.getEmail(), subject, content);
@@ -232,17 +233,14 @@ public class ProfessorService{
         }else if(!emailValidatorService.test(professorDTO.getEmail())){
             answer.put("error", "Email not valid");
         }else{
-            // get role
-            Role role = iRoleRepository.findByName("Professor").orElse(null);
+            // get patient
+            Professor professor = iProfessorRepository.findById(professorDTO.getId()).orElse(null);
 
             // update professor
-            Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
-            professor.setStudents(new ArrayList<>());
-            professor.setAppointments(new ArrayList<>());
-            professor.setRole(role);
-
-            // encrypt password
-            professor.setPassword(passwordEncoder.encode(professor.getPassword()));
+            professor.setUsername(professorDTO.getUsername());
+            professor.setName(professorDTO.getName());
+            professor.setDocument_type(professorDTO.getDocument_type());
+            professor.setDocument_number(professorDTO.getDocument_number());
 
             iProfessorRepository.save(professor);
             answer.put("message", "Professor updated successfully");

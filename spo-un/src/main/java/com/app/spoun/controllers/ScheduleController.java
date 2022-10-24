@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/schedule")
@@ -26,57 +25,52 @@ public class ScheduleController {
     public ResponseEntity<?> getAllSchedule(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.getAllSchedule(page, size);
+            Map<String, Object> answer = scheduleService.getAllSchedule(page, size);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findScheduleById(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.findScheduleById(id);
+            Map<String, Object> answer = scheduleService.findScheduleById(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveSchedule(@RequestBody ScheduleDTO scheduleDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.saveSchedule(scheduleDTO);
+            Map<String, Object> answer = scheduleService.saveSchedule(scheduleDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editSchedule(@RequestBody ScheduleDTO scheduleDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.editSchedule(scheduleDTO);
+            Map<String, Object> answer = scheduleService.editSchedule(scheduleDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteSchedule(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = scheduleService.deleteSchedule(id);
+            Map<String, Object> answer = scheduleService.deleteSchedule(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
 }

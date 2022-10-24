@@ -80,7 +80,7 @@ class AdminServiceTest {
 
     @Test
     void saveAdmin() throws UnsupportedEncodingException, MessagingException {
-        assertNotNull(adminService.saveAdmin(new AdminDTO(), "siteUrl"));
+        assertNotNull(adminService.saveAdmin(new AdminDTO()));
     }
 
     @Test

@@ -148,6 +148,7 @@ public class StudentService {
             Map<String,Object> schedule = new TreeMap<>();
             schedule.put("start_time", appointment.getStart_time());
             schedule.put("end_time", appointment.getEnd_time());
+            schedule.put("appointment_id", appointment.getId());
             listScheduleDTOS.add(schedule);
         }
 
@@ -243,7 +244,7 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String, Object> saveStudent(StudentDTO studentDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> saveStudent(StudentDTO studentDTO) throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(studentDTO == null){
@@ -283,7 +284,7 @@ public class StudentService {
                     + "Gracias,<br>"
                     + "Spo-un.";
             String subject = "Verifique su registro";
-            String verifyURL = siteUrl + "/student/verify?code=" + student.getVerification_code();
+            String verifyURL = "http://localhost:8080/verifyAccount/student/" + student.getVerification_code();
             content = content.replace("[[name]]", student.getName());
             content = content.replace("[[URL]]", verifyURL);
             emailSenderService.send(student.getEmail(), subject, content);
@@ -317,18 +318,14 @@ public class StudentService {
         }else if(!emailValidatorService.test(studentDTO.getEmail())){
             answer.put("error", "Email not valid");
         }else{
-            // get role and professor
-            Role role = iRoleRepository.findByName("Student").orElse(null);
-            Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
+            // get patient
+            Student student = iStudentRepository.findById(studentDTO.getId()).orElse(null);
 
             // update student
-            Student student = studentMapper.studentDTOToStudent(studentDTO);
-            student.setRole(role);
-            student.setProfessor(professor);
-            student.setAppointments(new ArrayList<>());
-
-            // encrypt password
-            student.setPassword(passwordEncoder.encode(student.getPassword()));
+            student.setUsername(studentDTO.getUsername());
+            student.setName(studentDTO.getName());
+            student.setDocument_type(studentDTO.getDocument_type());
+            student.setDocument_number(studentDTO.getDocument_number());
 
             iStudentRepository.save(student);
             answer.put("message", "Student updated successfully");

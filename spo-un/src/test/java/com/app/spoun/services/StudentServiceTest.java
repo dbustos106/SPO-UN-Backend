@@ -91,7 +91,7 @@ class StudentServiceTest {
 
     @Test
     void saveStudent() throws UnsupportedEncodingException, MessagingException {
-        assertNotNull(studentService.saveStudent(new StudentDTO(), "siteUrl"));
+        assertNotNull(studentService.saveStudent(new StudentDTO()));
     }
 
     @Test

@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
 
+    @Mapping(target = "password", ignore = true)
     @Mapping(source = "professor.id", target = "professor_id")
     @Mapping(source = "role.id", target = "role_id")
     public StudentDTO studentToStudentDTO(Student student);

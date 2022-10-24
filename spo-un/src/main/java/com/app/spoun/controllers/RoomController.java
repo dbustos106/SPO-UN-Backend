@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/room")
@@ -26,57 +25,52 @@ public class RoomController {
     public ResponseEntity<?> getAllRoom(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = roomService.getAllRoom(page, size);
+            Map<String, Object> answer = roomService.getAllRoom(page, size);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findRoomById(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = roomService.findRoomById(id);
+            Map<String, Object> answer = roomService.findRoomById(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveRoom(@RequestBody RoomDTO roomDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = roomService.saveRoom(roomDTO);
+            Map<String, Object> answer = roomService.saveRoom(roomDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editRoom(@RequestBody RoomDTO roomDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = roomService.editRoom(roomDTO);
+            Map<String, Object> answer = roomService.editRoom(roomDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteRoom(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = roomService.deleteRoom(id);
+            Map<String, Object> answer = roomService.deleteRoom(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
 }

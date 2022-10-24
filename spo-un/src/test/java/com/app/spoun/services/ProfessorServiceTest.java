@@ -92,7 +92,7 @@ class ProfessorServiceTest {
 
     @Test
     void saveProfessor() throws UnsupportedEncodingException, MessagingException {
-        assertNotNull(professorService.saveProfessor(new ProfessorDTO(), "siteUrl"));
+        assertNotNull(professorService.saveProfessor(new ProfessorDTO()));
     }
 
     @Test

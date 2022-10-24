@@ -100,7 +100,7 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String, Object> saveAdmin(AdminDTO adminDTO, String siteUrl) throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> saveAdmin(AdminDTO adminDTO) throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(adminDTO == null){
@@ -137,7 +137,7 @@ public class AdminService{
                     + "Gracias,<br>"
                     + "Spo-un.";
             String subject = "Verifique su registro";
-            String verifyURL = siteUrl + "/admin/verify?code=" + admin.getVerification_code();
+            String verifyURL = "http://localhost:8080/verifyAccount/admin/" + admin.getVerification_code();
             content = content.replace("[[name]]", admin.getEmail());
             content = content.replace("[[URL]]", verifyURL);
             emailSenderService.send(admin.getEmail(), subject, content);

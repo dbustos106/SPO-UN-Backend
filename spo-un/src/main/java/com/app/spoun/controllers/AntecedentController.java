@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/antecedent")
@@ -26,57 +25,52 @@ public class AntecedentController {
     public ResponseEntity<?> getAllAntecedent(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.getAllAntecedent(page, size);
+            Map<String, Object> answer = antecedentService.getAllAntecedent(page, size);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findAntecedentById(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.findAntecedentById(id);
+            Map<String, Object> answer = antecedentService.findAntecedentById(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveAntecedent(@RequestBody AntecedentDTO antecedentDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.saveAntecedent(antecedentDTO);
+            Map<String, Object> answer = antecedentService.saveAntecedent(antecedentDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editAntecedent(@RequestBody AntecedentDTO antecedentDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.editAntecedent(antecedentDTO);
+            Map<String, Object> answer = antecedentService.editAntecedent(antecedentDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteAntecedent(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = antecedentService.deleteAntecedent(id);
+            Map<String, Object> answer = antecedentService.deleteAntecedent(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
 }

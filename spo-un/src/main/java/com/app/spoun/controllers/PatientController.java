@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/patient")
@@ -26,68 +25,75 @@ public class PatientController {
     public ResponseEntity<?> getAllPatient(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.getAllPatient(page, size);
+            Map<String, Object> answer = patientService.getAllPatient(page, size);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findPatientById(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.findPatientById(id);
+            Map<String, Object> answer = patientService.findPatientById(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}/schedule")
     public ResponseEntity<?> getPatientScheduleByPatientId(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.getPatientScheduleByPatientId(id);
+            Map<String, Object> answer = patientService.getPatientScheduleByPatientId(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
+    }
+
+    @GetMapping(value = "/{id}/appointments")
+    public ResponseEntity<?> getAppointmentsByPatientId(
+            @PathVariable("id") Long id,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size){
+        try{
+            Map<String, Object> answer = patientService.getAppointmentsByPatientId(page, size, id);
+            return ResponseEntity.ok().body(answer);
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e);
+        }
     }
 
     @PutMapping(value = "/{id}/cancelAppointment")
     public ResponseEntity<?> cancelAppointmentByAppointmentId(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.cancelAppointmentByAppointmentId(id);
+            Map<String, Object> answer = patientService.cancelAppointmentByAppointmentId(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editPatient(@RequestBody PatientDTO patientDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.editPatient(patientDTO);
+            Map<String, Object> answer = patientService.editPatient(patientDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deletePatient(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = patientService.deletePatient(id);
+            Map<String, Object> answer = patientService.deletePatient(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
 }

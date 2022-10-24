@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 @RestController
 @RequestMapping("/student")
@@ -25,46 +24,42 @@ public class StudentController {
     public ResponseEntity<?> getAllStudent(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.getAllStudent(page, size);
+            Map<String, Object> answer = studentService.getAllStudent(page, size);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findStudentById(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.findStudentById(id);
+            Map<String, Object> answer = studentService.findStudentById(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}/schedule")
     public ResponseEntity<?> getStudentScheduleByStudentId(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.getStudentScheduleByStudentId(id);
+            Map<String, Object> answer = studentService.getStudentScheduleByStudentId(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}/unconfirmedSchedule")
     public ResponseEntity<?> getStudentUnconfirmedScheduleByStudentId(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.getStudentUnconfirmedScheduleByStudentId(id);
+            Map<String, Object> answer = studentService.getStudentUnconfirmedScheduleByStudentId(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @GetMapping(value = "/{id}/appointments")
@@ -72,46 +67,42 @@ public class StudentController {
             @PathVariable("id") Long id,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.getAppointmentsByStudentId(page, size, id);
+            Map<String, Object> answer = studentService.getAppointmentsByStudentId(page, size, id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PutMapping(value = "/{id}/cancelAppointment")
     public ResponseEntity<?> cancelAppointmentByAppointmentId(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.cancelAppointmentByAppointmentId(id);
+            Map<String, Object> answer = studentService.cancelAppointmentByAppointmentId(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editStudent(@RequestBody StudentDTO studentDTO){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.editStudent(studentDTO);
+            Map<String, Object> answer = studentService.editStudent(studentDTO);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
     @DeleteMapping(value = "/{id}/delete")
     public ResponseEntity<?> deleteStudent(@PathVariable("id") Long id){
-        Map<String, Object> answer = new TreeMap<>();
         try{
-            answer = studentService.deleteStudent(id);
+            Map<String, Object> answer = studentService.deleteStudent(id);
+            return ResponseEntity.ok().body(answer);
         }catch(Exception e){
-            answer.put("error", e);
+            return ResponseEntity.badRequest().body(e);
         }
-        return ResponseEntity.ok().body(answer);
     }
 
 }

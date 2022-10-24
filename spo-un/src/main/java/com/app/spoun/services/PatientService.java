@@ -1,7 +1,9 @@
 package com.app.spoun.services;
 
 import com.app.spoun.domain.*;
+import com.app.spoun.dto.AppointmentDTO;
 import com.app.spoun.dto.PatientDTO;
+import com.app.spoun.mappers.AppointmentMapper;
 import com.app.spoun.mappers.PatientMapper;
 import com.app.spoun.repository.*;
 
@@ -40,6 +42,7 @@ public class PatientService{
     private EmailValidatorService emailValidatorService;
     private EmailSenderService emailSenderService;
     private PatientMapper patientMapper;
+    private AppointmentMapper appointmentMapper;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -52,6 +55,7 @@ public class PatientService{
                           EmailValidatorService emailValidatorService,
                           EmailSenderService emailSenderService,
                           PatientMapper patientMapper,
+                          AppointmentMapper appointmentMapper,
                           PasswordEncoder passwordEncoder){
         this.iPatientRepository = iPatientRepository;
         this.iStudentRepository = iStudentRepository;
@@ -62,6 +66,7 @@ public class PatientService{
         this.emailValidatorService = emailValidatorService;
         this.emailSenderService = emailSenderService;
         this.patientMapper = patientMapper;
+        this.appointmentMapper = appointmentMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -137,6 +142,7 @@ public class PatientService{
             Map<String,Object> schedule = new TreeMap<>();
             schedule.put("start_time", appointment.getStart_time());
             schedule.put("end_time", appointment.getEnd_time());
+            schedule.put("appointment_id", appointment.getId());
             listScheduleDTOS.add(schedule);
         }
 
@@ -145,6 +151,30 @@ public class PatientService{
             answer.put("message", listScheduleDTOS);
         }else{
             answer.put("error", "No schedule found");
+        }
+        return answer;
+    }
+
+    public Map<String, Object> getAppointmentsByPatientId(Integer idPage, Integer size, Long id){
+        Map<String, Object> answer = new TreeMap<>();
+
+        // get page of appointments
+        Pageable page = PageRequest.of(idPage, size);
+        Page<Appointment> appointments = iAppointmentRepository.findByPatientId(id, page);
+
+        // map all appointments
+        List<AppointmentDTO> listAppointmentDTOS = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
+            listAppointmentDTOS.add(appointmentDTO);
+        }
+        Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
+
+        // return page of appointments
+        if(appointmentDTOS.getSize() != 0){
+            answer.put("message", appointmentDTOS);
+        }else {
+            answer.put("error", "No appointment found");
         }
         return answer;
     }
@@ -185,7 +215,7 @@ public class PatientService{
         return answer;
     }
 
-    public Map<String, Object> savePatient(PatientDTO patientDTO, String siteUrl)
+    public Map<String, Object> savePatient(PatientDTO patientDTO)
             throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
 
@@ -225,7 +255,7 @@ public class PatientService{
                     + "Gracias,<br>"
                     + "Spo-un.";
             String subject = "Verifique su registro";
-            String verifyURL = siteUrl + "/patient/verify?code=" + patient.getVerification_code();
+            String verifyURL = "http://localhost:8080/verifyAccount/patient/" + patient.getVerification_code();
             content = content.replace("[[name]]", patient.getName());
             content = content.replace("[[URL]]", verifyURL);
             emailSenderService.send(patient.getEmail(), subject, content);
@@ -260,17 +290,18 @@ public class PatientService{
         }else if(!emailValidatorService.test(patientDTO.getEmail())){
             answer.put("error", "Email not valid");
         }else{
-            // get role
-            Role role = iRoleRepository.findByName("Patient").orElse(null);
+            // get patient
+            Patient patient = iPatientRepository.findById(patientDTO.getId()).orElse(null);
 
             // update patient
-            Patient patient = patientMapper.patientDTOToPatient(patientDTO);
-            patient.setAntecedents(new ArrayList<>());
-            patient.setAppointments(new ArrayList<>());
-            patient.setRole(role);
-
-            // encrypt password
-            patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+            patient.setUsername(patientDTO.getUsername());
+            patient.setName(patientDTO.getName());
+            patient.setEmail(patientDTO.getEmail());
+            patient.setDocument_type(patientDTO.getDocument_type());
+            patient.setDocument_number(patientDTO.getDocument_number());
+            patient.setBlood_type(patientDTO.getBlood_type());
+            patient.setGender(patientDTO.getGender());
+            patient.setAge(patientDTO.getAge());
 
             iPatientRepository.save(patient);
             answer.put("message", "Patient updated successfully");
