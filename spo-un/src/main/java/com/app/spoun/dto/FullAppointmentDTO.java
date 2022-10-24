@@ -11,10 +11,12 @@ import java.util.List;
 @ToString
 public class FullAppointmentDTO {
 
-    private AppointmentDTO appointment;
+    private AppointmentDTO appointmentDTO;
 
     private List<TentativeScheduleDTO> tentativeSchedules;
 
     private List<String> students;
+
+    private BuildingDTO buildingDTO;
 
 }

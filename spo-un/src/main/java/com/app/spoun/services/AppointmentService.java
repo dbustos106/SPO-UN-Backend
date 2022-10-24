@@ -28,6 +28,7 @@ public class AppointmentService {
     private IStudentRepository iStudentRepository;
     private ITentativeScheduleRepository iTentativeScheduleRepository;
     private IScheduleRepository iScheduleRepository;
+    private BuildingMapper buildingMapper;
     private AppointmentMapper appointmentMapper;
     private TentativeScheduleMapper tentativeScheduleMapper;
     private TentativeScheduleService tentativeScheduleService;
@@ -40,6 +41,7 @@ public class AppointmentService {
                               IStudentRepository iStudentRepository,
                               ITentativeScheduleRepository iTentativeScheduleRepository,
                               IScheduleRepository iScheduleRepository,
+                              BuildingMapper buildingMapper,
                               AppointmentMapper appointmentMapper,
                               TentativeScheduleMapper tentativeScheduleMapper,
                               TentativeScheduleService tentativeScheduleService,
@@ -50,6 +52,7 @@ public class AppointmentService {
         this.iStudentRepository = iStudentRepository;
         this.iTentativeScheduleRepository = iTentativeScheduleRepository;
         this.iScheduleRepository = iScheduleRepository;
+        this.buildingMapper = buildingMapper;
         this.appointmentMapper = appointmentMapper;
         this.tentativeScheduleMapper = tentativeScheduleMapper;
         this.tentativeScheduleService = tentativeScheduleService;
@@ -135,48 +138,26 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String, Object> getAllAvailableAppointment(Integer idPage, Integer size){
+    public Map<String, Object> getAllAvailableAppointment(Integer idPage, Integer size) throws ParseException{
         Map<String, Object> answer = new TreeMap<>();
+
+        // create list object FullAppointmentDTO
+        List<FullAppointmentDTO> listFullAppointmentDTOS = new ArrayList<>();
 
         // get page of appointments
         Pageable page = PageRequest.of(idPage, size);
         Page<Appointment> appointments = iAppointmentRepository.findAllAvailable(page);
 
         // map all appointments
-        List<AppointmentDTO> listAppointmentDTOS = new ArrayList<>();
         for(Appointment appointment : appointments){
+            FullAppointmentDTO fullAppointmentDTO = new FullAppointmentDTO();
             AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
-            listAppointmentDTOS.add(appointmentDTO);
-        }
-        Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
-
-        // return page of appointments
-        if(appointmentDTOS.getSize() != 0){
-            answer.put("message", appointmentDTOS);
-        }else {
-            answer.put("error", "No appointment found");
-        }
-        return answer;
-    }
-
-    public Map<String, Object> findAppointmentById(Long id)  throws ParseException{
-        Map<String, Object> answer = new TreeMap<>();
-
-        // create object Appointment_ScheduleDTO
-        FullAppointmentDTO fullAppointment_DTO = new FullAppointmentDTO();
-
-        // get appointment
-        Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
-
-        if(appointment != null){
-            // map appointment
-            AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
-            fullAppointment_DTO.setAppointment(appointmentDTO);
+            fullAppointmentDTO.setAppointmentDTO(appointmentDTO);
 
             // get tentative schedules
-            List<TentativeSchedule> tentativeSchedules = iTentativeScheduleRepository.findByAppointment_id(id);
+            List<TentativeSchedule> tentativeSchedules = iTentativeScheduleRepository.findByAppointment_id(appointment.getId());
 
-            // map available schedules
+            // map tentative schedules
             List<TentativeScheduleDTO> listTentativeScheduleDTOS = new ArrayList<>();
             List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
             for(TentativeSchedule tentativeSchedule : tentativeSchedules){
@@ -185,7 +166,60 @@ public class AppointmentService {
                     listTentativeScheduleDTOS.add(tentativeScheduleDTO);
                 }
             }
-            fullAppointment_DTO.setTentativeSchedules(listTentativeScheduleDTOS);
+            fullAppointmentDTO.setTentativeSchedules(listTentativeScheduleDTOS);
+
+            // get students
+            List<Student> students = iStudentRepository.findByAppointment_id(appointment.getId());
+            List<String> usernameStudents = new ArrayList<>();
+            for(Student student : students){
+                usernameStudents.add(student.getUsername());
+            }
+            fullAppointmentDTO.setStudents(usernameStudents);
+
+            // get building
+            Building building = appointment.getRoom().getBuilding();
+            BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
+            fullAppointmentDTO.setBuildingDTO(buildingDTO);
+
+            listFullAppointmentDTOS.add(fullAppointmentDTO);
+        }
+
+        // return page of appointments
+        if(listFullAppointmentDTOS.size() != 0){
+            answer.put("message", listFullAppointmentDTOS);
+        }else {
+            answer.put("error", "No appointment found");
+        }
+        return answer;
+    }
+
+    public Map<String, Object> findAppointmentById(Long id) throws ParseException{
+        Map<String, Object> answer = new TreeMap<>();
+
+        // create object Appointment_ScheduleDTO
+        FullAppointmentDTO fullAppointmentDTO = new FullAppointmentDTO();
+
+        // get appointment
+        Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
+
+        if(appointment != null){
+            // map appointment
+            AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
+            fullAppointmentDTO.setAppointmentDTO(appointmentDTO);
+
+            // get tentative schedules
+            List<TentativeSchedule> tentativeSchedules = iTentativeScheduleRepository.findByAppointment_id(id);
+
+            // map tentative schedules
+            List<TentativeScheduleDTO> listTentativeScheduleDTOS = new ArrayList<>();
+            List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
+            for(TentativeSchedule tentativeSchedule : tentativeSchedules){
+                if(isAvailableSchedule(schedules, tentativeSchedule.getStart_time(), tentativeSchedule.getEnd_time())){
+                    TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
+                    listTentativeScheduleDTOS.add(tentativeScheduleDTO);
+                }
+            }
+            fullAppointmentDTO.setTentativeSchedules(listTentativeScheduleDTOS);
 
             // get students
             List<Student> students = iStudentRepository.findByAppointment_id(id);
@@ -193,9 +227,14 @@ public class AppointmentService {
             for(Student student : students){
                 usernameStudents.add(student.getUsername());
             }
-            fullAppointment_DTO.setStudents(usernameStudents);
+            fullAppointmentDTO.setStudents(usernameStudents);
 
-            answer.put("message", fullAppointment_DTO);
+            // get building
+            Building building = appointment.getRoom().getBuilding();
+            BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
+            fullAppointmentDTO.setBuildingDTO(buildingDTO);
+
+            answer.put("message", fullAppointmentDTO);
         }else{
             answer.put("error", "No appointment found");
         }
@@ -208,7 +247,7 @@ public class AppointmentService {
         if(fullAppointment_DTO != null){
 
             // extract objects in Appointment_scheduleDTO
-            AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointment();
+            AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointmentDTO();
             List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeSchedules();
             List<String> students = fullAppointment_DTO.getStudents();
 
@@ -251,7 +290,7 @@ public class AppointmentService {
         if(fullAppointment_DTO != null){
 
             // extract objects in fullAppointmentDTO
-            AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointment();
+            AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointmentDTO();
             List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeSchedules();
             List<String> students = fullAppointment_DTO.getStudents();
 
