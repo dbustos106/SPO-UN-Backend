@@ -66,6 +66,19 @@ public class ProfessorController {
         }
     }
 
+    @GetMapping(value = "/{id}/appointments")
+    public ResponseEntity<?> getAppointmentsByProfessorId(
+            @PathVariable("id") Long id,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size){
+        try{
+            Map<String, Object> answer = professorService.getAppointmentsByProfessorId(page, size, id);
+            return ResponseEntity.ok().body(answer);
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
     @PutMapping(value = "/edit")
     public ResponseEntity<?> editProfessor(@RequestBody ProfessorDTO professorDTO){
         try{

@@ -21,9 +21,9 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Long>
     boolean existsById(Long id);
 
     @Query(value = "SELECT *\n" +
-            "FROM appointment\n" +
+            "FROM (appointment)\n" +
             "WHERE appointment.state = 'Available'", nativeQuery = true)
-    Page<Appointment> findAllAvailable(Pageable page);
+    List<Appointment> findAllAvailable();
 
     @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN student_appointment ON appointment.id = student_appointment.appointment_id)\n" +
@@ -31,9 +31,14 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Long>
     Page<Appointment> findByStudentId(Long id, Pageable page);
 
     @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
-            "FROM appointment\n" +
-            "WHERE appointment.patient_id = ?1", nativeQuery = true)
+            "FROM (appointment)\n" +
+            "WHERE appointment.patient_id = ?1 and appointment.state = 'Confirmed'", nativeQuery = true)
     Page<Appointment> findByPatientId(Long id, Pageable page);
+
+    @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
+            "FROM (appointment)\n" +
+            "WHERE appointment.professor_id = ?1 and appointment.state <> 'Canceled'", nativeQuery = true)
+    Page<Appointment> findByProfessorId(Long id, Pageable page);
 
     @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN student_appointment ON appointment.id = student_appointment.appointment_id)\n" +

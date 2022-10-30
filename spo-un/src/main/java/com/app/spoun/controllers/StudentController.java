@@ -75,7 +75,7 @@ public class StudentController {
         }
     }
 
-    @PutMapping(value = "/{id}/cancelAppointment")
+    @PutMapping(value = "/cancelAppointment/{id}")
     public ResponseEntity<?> cancelAppointmentByAppointmentId(@PathVariable("id") Long id){
         try{
             Map<String, Object> answer = studentService.cancelAppointmentByAppointmentId(id);

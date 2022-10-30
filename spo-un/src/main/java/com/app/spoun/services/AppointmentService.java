@@ -29,6 +29,7 @@ public class AppointmentService {
     private ITentativeScheduleRepository iTentativeScheduleRepository;
     private IScheduleRepository iScheduleRepository;
     private BuildingMapper buildingMapper;
+    private RoomMapper roomMapper;
     private AppointmentMapper appointmentMapper;
     private TentativeScheduleMapper tentativeScheduleMapper;
     private TentativeScheduleService tentativeScheduleService;
@@ -42,6 +43,7 @@ public class AppointmentService {
                               ITentativeScheduleRepository iTentativeScheduleRepository,
                               IScheduleRepository iScheduleRepository,
                               BuildingMapper buildingMapper,
+                              RoomMapper roomMapper,
                               AppointmentMapper appointmentMapper,
                               TentativeScheduleMapper tentativeScheduleMapper,
                               TentativeScheduleService tentativeScheduleService,
@@ -53,6 +55,7 @@ public class AppointmentService {
         this.iTentativeScheduleRepository = iTentativeScheduleRepository;
         this.iScheduleRepository = iScheduleRepository;
         this.buildingMapper = buildingMapper;
+        this.roomMapper = roomMapper;
         this.appointmentMapper = appointmentMapper;
         this.tentativeScheduleMapper = tentativeScheduleMapper;
         this.tentativeScheduleService = tentativeScheduleService;
@@ -144,9 +147,8 @@ public class AppointmentService {
         // create list object FullAppointmentDTO
         List<FullAppointmentDTO> listFullAppointmentDTOS = new ArrayList<>();
 
-        // get page of appointments
-        Pageable page = PageRequest.of(idPage, size);
-        Page<Appointment> appointments = iAppointmentRepository.findAllAvailable(page);
+        // get list of appointments
+        List<Appointment> appointments = iAppointmentRepository.findAllAvailable();
 
         // map all appointments
         for(Appointment appointment : appointments){
@@ -176,10 +178,17 @@ public class AppointmentService {
             }
             fullAppointmentDTO.setStudents(usernameStudents);
 
+            // get professor
+            Professor professor = appointment.getProfessor();
+            fullAppointmentDTO.setProfessor(professor.getName());
+
             // get building
             Building building = appointment.getRoom().getBuilding();
-            BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
-            fullAppointmentDTO.setBuildingDTO(buildingDTO);
+            fullAppointmentDTO.setBuilding(building.getName());
+
+            // get room
+            Room room = appointment.getRoom();
+            fullAppointmentDTO.setRoom(room.getName());
 
             listFullAppointmentDTOS.add(fullAppointmentDTO);
         }
@@ -229,10 +238,17 @@ public class AppointmentService {
             }
             fullAppointmentDTO.setStudents(usernameStudents);
 
+            // get professor
+            Professor professor = appointment.getProfessor();
+            fullAppointmentDTO.setProfessor(professor.getName());
+
             // get building
             Building building = appointment.getRoom().getBuilding();
-            BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
-            fullAppointmentDTO.setBuildingDTO(buildingDTO);
+            fullAppointmentDTO.setBuilding(building.getName());
+
+            // get room
+            Room room = appointment.getRoom();
+            fullAppointmentDTO.setRoom(room.getName());
 
             answer.put("message", fullAppointmentDTO);
         }else{

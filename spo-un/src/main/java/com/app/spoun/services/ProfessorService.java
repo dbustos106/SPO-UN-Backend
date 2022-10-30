@@ -4,8 +4,10 @@ import com.app.spoun.domain.Appointment;
 import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Role;
 import com.app.spoun.domain.Student;
+import com.app.spoun.dto.AppointmentDTO;
 import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.dto.StudentDTO;
+import com.app.spoun.mappers.AppointmentMapper;
 import com.app.spoun.mappers.ProfessorMapper;
 import com.app.spoun.mappers.StudentMapper;
 import com.app.spoun.repository.*;
@@ -46,6 +48,7 @@ public class ProfessorService{
     private EmailSenderService emailSenderService;
     private ProfessorMapper professorMapper;
     private StudentMapper studentMapper;
+    private AppointmentMapper appointmentMapper;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -59,6 +62,7 @@ public class ProfessorService{
                             EmailSenderService emailSenderService,
                             ProfessorMapper professorMapper,
                             StudentMapper studentMapper,
+                            AppointmentMapper appointmentMapper,
                             PasswordEncoder passwordEncoder){
         this.iProfessorRepository = iProfessorRepository;
         this.iStudentRepository = iStudentRepository;
@@ -70,6 +74,7 @@ public class ProfessorService{
         this.emailSenderService = emailSenderService;
         this.professorMapper = professorMapper;
         this.studentMapper = studentMapper;
+        this.appointmentMapper = appointmentMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -98,6 +103,31 @@ public class ProfessorService{
         }
         return answer;
     }
+
+    public Map<String, Object> getAppointmentsByProfessorId(Integer idPage, Integer size, Long id){
+        Map<String, Object> answer = new TreeMap<>();
+
+        // get page of appointments
+        Pageable page = PageRequest.of(idPage, size);
+        Page<Appointment> appointments = iAppointmentRepository.findByProfessorId(id, page);
+
+        // map all appointments
+        List<AppointmentDTO> listAppointmentDTOS = new ArrayList<>();
+        for(Appointment appointment : appointments){
+            AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
+            listAppointmentDTOS.add(appointmentDTO);
+        }
+        Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
+
+        // return page of appointments
+        if(appointmentDTOS.getSize() != 0){
+            answer.put("message", appointmentDTOS);
+        }else {
+            answer.put("error", "No appointment found");
+        }
+        return answer;
+    }
+
 
     public Map<String, Object> getAllProfessor(Integer idPage, Integer size){
         Map<String, Object> answer = new TreeMap<>();

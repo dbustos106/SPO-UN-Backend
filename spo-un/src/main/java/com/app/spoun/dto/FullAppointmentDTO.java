@@ -17,6 +17,10 @@ public class FullAppointmentDTO {
 
     private List<String> students;
 
-    private BuildingDTO buildingDTO;
+    private String professor;
+
+    private String building;
+
+    private String room;
 
 }
