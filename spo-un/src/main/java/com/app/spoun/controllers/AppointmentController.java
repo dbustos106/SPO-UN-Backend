@@ -48,11 +48,9 @@ public class AppointmentController{
     }
 
     @GetMapping(value = "/allAvailable")
-    public ResponseEntity<?> getAllAvailableAppointment(
-            @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer size){
+    public ResponseEntity<?> getAllAvailableAppointment(){
         try{
-            Map<String, Object> answer = appointmentService.getAllAvailableAppointment(page, size);
+            Map<String, Object> answer = appointmentService.getAllAvailableAppointment();
             return ResponseEntity.ok().body(answer);
         }catch(Exception e){
             return ResponseEntity.badRequest().body(e);

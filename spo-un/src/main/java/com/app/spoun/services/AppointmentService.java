@@ -141,7 +141,7 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String, Object> getAllAvailableAppointment(Integer idPage, Integer size) throws ParseException{
+    public Map<String, Object> getAllAvailableAppointment() throws ParseException{
         Map<String, Object> answer = new TreeMap<>();
 
         // create list object FullAppointmentDTO
