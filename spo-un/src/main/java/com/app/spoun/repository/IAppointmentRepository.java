@@ -27,7 +27,7 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Long>
 
     @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
             "FROM (appointment INNER JOIN student_appointment ON appointment.id = student_appointment.appointment_id)\n" +
-            "WHERE student_appointment.student_id = ?1", nativeQuery = true)
+            "WHERE student_appointment.student_id = ?1 and appointment.state <> 'Canceled'", nativeQuery = true)
     Page<Appointment> findByStudentId(Long id, Pageable page);
 
     @Query(value = "SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id\n" +
