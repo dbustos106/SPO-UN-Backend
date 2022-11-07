@@ -13,6 +13,7 @@ public interface StudentMapper {
     @Mapping(source = "role.id", target = "role_id")
     public StudentDTO studentToStudentDTO(Student student);
 
+    @Mapping(target = "appointments", ignore = true)
     @Mapping(source = "professor_id", target = "professor.id")
     @Mapping(source = "role_id", target = "role.id")
     public Student studentDTOToStudent(StudentDTO studentDTO);

@@ -13,6 +13,8 @@ public interface AppointmentMapper {
     @Mapping(source = "professor.id", target = "professor_id")
     public AppointmentDTO appointmentToAppointmentDTO(Appointment appointment);
 
+    @Mapping(target = "students", ignore = true)
+    @Mapping(target = "tentativeSchedules", ignore = true)
     @Mapping(source = "room_id", target = "room.id")
     @Mapping(source = "patient_id", target = "patient.id")
     @Mapping(source = "professor_id", target = "professor.id")

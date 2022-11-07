@@ -12,6 +12,8 @@ public interface ProfessorMapper {
     @Mapping(source = "role.id", target = "role_id")
     public ProfessorDTO professorToProfessorDTO(Professor professor);
 
+    @Mapping(target = "students", ignore = true)
+    @Mapping(target = "appointments", ignore = true)
     @Mapping(source = "role_id", target = "role.id")
     public Professor professorDTOToProfessor(ProfessorDTO professorDTO);
 

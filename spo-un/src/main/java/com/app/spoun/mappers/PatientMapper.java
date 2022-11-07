@@ -12,6 +12,8 @@ public interface PatientMapper {
     @Mapping(source = "role.id", target = "role_id")
     public PatientDTO patientToPatientDTO(Patient patient);
 
+    @Mapping(target = "antecedents", ignore = true)
+    @Mapping(target = "appointments", ignore = true)
     @Mapping(source = "role_id", target = "role.id")
     public Patient patientDTOToPatient(PatientDTO patientDTO);
 
