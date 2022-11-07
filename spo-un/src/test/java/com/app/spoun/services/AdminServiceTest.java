@@ -3,13 +3,12 @@ package com.app.spoun.services;
 import com.app.spoun.domain.Admin;
 import com.app.spoun.domain.Role;
 import com.app.spoun.dto.AdminDTO;
+import com.app.spoun.mappers.AdminMapper;
 import com.app.spoun.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,21 +27,23 @@ import static org.mockito.ArgumentMatchers.any;
 class AdminServiceTest {
 
     @Mock
-    private IStudentRepository iStudentRepository;
+    private IAdminRepository iAdminRepository;
     @Mock
     private IProfessorRepository iProfessorRepository;
+    @Mock
+    private IStudentRepository iStudentRepository;
     @Mock
     private IPatientRepository iPatientRepository;
     @Mock
     private IRoleRepository iRoleRepository;
     @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
     private EmailValidatorService emailValidatorService;
     @Mock
     private EmailSenderService emailSenderService;
     @Mock
-    private IAdminRepository iAdminRepository;
+    private AdminMapper adminMapper;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private AdminService adminService;
