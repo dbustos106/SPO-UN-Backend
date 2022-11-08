@@ -138,6 +138,7 @@ public class AdminService{
                     + "Spo-un.";
             String subject = "Verifique su registro";
             String verifyURL = "http://localhost:8080/verifyAccount/admin/" + admin.getVerification_code();
+            //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/admin/" + admin.getVerification_code();
             content = content.replace("[[name]]", admin.getEmail());
             content = content.replace("[[URL]]", verifyURL);
             emailSenderService.send(admin.getEmail(), subject, content);
