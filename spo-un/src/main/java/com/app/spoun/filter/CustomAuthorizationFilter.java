@@ -24,11 +24,11 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class CustomAuthoritationFilter extends OncePerRequestFilter {
+public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtIOPropieties jwtIOPropieties;
 
-    public CustomAuthoritationFilter(JwtIOPropieties jwtIOPropieties){
+    public CustomAuthorizationFilter(JwtIOPropieties jwtIOPropieties){
         this.jwtIOPropieties = jwtIOPropieties;
     }
 

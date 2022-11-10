@@ -26,8 +26,8 @@ import java.util.TreeMap;
 @Slf4j
 public class RoleService {
 
-    private IRoleRepository iRoleRepository;
-    private RoleMapper roleMapper;
+    private final IRoleRepository iRoleRepository;
+    private final RoleMapper roleMapper;
 
     @Autowired
     public RoleService(IRoleRepository iRoleRepository,

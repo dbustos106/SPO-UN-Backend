@@ -7,7 +7,6 @@ import com.app.spoun.mappers.AppointmentMapper;
 import com.app.spoun.mappers.PatientMapper;
 import com.app.spoun.repository.*;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.bytebuddy.utility.RandomString;
@@ -28,23 +27,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-@RequiredArgsConstructor
 @Transactional
 @Service
 @Slf4j
 public class PatientService{
 
-    private IPatientRepository iPatientRepository;
-    private IStudentRepository iStudentRepository;
-    private IProfessorRepository iProfessorRepository;
-    private IAdminRepository iAdminRepository;
-    private IRoleRepository iRoleRepository;
-    private IAppointmentRepository iAppointmentRepository;
-    private EmailValidatorService emailValidatorService;
-    private EmailSenderService emailSenderService;
-    private PatientMapper patientMapper;
-    private AppointmentMapper appointmentMapper;
-    private PasswordEncoder passwordEncoder;
+    private final IPatientRepository iPatientRepository;
+    private final IStudentRepository iStudentRepository;
+    private final IProfessorRepository iProfessorRepository;
+    private final IAdminRepository iAdminRepository;
+    private final IRoleRepository iRoleRepository;
+    private final IAppointmentRepository iAppointmentRepository;
+    private final EmailValidatorService emailValidatorService;
+    private final EmailSenderService emailSenderService;
+    private final PatientMapper patientMapper;
+    private final AppointmentMapper appointmentMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public PatientService(IPatientRepository iPatientRepository,
@@ -72,7 +70,7 @@ public class PatientService{
     }
 
 
-    public Map<String, Object> cancelAppointmentByAppointmentId(Long id) throws MessagingException, UnsupportedEncodingException {
+    public Map<String, Object> cancelAppointmentByAppointmentId(Long id) throws UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointment
@@ -209,7 +207,7 @@ public class PatientService{
         return answer;
     }
 
-    public Map<String, Object> savePatient(PatientDTO patientDTO) throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> savePatient(PatientDTO patientDTO) throws UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(patientDTO == null){

@@ -12,7 +12,6 @@ import com.app.spoun.mappers.ProfessorMapper;
 import com.app.spoun.mappers.StudentMapper;
 import com.app.spoun.repository.*;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
 
@@ -25,7 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -33,24 +31,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-@RequiredArgsConstructor
 @Transactional
 @Service
 @Slf4j
 public class ProfessorService{
 
-    private IProfessorRepository iProfessorRepository;
-    private IStudentRepository iStudentRepository;
-    private IPatientRepository iPatientRepository;
-    private IAdminRepository iAdminRepository;
-    private IRoleRepository iRoleRepository;
-    private IAppointmentRepository iAppointmentRepository;
-    private EmailValidatorService emailValidatorService;
-    private EmailSenderService emailSenderService;
-    private ProfessorMapper professorMapper;
-    private StudentMapper studentMapper;
-    private AppointmentMapper appointmentMapper;
-    private PasswordEncoder passwordEncoder;
+    private final IProfessorRepository iProfessorRepository;
+    private final IStudentRepository iStudentRepository;
+    private final IPatientRepository iPatientRepository;
+    private final IAdminRepository iAdminRepository;
+    private final IRoleRepository iRoleRepository;
+    private final IAppointmentRepository iAppointmentRepository;
+    private final EmailValidatorService emailValidatorService;
+    private final EmailSenderService emailSenderService;
+    private final ProfessorMapper professorMapper;
+    private final StudentMapper studentMapper;
+    private final AppointmentMapper appointmentMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public ProfessorService(IProfessorRepository iProfessorRepository,
@@ -179,7 +176,7 @@ public class ProfessorService{
         return answer;
     }
 
-    public Map<String, Object> saveProfessor(ProfessorDTO professorDTO) throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> saveProfessor(ProfessorDTO professorDTO) throws UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(professorDTO == null){

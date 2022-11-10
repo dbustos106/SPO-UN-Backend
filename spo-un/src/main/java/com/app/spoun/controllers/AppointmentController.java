@@ -14,7 +14,7 @@ import java.util.Map;
 @RequestMapping("/appointment")
 public class AppointmentController{
 
-    private AppointmentService appointmentService;
+    private final AppointmentService appointmentService;
 
     @Autowired
     public AppointmentController(AppointmentService appointmentService){

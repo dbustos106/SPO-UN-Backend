@@ -25,9 +25,9 @@ import java.util.TreeMap;
 @Service
 public class ScheduleService {
 
-    private IScheduleRepository iScheduleRepository;
-    private IRoomRepository iRoomRepository;
-    private ScheduleMapper scheduleMapper;
+    private final IScheduleRepository iScheduleRepository;
+    private final IRoomRepository iRoomRepository;
+    private final ScheduleMapper scheduleMapper;
 
     @Autowired
     public ScheduleService(IScheduleRepository iScheduleRepository,

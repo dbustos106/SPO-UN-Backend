@@ -1,7 +1,7 @@
 package com.app.spoun.security;
 
 import com.app.spoun.filter.CustomAuthenticationFilter;
-import com.app.spoun.filter.CustomAuthoritationFilter;
+import com.app.spoun.filter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ public class SecurityConfig {
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(new CustomAuthoritationFilter(jwtIOPropieties), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtIOPropieties), UsernamePasswordAuthenticationFilter.class);
         http.authenticationProvider(daoAuthenticationProvider());
 
         return http.build();

@@ -13,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/room")
 public class RoomController {
 
-    private RoomService roomService;
+    private final RoomService roomService;
 
     @Autowired
     public RoomController(RoomService roomService){

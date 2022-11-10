@@ -13,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/role")
 public class RoleController {
 
-    private RoleService roleService;
+    private final RoleService roleService;
 
     @Autowired
     public RoleController(RoleService roleService){

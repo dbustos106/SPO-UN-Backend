@@ -20,8 +20,8 @@ import java.util.*;
 @Service
 public class BuildingService{
 
-    private IBuildingRepository iBuildingRepository;
-    private BuildingMapper buildingMapper;
+    private final IBuildingRepository iBuildingRepository;
+    private final BuildingMapper buildingMapper;
 
     @Autowired
     public BuildingService(IBuildingRepository iBuildingRepository,

@@ -13,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private AdminService adminService;
+    private final AdminService adminService;
 
     @Autowired
     public AdminController(AdminService adminService){

@@ -13,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/tentativeSchedule")
 public class TentativeScheduleController {
 
-    private TentativeScheduleService tentativeScheduleService;
+    private final TentativeScheduleService tentativeScheduleService;
 
     @Autowired
     public TentativeScheduleController(TentativeScheduleService tentativeScheduleService){

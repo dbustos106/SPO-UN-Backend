@@ -23,10 +23,10 @@ import java.util.Map;
 @RequestMapping("/register")
 public class RegisterController {
 
-    private StudentService studentService;
-    private ProfessorService professorService;
-    private PatientService patientService;
-    private AdminService adminService;
+    private final StudentService studentService;
+    private final ProfessorService professorService;
+    private final PatientService patientService;
+    private final AdminService adminService;
 
     @Autowired
     public RegisterController(StudentService studentService,

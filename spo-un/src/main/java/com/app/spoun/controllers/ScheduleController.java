@@ -13,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/schedule")
 public class ScheduleController {
 
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
 
     @Autowired
     public ScheduleController(ScheduleService scheduleService){

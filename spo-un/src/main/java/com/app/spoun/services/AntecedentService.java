@@ -25,9 +25,9 @@ import java.util.TreeMap;
 @Service
 public class AntecedentService{
 
-    private IAntecedentRepository iAntecedentRepository;
-    private IPatientRepository iPatientRepository;
-    private AntecedentMapper antecedentMapper;
+    private final IAntecedentRepository iAntecedentRepository;
+    private final IPatientRepository iPatientRepository;
+    private final AntecedentMapper antecedentMapper;
 
     @Autowired
     public AntecedentService(IAntecedentRepository iAntecedentRepository,

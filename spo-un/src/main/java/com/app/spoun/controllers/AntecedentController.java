@@ -13,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/antecedent")
 public class AntecedentController {
 
-    private AntecedentService antecedentService;
+    private final AntecedentService antecedentService;
 
     @Autowired
     public AntecedentController(AntecedentService antecedentService){

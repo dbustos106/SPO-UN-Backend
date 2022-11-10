@@ -23,18 +23,16 @@ import java.util.*;
 @Service
 public class AppointmentService {
 
-    private IAppointmentRepository iAppointmentRepository;
-    private IRoomRepository iRoomRepository;
-    private IPatientRepository iPatientRepository;
-    private IStudentRepository iStudentRepository;
-    private ITentativeScheduleRepository iTentativeScheduleRepository;
-    private IScheduleRepository iScheduleRepository;
-    private BuildingMapper buildingMapper;
-    private RoomMapper roomMapper;
-    private AppointmentMapper appointmentMapper;
-    private TentativeScheduleMapper tentativeScheduleMapper;
-    private TentativeScheduleService tentativeScheduleService;
-    private ScheduleService scheduleService;
+    private final IAppointmentRepository iAppointmentRepository;
+    private final IRoomRepository iRoomRepository;
+    private final IPatientRepository iPatientRepository;
+    private final IStudentRepository iStudentRepository;
+    private final ITentativeScheduleRepository iTentativeScheduleRepository;
+    private final IScheduleRepository iScheduleRepository;
+    private final AppointmentMapper appointmentMapper;
+    private final TentativeScheduleMapper tentativeScheduleMapper;
+    private final TentativeScheduleService tentativeScheduleService;
+    private final ScheduleService scheduleService;
 
     @Autowired
     public AppointmentService(IAppointmentRepository iAppointmentRepository,
@@ -43,8 +41,6 @@ public class AppointmentService {
                               IStudentRepository iStudentRepository,
                               ITentativeScheduleRepository iTentativeScheduleRepository,
                               IScheduleRepository iScheduleRepository,
-                              BuildingMapper buildingMapper,
-                              RoomMapper roomMapper,
                               AppointmentMapper appointmentMapper,
                               TentativeScheduleMapper tentativeScheduleMapper,
                               TentativeScheduleService tentativeScheduleService,
@@ -55,8 +51,6 @@ public class AppointmentService {
         this.iStudentRepository = iStudentRepository;
         this.iTentativeScheduleRepository = iTentativeScheduleRepository;
         this.iScheduleRepository = iScheduleRepository;
-        this.buildingMapper = buildingMapper;
-        this.roomMapper = roomMapper;
         this.appointmentMapper = appointmentMapper;
         this.tentativeScheduleMapper = tentativeScheduleMapper;
         this.tentativeScheduleService = tentativeScheduleService;

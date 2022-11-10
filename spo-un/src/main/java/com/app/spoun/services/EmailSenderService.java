@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 @Service
 public class EmailSenderService{
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
     private static Logger LOGGER;
 
     @Autowired
@@ -26,7 +26,7 @@ public class EmailSenderService{
 
 
     @Async
-    public void send(String toEmail, String subject, String content) throws MessagingException, UnsupportedEncodingException {
+    public void send(String toEmail, String subject, String content) throws UnsupportedEncodingException {
         try{
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper =

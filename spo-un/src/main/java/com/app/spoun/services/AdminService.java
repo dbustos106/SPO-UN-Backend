@@ -6,7 +6,6 @@ import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.mappers.AdminMapper;
 import com.app.spoun.repository.*;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.bytebuddy.utility.RandomString;
@@ -19,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -27,21 +25,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-@RequiredArgsConstructor
 @Transactional
 @Service
 @Slf4j
 public class AdminService{
 
-    private IAdminRepository iAdminRepository;
-    private IProfessorRepository iProfessorRepository;
-    private IStudentRepository iStudentRepository;
-    private IPatientRepository iPatientRepository;
-    private IRoleRepository iRoleRepository;
-    private EmailValidatorService emailValidatorService;
-    private EmailSenderService emailSenderService;
-    private AdminMapper adminMapper;
-    private PasswordEncoder passwordEncoder;
+    private final IAdminRepository iAdminRepository;
+    private final IProfessorRepository iProfessorRepository;
+    private final IStudentRepository iStudentRepository;
+    private final IPatientRepository iPatientRepository;
+    private final IRoleRepository iRoleRepository;
+    private final EmailValidatorService emailValidatorService;
+    private final EmailSenderService emailSenderService;
+    private final AdminMapper adminMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AdminService(IAdminRepository iAdminRepository,
@@ -99,7 +96,7 @@ public class AdminService{
         return answer;
     }
 
-    public Map<String, Object> saveAdmin(AdminDTO adminDTO) throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> saveAdmin(AdminDTO adminDTO) throws UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(adminDTO == null){

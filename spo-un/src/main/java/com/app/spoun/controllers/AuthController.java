@@ -16,7 +16,7 @@ import java.io.IOException;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private AuthService authService;
+    private final AuthService authService;
 
     @Autowired
     public AuthController(AuthService authService){

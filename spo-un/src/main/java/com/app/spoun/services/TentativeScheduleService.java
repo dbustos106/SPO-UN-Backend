@@ -25,9 +25,9 @@ import java.util.TreeMap;
 @Service
 public class TentativeScheduleService {
 
-    private ITentativeScheduleRepository iTentativeScheduleRepository;
-    private IAppointmentRepository iAppointmentRepository;
-    private TentativeScheduleMapper tentativeScheduleMapper;
+    private final ITentativeScheduleRepository iTentativeScheduleRepository;
+    private final IAppointmentRepository iAppointmentRepository;
+    private final TentativeScheduleMapper tentativeScheduleMapper;
 
     @Autowired
     public TentativeScheduleService(ITentativeScheduleRepository iTentativeScheduleRepository,

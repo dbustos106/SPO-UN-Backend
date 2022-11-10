@@ -13,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/professor")
 public class ProfessorController {
 
-    private ProfessorService professorService;
+    private final ProfessorService professorService;
 
     @Autowired
     public ProfessorController(ProfessorService professorService){

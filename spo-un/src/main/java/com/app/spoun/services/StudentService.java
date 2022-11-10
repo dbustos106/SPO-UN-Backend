@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -28,25 +27,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-@RequiredArgsConstructor
 @Transactional
 @Service
 @Slf4j
 public class StudentService {
 
-    private IStudentRepository iStudentRepository;
-    private IProfessorRepository iProfessorRepository;
-    private IPatientRepository iPatientRepository;
-    private IAdminRepository iAdminRepository;
-    private IRoleRepository iRoleRepository;
-    private ITentativeScheduleRepository iTentativeScheduleRepository;
-    private IAppointmentRepository iAppointmentRepository;
-    private EmailValidatorService emailValidatorService;
-    private EmailSenderService emailSenderService;
-    private StudentMapper studentMapper;
-    private TentativeScheduleMapper tentativeScheduleMapper;
-    private AppointmentMapper appointmentMapper;
-    private PasswordEncoder passwordEncoder;
+    private final IStudentRepository iStudentRepository;
+    private final IProfessorRepository iProfessorRepository;
+    private final IPatientRepository iPatientRepository;
+    private final IAdminRepository iAdminRepository;
+    private final IRoleRepository iRoleRepository;
+    private final ITentativeScheduleRepository iTentativeScheduleRepository;
+    private final IAppointmentRepository iAppointmentRepository;
+    private final EmailValidatorService emailValidatorService;
+    private final EmailSenderService emailSenderService;
+    private final StudentMapper studentMapper;
+    private final TentativeScheduleMapper tentativeScheduleMapper;
+    private final AppointmentMapper appointmentMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public StudentService(IStudentRepository iStudentRepository,
@@ -78,7 +76,7 @@ public class StudentService {
     }
 
 
-    public Map<String, Object> cancelAppointmentByAppointmentId(Long id) throws MessagingException, UnsupportedEncodingException {
+    public Map<String, Object> cancelAppointmentByAppointmentId(Long id) throws UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 
         // get appointment
@@ -233,7 +231,7 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String, Object> saveStudent(StudentDTO studentDTO) throws MessagingException, UnsupportedEncodingException {
+    public Map<String, Object> saveStudent(StudentDTO studentDTO) throws UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(studentDTO == null) {

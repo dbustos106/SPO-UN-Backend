@@ -27,10 +27,10 @@ import java.util.TreeMap;
 @Service
 public class RoomService {
 
-    private IRoomRepository iRoomRepository;
-    private IBuildingRepository iBuildingRepository;
-    private RoomMapper roomMapper;
-    private BuildingMapper buildingMapper;
+    private final IRoomRepository iRoomRepository;
+    private final IBuildingRepository iBuildingRepository;
+    private final RoomMapper roomMapper;
+    private final BuildingMapper buildingMapper;
 
     @Autowired
     public RoomService(IRoomRepository iRoomRepository,
