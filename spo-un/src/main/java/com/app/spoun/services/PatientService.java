@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -76,8 +77,10 @@ public class PatientService{
 
         // get appointment
         Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
+        if(appointment == null) {
+            throw new NotFoundException("Appointment not found");
+        }else{
 
-        if(appointment != null){
             appointment.setState("Canceled");
             iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment canceled successfully");
@@ -124,9 +127,8 @@ public class PatientService{
             emailPatient = emailPatient.replace("[[id]]", id.toString());
             emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
 
-        }else{
-            answer.put("error", "No appointment found");
         }
+
         return answer;
     }
 
@@ -147,11 +149,8 @@ public class PatientService{
         }
 
         // return schedules
-        if(listScheduleDTOS.size() != 0){
-            answer.put("message", listScheduleDTOS);
-        }else{
-            answer.put("error", "No schedule found");
-        }
+        answer.put("message", listScheduleDTOS);
+
         return answer;
     }
 
@@ -171,11 +170,8 @@ public class PatientService{
         Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
 
         // return page of appointments
-        if(appointmentDTOS.getSize() != 0){
-            answer.put("message", appointmentDTOS);
-        }else {
-            answer.put("error", "No appointment found");
-        }
+        answer.put("message", appointmentDTOS);
+
         return answer;
     }
 
@@ -195,38 +191,35 @@ public class PatientService{
         Page<PatientDTO> patientDTOS = new PageImpl<>(listPatientDTOS);
 
         // return page of patients
-        if(patientDTOS.getSize() != 0){
-            answer.put("message", patientDTOS);
-        }else{
-            answer.put("error", "No patient found");
-        }
+        answer.put("message", patientDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findPatientById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Patient patient = iPatientRepository.findById(id).orElse(null);
-        PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
-        if(patientDTO != null){
+        if(patient != null){
+            PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
             answer.put("message", patientDTO);
         }else{
-            answer.put("error", "Patient not found");
+            throw new NotFoundException("Patient not found");
         }
         return answer;
     }
 
-    public Map<String, Object> savePatient(PatientDTO patientDTO)
-            throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> savePatient(PatientDTO patientDTO) throws UnsupportedEncodingException, MessagingException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(patientDTO == null){
-            answer.put("error", "Patient not saved");
+            throw new IllegalStateException("Request data missing");
+        }else if(!emailValidatorService.test(patientDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
         }else if(iProfessorRepository.existsByUsername(patientDTO.getUsername()) ||
                     iStudentRepository.existsByUsername(patientDTO.getUsername()) ||
                     iAdminRepository.existsByUsername(patientDTO.getUsername())){
-            answer.put("error", "Repeated username");
-        }else if(!emailValidatorService.test(patientDTO.getEmail())){
-            answer.put("error", "Email not valid");
+            throw new IllegalStateException("Repeated username");
         }else{
             // get role
             Role role = iRoleRepository.findByName("Patient").orElse(null);
@@ -266,15 +259,15 @@ public class PatientService{
 
     public Map<String, Object> verifyPatient(String code){
         Map<String, Object> answer = new TreeMap<>();
-        Patient patient = iPatientRepository.findByVerification_code(code).orElse(null);
 
-        if(patient == null || patient.isEnabled()){
-            answer.put("error", "verify fail");
+        Patient patient = iPatientRepository.findByVerification_code(code).orElse(null);
+        if(patient == null){
+            throw new IllegalStateException("Invalid code");
         }else{
             patient.setVerification_code(null);
             patient.setEnabled(true);
             iPatientRepository.save(patient);
-            answer.put("message", "verify success");
+            answer.put("message", "Successful verification");
         }
         return answer;
     }
@@ -283,40 +276,43 @@ public class PatientService{
         Map<String, Object> answer = new TreeMap<>();
 
         if(patientDTO == null){
-            answer.put("error", "Patient not found");
+            throw new IllegalStateException("Request data missing");
+        }else if(!emailValidatorService.test(patientDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
         }else if(iProfessorRepository.existsByUsername(patientDTO.getUsername()) ||
                 iStudentRepository.existsByUsername(patientDTO.getUsername()) ||
                 iAdminRepository.existsByUsername(patientDTO.getUsername())){
-            answer.put("error", "Repeated username");
-        }else if(!emailValidatorService.test(patientDTO.getEmail())){
-            answer.put("error", "Email not valid");
+            throw new IllegalStateException("Repeated username");
         }else{
-            // get patient
             Patient patient = iPatientRepository.findById(patientDTO.getId()).orElse(null);
+            if(patient == null) {
+                throw new NotFoundException("Patient not found");
+            }else{
+                // update patient
+                patient.setUsername(patientDTO.getUsername());
+                patient.setName(patientDTO.getName());
+                patient.setEmail(patientDTO.getEmail());
+                patient.setDocument_type(patientDTO.getDocument_type());
+                patient.setDocument_number(patientDTO.getDocument_number());
+                patient.setBlood_type(patientDTO.getBlood_type());
+                patient.setGender(patientDTO.getGender());
+                patient.setAge(patientDTO.getAge());
 
-            // update patient
-            patient.setUsername(patientDTO.getUsername());
-            patient.setName(patientDTO.getName());
-            patient.setEmail(patientDTO.getEmail());
-            patient.setDocument_type(patientDTO.getDocument_type());
-            patient.setDocument_number(patientDTO.getDocument_number());
-            patient.setBlood_type(patientDTO.getBlood_type());
-            patient.setGender(patientDTO.getGender());
-            patient.setAge(patientDTO.getAge());
-
-            iPatientRepository.save(patient);
-            answer.put("message", "Patient updated successfully");
+                iPatientRepository.save(patient);
+                answer.put("message", "Patient updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String, Object> deletePatient(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iPatientRepository.existsById(id)){
             iPatientRepository.deleteById(id);
             answer.put("message", "Patient deleted successfully");
         }else{
-            answer.put("error", "Patient not found");
+            throw new NotFoundException("Patient not found");
         }
         return answer;
     }

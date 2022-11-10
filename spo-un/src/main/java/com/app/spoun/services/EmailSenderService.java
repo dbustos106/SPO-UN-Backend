@@ -39,7 +39,7 @@ public class EmailSenderService{
             mailSender.send(mimeMessage);
         }catch (MessagingException e){
             LOGGER.error("failed to send email", e);
-            throw new IllegalStateException("failed to send email");
+            throw new IllegalStateException("Failed to send email");
         }
     }
 

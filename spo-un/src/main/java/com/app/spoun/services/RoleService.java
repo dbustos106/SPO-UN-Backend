@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -52,29 +53,30 @@ public class RoleService {
         Page<RoleDTO> roleDTOS = new PageImpl<>(listRoleDTOS);
 
         // return page of roles
-        if(roleDTOS.getSize() != 0){
-            answer.put("message", roleDTOS);
-        }else {
-            answer.put("error", "No role found");
-        }
+        answer.put("message", roleDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findRoleById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Role role = iRoleRepository.findById(id).orElse(null);
-        RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
-        if(roleDTO != null){
+        if(role != null){
+            RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
             answer.put("message", roleDTO);
         }else{
-            answer.put("error", "Role not found");
+            throw new NotFoundException("Role not found");
         }
         return answer;
     }
 
     public Map<String, Object> saveRole(RoleDTO roleDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(roleDTO != null){
+
+        if(roleDTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else{
             // save role
             Role role = roleMapper.roleDTOToRole(roleDTO);
             role.setStudents(new ArrayList<>());
@@ -84,37 +86,38 @@ public class RoleService {
 
             iRoleRepository.save(role);
             answer.put("message", "Role saved successfully");
-        }else{
-            answer.put("error", "Role not saved");
         }
         return answer;
     }
 
     public Map<String, Object> editRole(RoleDTO roleDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(roleDTO.getId() != null && iRoleRepository.existsById(roleDTO.getId())){
-            // update role
-            Role role = roleMapper.roleDTOToRole(roleDTO);
-            role.setStudents(new ArrayList<>());
-            role.setProfessors(new ArrayList<>());
-            role.setPatients(new ArrayList<>());
-            role.setAdmins(new ArrayList<>());
 
-            iRoleRepository.save(role);
-            answer.put("message", "Role updated successfully");
+        if(roleDTO == null){
+            throw new IllegalStateException("Request data missing");
         }else{
-            answer.put("error", "Role not found");
+            Role role = iRoleRepository.findById(roleDTO.getId()).orElse(null);
+            if(role == null){
+                throw new NotFoundException("Role not found");
+            }else{
+                // update role
+                role.setName(roleDTO.getName());
+
+                iRoleRepository.save(role);
+                answer.put("message", "Role updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String, Object> deleteRole(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iRoleRepository.existsById(id)){
             iRoleRepository.deleteById(id);
             answer.put("message", "Role deleted successfully");
         }else{
-            answer.put("error", "Role not found");
+            throw new NotFoundException("Role not found");
         }
         return answer;
     }

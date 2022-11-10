@@ -66,7 +66,7 @@ class AdminServiceTest {
 
     }
 
-    @Test
+    /*@Test
     void getAllAdmin(){
         Page<Admin> admins = new PageImpl<>(Arrays.asList(admin));
         Mockito.when(iAdminRepository.findAll(any(Pageable.class))).thenReturn(admins);
@@ -92,6 +92,6 @@ class AdminServiceTest {
     @Test
     void deleteAdmin(){
         assertNotNull(adminService.deleteAdmin(1L));
-    }
+    }*/
 
 }

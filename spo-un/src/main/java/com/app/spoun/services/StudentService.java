@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -82,8 +83,10 @@ public class StudentService {
 
         // get appointment
         Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
+        if(appointment == null){
+            throw new NotFoundException("Appointment not found");
+        }else{
 
-        if(appointment != null){
             appointment.setState("Canceled");
             iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment canceled successfully");
@@ -129,10 +132,8 @@ public class StudentService {
             emailPatient = emailPatient.replace("[[name]]", patient.getName());
             emailPatient = emailPatient.replace("[[id]]", id.toString());
             emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
-
-        }else{
-            answer.put("error", "No appointment found");
         }
+
         return answer;
     }
 
@@ -153,11 +154,8 @@ public class StudentService {
         }
 
         // return schedules
-        if(listScheduleDTOS.size() != 0){
-            answer.put("message", listScheduleDTOS);
-        }else{
-            answer.put("error", "No schedule found");
-        }
+        answer.put("message", listScheduleDTOS);
+
         return answer;
     }
 
@@ -175,11 +173,7 @@ public class StudentService {
         }
 
         // return schedules
-        if(listTentativeScheduleDTOS.size() != 0){
-            answer.put("message", listTentativeScheduleDTOS);
-        }else{
-            answer.put("error", "No unconfirmed schedule found");
-        }
+        answer.put("message", listTentativeScheduleDTOS);
 
         return answer;
     }
@@ -200,11 +194,8 @@ public class StudentService {
         Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
 
         // return page of appointments
-        if(appointmentDTOS.getSize() != 0){
-            answer.put("message", appointmentDTOS);
-        }else {
-            answer.put("error", "No appointment found");
-        }
+        answer.put("message", appointmentDTOS);
+
         return answer;
     }
 
@@ -224,37 +215,35 @@ public class StudentService {
         Page<StudentDTO> studentDTOS = new PageImpl<>(listStudentDTOS);
 
         // return page of students
-        if(studentDTOS.getSize() != 0){
-            answer.put("message", studentDTOS);
-        }else {
-            answer.put("error", "No student found");
-        }
+        answer.put("message", studentDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findStudentById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Student student = iStudentRepository.findById(id).orElse(null);
-        StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
-        if(studentDTO != null){
+        if(student != null){
+            StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
             answer.put("message", studentDTO);
         }else{
-            answer.put("error", "Student not found");
+            throw new NotFoundException("Student not found");
         }
         return answer;
     }
 
-    public Map<String, Object> saveStudent(StudentDTO studentDTO) throws UnsupportedEncodingException, MessagingException {
+    public Map<String, Object> saveStudent(StudentDTO studentDTO) throws MessagingException, UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 
-        if(studentDTO == null){
-            answer.put("error", "Student not saved");
+        if(studentDTO == null) {
+            throw new IllegalStateException("Request data missing");
+        }else if(!emailValidatorService.test(studentDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
         }else if(iProfessorRepository.existsByUsername(studentDTO.getUsername()) ||
                     iPatientRepository.existsByUsername(studentDTO.getUsername()) ||
                     iAdminRepository.existsByUsername(studentDTO.getUsername())){
-            answer.put("error", "Repeated username");
-        }else if(!emailValidatorService.test(studentDTO.getEmail())){
-            answer.put("error", "Email not valid");
+            throw new IllegalStateException("Repeated username");
         }else{
             // get role and professor
             Role role = iRoleRepository.findByName("Student").orElse(null);
@@ -293,54 +282,58 @@ public class StudentService {
         return answer;
     }
 
-    public Map<String, Object> verifyStudent(String code){
+    public Map<String, Object> verifyStudent(String code) {
         Map<String, Object> answer = new TreeMap<>();
-        Student student = iStudentRepository.findByVerification_code(code).orElse(null);
 
-        if(student == null || student.isEnabled()){
-            answer.put("error", "verify fail");
+        Student student = iStudentRepository.findByVerification_code(code).orElse(null);
+        if(student == null) {
+            throw new IllegalStateException("Invalid code");
         }else{
             student.setVerification_code(null);
             student.setEnabled(true);
             iStudentRepository.save(student);
-            answer.put("message", "verify success");
+            answer.put("message", "Successful verification");
         }
         return answer;
     }
 
-    public Map<String, Object> editStudent(StudentDTO studentDTO){
+    public Map<String, Object> editStudent(StudentDTO studentDTO) {
         Map<String, Object> answer = new TreeMap<>();
-        if(studentDTO == null){
-            answer.put("error", "Student not found");
+
+        if(studentDTO == null) {
+            throw new IllegalStateException("Request data missing");
+        }else if(!emailValidatorService.test(studentDTO.getEmail())) {
+            throw new IllegalStateException("Email not valid");
         }else if(iProfessorRepository.existsByUsername(studentDTO.getUsername()) ||
                 iPatientRepository.existsByUsername(studentDTO.getUsername()) ||
                 iAdminRepository.existsByUsername(studentDTO.getUsername())){
-            answer.put("error", "Repeated username");
-        }else if(!emailValidatorService.test(studentDTO.getEmail())){
-            answer.put("error", "Email not valid");
+            throw new IllegalStateException("Repeated username");
         }else{
-            // get patient
             Student student = iStudentRepository.findById(studentDTO.getId()).orElse(null);
+            if(student == null) {
+                throw new NotFoundException("Student not found");
+            }else{
+                // update student
+                student.setUsername(studentDTO.getUsername());
+                student.setName(studentDTO.getName());
+                student.setDocument_type(studentDTO.getDocument_type());
+                student.setDocument_number(studentDTO.getDocument_number());
 
-            // update student
-            student.setUsername(studentDTO.getUsername());
-            student.setName(studentDTO.getName());
-            student.setDocument_type(studentDTO.getDocument_type());
-            student.setDocument_number(studentDTO.getDocument_number());
-
-            iStudentRepository.save(student);
-            answer.put("message", "Student updated successfully");
+                iStudentRepository.save(student);
+                answer.put("message", "Student updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String, Object> deleteStudent(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iStudentRepository.existsById(id)){
             iStudentRepository.deleteById(id);
             answer.put("message", "Student deleted successfully");
         }else{
-            answer.put("error", "Student not found");
+            throw new NotFoundException("Student not found");
         }
         return answer;
     }

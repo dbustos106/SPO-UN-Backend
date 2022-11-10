@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -54,29 +55,30 @@ public class AntecedentService{
         Page<AntecedentDTO> antecedentDTOS = new PageImpl<>(listAntecedentDTOS);
 
         // return page of antecedents
-        if(antecedentDTOS.getSize() != 0){
-            answer.put("message", antecedentDTOS);
-        }else {
-            answer.put("error", "No antecedent found");
-        }
+        answer.put("message", antecedentDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findAntecedentById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Antecedent antecedent = iAntecedentRepository.findById(id).orElse(null);
-        AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
-        if(antecedentDTO != null){
+        if(antecedent != null){
+            AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
             answer.put("message", antecedentDTO);
         }else{
-            answer.put("error", "Antecedent not found");
+            throw new NotFoundException("Antecedent not found");
         }
         return answer;
     }
 
     public Map<String, Object> saveAntecedent(AntecedentDTO antecedentDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(antecedentDTO != null){
+
+        if(antecedentDTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else{
             // get patient
             Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
 
@@ -85,36 +87,39 @@ public class AntecedentService{
             antecedent.setPatient(patient);
             iAntecedentRepository.save(antecedent);
             answer.put("message", "Antecedent saved successfully");
-        }else{
-            answer.put("error", "Antecedent not saved");
         }
         return answer;
     }
 
     public Map<String, Object> editAntecedent(AntecedentDTO antecedentDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(antecedentDTO != null && antecedentDTO.getId() != null && iAntecedentRepository.existsById(antecedentDTO.getId())){
-            // get patient
-            Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
 
-            // update antecedent
-            Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
-            antecedent.setPatient(patient);
-            iAntecedentRepository.save(antecedent);
-            answer.put("message", "Antecedent updated successfully");
+        if(antecedentDTO == null){
+            throw new IllegalStateException("Request data missing");
         }else{
-            answer.put("error", "Antecedent not found");
+            Antecedent antecedent = iAntecedentRepository.findById(antecedentDTO.getId()).orElse(null);
+            if(antecedent == null){
+                throw new NotFoundException("Antecedent not found");
+            }else {
+                // update antecedent
+                antecedent.setType(antecedentDTO.getType());
+                antecedent.setDescription(antecedentDTO.getDescription());
+
+                iAntecedentRepository.save(antecedent);
+                answer.put("message", "Antecedent updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String,Object> deleteAntecedent(Long id){
         Map<String,Object> answer = new TreeMap<>();
+
         if(iAntecedentRepository.existsById(id)){
             iAntecedentRepository.deleteById(id);
             answer.put("message", "Successful");
         }else{
-            answer.put("error", "Antecedent not found");
+            throw new NotFoundException("Antecedent not found");
         }
         return answer;
     }

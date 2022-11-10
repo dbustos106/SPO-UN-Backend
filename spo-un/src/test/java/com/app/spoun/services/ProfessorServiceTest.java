@@ -83,7 +83,7 @@ class ProfessorServiceTest {
 
     }
 
-    @Test
+    /*@Test
     void getAllProfessor(){
         Page<Professor> professors = new PageImpl<>(Arrays.asList(professor));
         Mockito.when(iProfessorRepository.findAll(any(Pageable.class))).thenReturn(professors);
@@ -104,7 +104,7 @@ class ProfessorServiceTest {
     }
 
 
-    /*@Test
+    @Test
     void saveProfessor() throws UnsupportedEncodingException, MessagingException {
         assertNotNull(professorService.saveProfessor(new ProfessorDTO()));
     }
@@ -112,11 +112,11 @@ class ProfessorServiceTest {
     @Test
     void editProfessor(){
         assertNotNull(professorService.editProfessor(new ProfessorDTO()));
-    }*/
+    }
 
     @Test
     void deleteProfessor(){
         assertNotNull(professorService.deleteProfessor(1L));
-    }
+    }*/
 
 }

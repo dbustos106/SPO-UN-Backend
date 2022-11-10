@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -96,11 +97,8 @@ public class ProfessorService{
         }
 
         // return schedules
-        if(listScheduleDTOS.size() != 0){
-            answer.put("message", listScheduleDTOS);
-        }else{
-            answer.put("error", "No schedule found");
-        }
+        answer.put("message", listScheduleDTOS);
+
         return answer;
     }
 
@@ -120,11 +118,8 @@ public class ProfessorService{
         Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
 
         // return page of appointments
-        if(appointmentDTOS.getSize() != 0){
-            answer.put("message", appointmentDTOS);
-        }else {
-            answer.put("error", "No appointment found");
-        }
+        answer.put("message", appointmentDTOS);
+
         return answer;
     }
 
@@ -145,22 +140,20 @@ public class ProfessorService{
         Page<ProfessorDTO> professorDTOS = new PageImpl<>(listProfessorDTOS);
 
         // return page of professors
-        if(professorDTOS.getSize() != 0){
-            answer.put("message", professorDTOS);
-        }else {
-            answer.put("error", "No professor found");
-        }
+        answer.put("message", professorDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findProfessorById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Professor professor = iProfessorRepository.findById(id).orElse(null);
-        ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
-        if(professorDTO != null){
+        if(professor != null){
+            ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
             answer.put("message", professorDTO);
         }else{
-            answer.put("error", "Professor not found");
+            throw new NotFoundException("Professor not found");
         }
         return answer;
     }
@@ -181,11 +174,8 @@ public class ProfessorService{
         Page<StudentDTO> studentDTOS = new PageImpl<>(listStudentDTOS);
 
         // return page of students
-        if(studentDTOS.getSize() != 0){
-            answer.put("message", studentDTOS);
-        }else {
-            answer.put("error", "No students found under this professor");
-        }
+        answer.put("message", studentDTOS);
+
         return answer;
     }
 
@@ -193,13 +183,13 @@ public class ProfessorService{
         Map<String, Object> answer = new TreeMap<>();
 
         if(professorDTO == null){
-            answer.put("error", "Professor not saved");
+            throw new IllegalStateException("Request data missing");
+        }else if(!emailValidatorService.test(professorDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
         }else if(iStudentRepository.existsByUsername(professorDTO.getUsername()) ||
                     iPatientRepository.existsByUsername(professorDTO.getUsername()) ||
                     iAdminRepository.existsByUsername(professorDTO.getUsername())){
-            answer.put("error", "Repeated username");
-        }else if(!emailValidatorService.test(professorDTO.getEmail())){
-            answer.put("error", "Email not valid");
+            throw new IllegalStateException("Repeated username");
         }else{
             // get role
             Role role = iRoleRepository.findByName("Professor").orElse(null);
@@ -239,15 +229,15 @@ public class ProfessorService{
 
     public Map<String, Object> verifyProfessor(String code){
         Map<String, Object> answer = new TreeMap<>();
-        Professor professor = iProfessorRepository.findByVerification_code(code).orElse(null);
 
-        if(professor == null || professor.isEnabled()){
-            answer.put("error", "verify fail");
+        Professor professor = iProfessorRepository.findByVerification_code(code).orElse(null);
+        if(professor == null){
+            throw new IllegalStateException("Invalid code");
         }else{
             professor.setVerification_code(null);
             professor.setEnabled(true);
             iProfessorRepository.save(professor);
-            answer.put("message", "verify success");
+            answer.put("message", "Successful verification");
         }
         return answer;
     }
@@ -256,36 +246,39 @@ public class ProfessorService{
         Map<String, Object> answer = new TreeMap<>();
 
         if(professorDTO == null){
-            answer.put("error", "Professor not found");
+            throw new IllegalStateException("Request data missing");
+        }else if(!emailValidatorService.test(professorDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
         }else if(iStudentRepository.existsByUsername(professorDTO.getUsername()) ||
                 iPatientRepository.existsByUsername(professorDTO.getUsername()) ||
                 iAdminRepository.existsByUsername(professorDTO.getUsername())){
-            answer.put("error", "Repeated username");
-        }else if(!emailValidatorService.test(professorDTO.getEmail())){
-            answer.put("error", "Email not valid");
+            throw new IllegalStateException("Repeated username");
         }else{
-            // get patient
             Professor professor = iProfessorRepository.findById(professorDTO.getId()).orElse(null);
+            if(professor == null){
+                throw new NotFoundException("Professor not found");
+            }else{
+                // update professor
+                professor.setUsername(professorDTO.getUsername());
+                professor.setName(professorDTO.getName());
+                professor.setDocument_type(professorDTO.getDocument_type());
+                professor.setDocument_number(professorDTO.getDocument_number());
 
-            // update professor
-            professor.setUsername(professorDTO.getUsername());
-            professor.setName(professorDTO.getName());
-            professor.setDocument_type(professorDTO.getDocument_type());
-            professor.setDocument_number(professorDTO.getDocument_number());
-
-            iProfessorRepository.save(professor);
-            answer.put("message", "Professor updated successfully");
+                iProfessorRepository.save(professor);
+                answer.put("message", "Professor updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String, Object> deleteProfessor(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iProfessorRepository.existsById(id)){
             iProfessorRepository.deleteById(id);
             answer.put("message", "Professor deleted successfully");
         }else{
-            answer.put("error", "Professor not found");
+            throw new NotFoundException("Professor not found");
         }
         return answer;
     }

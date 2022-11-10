@@ -74,7 +74,7 @@ class PatientServiceTest {
 
     }
 
-    @Test
+    /*@Test
     void getAllPatient(){
         Page<Patient> patients = new PageImpl<>(Arrays.asList(patient));
         Mockito.when(iPatientRepository.findAll(any(Pageable.class))).thenReturn(patients);
@@ -87,19 +87,19 @@ class PatientServiceTest {
         assertNotNull(patientService.findPatientById(1L));
     }
 
-    /*@Test
+    @Test
     void savePatient() throws UnsupportedEncodingException, MessagingException {
         assertNotNull(patientService.savePatient(new PatientDTO()));
-    }*/
+    }
 
-    /*@Test
+    @Test
     void editPatient(){
         assertNotNull(patientService.editPatient(new PatientDTO()));
-    }*/
+    }
 
     @Test
     void deletePatient(){
         assertNotNull(patientService.deletePatient(1L));
-    }
+    }*/
 
 }

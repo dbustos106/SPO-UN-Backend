@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -80,22 +81,20 @@ public class AdminService{
         Page<AdminDTO> adminDTOS = new PageImpl<>(listAdminDTOS);
 
         // return page of admins
-        if(adminDTOS.getSize() != 0){
-            answer.put("message", adminDTOS);
-        }else {
-            answer.put("error", "No admin found");
-        }
+        answer.put("message", adminDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findAdminById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Admin admin = iAdminRepository.findById(id).orElse(null);
-        AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
-        if(adminDTO != null){
+        if(admin != null){
+            AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
             answer.put("message", adminDTO);
         }else{
-            answer.put("error", "Admin not found");
+            throw new NotFoundException("Admin not found");
         }
         return answer;
     }
@@ -104,13 +103,13 @@ public class AdminService{
         Map<String, Object> answer = new TreeMap<>();
 
         if(adminDTO == null){
-            answer.put("error", "Admin not saved");
+            throw new IllegalStateException("Request data missing");
+        }else if(!emailValidatorService.test(adminDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
         }else if(iProfessorRepository.existsByUsername(adminDTO.getUsername()) ||
                     iPatientRepository.existsByUsername(adminDTO.getUsername()) ||
                     iStudentRepository.existsByUsername(adminDTO.getUsername())){
-            answer.put("error", "Repeated username");
-        }else if(!emailValidatorService.test(adminDTO.getEmail())){
-            answer.put("error", "Email not valid");
+            throw new IllegalStateException("Repeated username");
         }else{
             // get role
             Role role = iRoleRepository.findByName("Admin").orElse(null);
@@ -148,15 +147,15 @@ public class AdminService{
 
     public Map<String, Object> verifyAdmin(String code){
         Map<String, Object> answer = new TreeMap<>();
-        Admin admin = iAdminRepository.findByVerification_code(code).orElse(null);
 
-        if(admin == null || admin.isEnabled()){
-            answer.put("error", "verify fail");
+        Admin admin = iAdminRepository.findByVerification_code(code).orElse(null);
+        if(admin == null){
+            throw new IllegalStateException("Invalid code");
         }else{
             admin.setVerification_code(null);
             admin.setEnabled(true);
             iAdminRepository.save(admin);
-            answer.put("message", "verify success");
+            answer.put("message", "Successful verification");
         }
         return answer;
     }
@@ -165,13 +164,13 @@ public class AdminService{
         Map<String, Object> answer = new TreeMap<>();
 
         if(adminDTO == null){
-            answer.put("error", "Admin not found");
+            throw new IllegalStateException("Request data missing");
+        }else if(!emailValidatorService.test(adminDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
         }else if(iProfessorRepository.existsByUsername(adminDTO.getUsername()) ||
                     iPatientRepository.existsByUsername(adminDTO.getUsername()) ||
                     iStudentRepository.existsByUsername(adminDTO.getUsername())){
-            answer.put("error", "Repeated username");
-        }else if(!emailValidatorService.test(adminDTO.getEmail())){
-            answer.put("error", "Email not valid");
+            throw new IllegalStateException("Repeated username");
         }else{
             // get role
             Role role = iRoleRepository.findByName("Admin").orElse(null);
@@ -191,11 +190,12 @@ public class AdminService{
 
     public Map<String, Object> deleteAdmin(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iAdminRepository.existsById(id)){
             iAdminRepository.deleteById(id);
             answer.put("message", "Admin deleted successfully");
         }else{
-            answer.put("error", "Admin not found");
+            throw new NotFoundException("Admin not found");
         }
         return answer;
     }

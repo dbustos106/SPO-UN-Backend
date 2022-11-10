@@ -159,7 +159,7 @@ class AppointmentServiceTest {
 
     }
 
-    @Test
+    /*@Test
     void isAvailableSchedule() throws ParseException {
         assertNotNull(appointmentService.isAvailableSchedule(schedules, "11-11-2022 09:00:00", "11-11-2022 09:30:00"));
     }
@@ -183,17 +183,17 @@ class AppointmentServiceTest {
         assertNotNull(appointmentService.findAppointmentById(1L));
     }
 
-    /*@Test
+    @Test
     void saveAppointment(){
         Mockito.when(iStudentRepository.findByUsername(students.get(0))).thenReturn(Optional.ofNullable(student));
         Mockito.when(iAppointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
         assertNotNull(appointmentService.saveAppointment(fullAppointmentDTO));
-    }*/
+    }
 
     @Test
     void editAppointment(){ assertNotNull(appointmentService.editAppointment(fullAppointmentDTO)); }
 
     @Test
-    void deleteAppointment(){ assertNotNull(appointmentService.deleteAppointment(1L)); }
+    void deleteAppointment(){ assertNotNull(appointmentService.deleteAppointment(1L)); }*/
 
 }

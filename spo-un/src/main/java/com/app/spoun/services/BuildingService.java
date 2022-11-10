@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -46,60 +47,67 @@ public class BuildingService{
         Page<BuildingDTO> buildingDTOS = new PageImpl<>(listBuildingDTOS);
 
         // return page of buildings
-        if(buildingDTOS.getSize() != 0){
-            answer.put("message", buildingDTOS);
-        }else {
-            answer.put("error", "No building found");
-        }
+        answer.put("message", buildingDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findBuildingById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Building building = iBuildingRepository.findById(id).orElse(null);
-        BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
-        if(buildingDTO != null){
+        if(building != null){
+            BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
             answer.put("message", buildingDTO);
         }else{
-            answer.put("error", "Building not found");
+            throw new NotFoundException("Building not found");
         }
         return answer;
     }
 
     public Map<String, Object> saveBuilding(BuildingDTO buildingDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(buildingDTO != null){
+
+        if(buildingDTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else{
             // save building
             Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
             building.setRooms(new ArrayList<>());
             iBuildingRepository.save(building);
             answer.put("message", "Building saved successfully");
-        }else{
-            answer.put("error", "Building not saved");
         }
         return answer;
     }
 
     public Map<String, Object> editBuilding(BuildingDTO buildingDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(buildingDTO.getId() != null && iBuildingRepository.existsById(buildingDTO.getId())){
-            // update building
-            Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
-            iBuildingRepository.save(building);
-            answer.put("message", "Building updated successfully");
-        }else{
-            answer.put("error", "Building not found");
+
+        if(buildingDTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else {
+            Building building = iBuildingRepository.findById(buildingDTO.getId()).orElse(null);
+            if(building == null){
+                throw new NotFoundException("Building not found");
+            }else{
+                // update building
+                building.setName(buildingDTO.getName());
+
+                iBuildingRepository.save(building);
+                answer.put("message", "Building updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String, Object> deleteBuilding(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iBuildingRepository.existsById(id)){
             iBuildingRepository.deleteById(id);
             answer.put("message", "Building deleted successfully");
         }else{
-            answer.put("error", "Building not found");
+            throw new NotFoundException("Building not found");
         }
         return answer;
     }

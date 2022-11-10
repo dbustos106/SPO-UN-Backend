@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -83,13 +84,13 @@ public class AppointmentService {
 
         // get appointment
         Appointment appointment = iAppointmentRepository.findById(appointmentId).orElse(null);
-
-        if(appointment != null){
-
-            // check if the schedule is available
+        if(appointment == null){
+            throw new NotFoundException("Appointment not found");
+        }else{
             List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
-            if(isAvailableSchedule(schedules, scheduleDTO.getStart_time(), scheduleDTO.getEnd_time())){
-
+            if(!isAvailableSchedule(schedules, scheduleDTO.getStart_time(), scheduleDTO.getEnd_time())){
+                throw new IllegalStateException("Schedule not available");
+            }else{
                 // set start_time and end_time
                 appointment.setStart_time(scheduleDTO.getStart_time());
                 appointment.setEnd_time(scheduleDTO.getEnd_time());
@@ -107,11 +108,7 @@ public class AppointmentService {
                 // save appointment
                 iAppointmentRepository.save(appointment);
                 answer.put("message", "Appointment schedule changed successfully");
-            }else{
-                answer.put("error", "Schedule not available");
             }
-        }else{
-            answer.put("error", "Appointment not found");
         }
 
         return answer;
@@ -133,11 +130,8 @@ public class AppointmentService {
         Page<AppointmentDTO> appointmentDTOS = new PageImpl<>(listAppointmentDTOS);
 
         // return page of appointments
-        if(appointmentDTOS.getSize() != 0){
-            answer.put("message", appointmentDTOS);
-        }else {
-            answer.put("error", "No appointment found");
-        }
+        answer.put("message", appointmentDTOS);
+
         return answer;
     }
 
@@ -194,11 +188,8 @@ public class AppointmentService {
         }
 
         // return page of appointments
-        if(listFullAppointmentDTOS.size() != 0){
-            answer.put("message", listFullAppointmentDTOS);
-        }else {
-            answer.put("error", "No appointment found");
-        }
+        answer.put("message", listFullAppointmentDTOS);
+
         return answer;
     }
 
@@ -210,7 +201,6 @@ public class AppointmentService {
 
         // get appointment
         Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
-
         if(appointment != null){
             // map appointment
             AppointmentDTO appointmentDTO = appointmentMapper.appointmentToAppointmentDTO(appointment);
@@ -252,7 +242,7 @@ public class AppointmentService {
 
             answer.put("message", fullAppointmentDTO);
         }else{
-            answer.put("error", "No appointment found");
+            throw new NotFoundException("No appointment found");
         }
         return answer;
 
@@ -260,8 +250,10 @@ public class AppointmentService {
 
     public Map<String, Object> saveAppointment(FullAppointmentDTO fullAppointment_DTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(fullAppointment_DTO != null){
 
+        if(fullAppointment_DTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else{
             // extract objects in Appointment_scheduleDTO
             AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointmentDTO();
             List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeSchedules();
@@ -295,26 +287,26 @@ public class AppointmentService {
             }
 
             answer.put("message", "Appointment saved successfully");
-        }else{
-            answer.put("error", "Appointment not saved");
         }
         return answer;
     }
 
     public Map<String, Object> editAppointment(FullAppointmentDTO fullAppointment_DTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(fullAppointment_DTO != null){
 
+        if(fullAppointment_DTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else{
             // extract objects in fullAppointmentDTO
             AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointmentDTO();
             List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeSchedules();
             List<String> students = fullAppointment_DTO.getStudents();
 
-            if(appointmentDTO.getId() != null && iAppointmentRepository.existsById(appointmentDTO.getId())){
-
-                // get appointment
-                Appointment appointment = iAppointmentRepository.findById(appointmentDTO.getId()).orElse(null);
-
+            // get appointment
+            Appointment appointment = iAppointmentRepository.findById(appointmentDTO.getId()).orElse(null);
+            if(appointment == null) {
+                throw new NotFoundException("Appointment not found");
+            }else{
                 // get room and professor
                 Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
                 Student studentMain = iStudentRepository.findByUsername(students.get(0)).orElse(null);
@@ -348,22 +340,19 @@ public class AppointmentService {
                 }
 
                 answer.put("message", "Appointment updated successfully");
-            }else{
-                answer.put("error", "Appointment not found");
             }
-        }else{
-            answer.put("error", "Appointment not edited");
         }
         return answer;
     }
 
     public Map<String, Object> deleteAppointment(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iAppointmentRepository.existsById(id)){
             iAppointmentRepository.deleteById(id);
             answer.put("message", "Appointment deleted successfully");
         }else{
-            answer.put("error", "Appointment not found");
+            throw new NotFoundException("Appointment not found");
         }
         return answer;
     }

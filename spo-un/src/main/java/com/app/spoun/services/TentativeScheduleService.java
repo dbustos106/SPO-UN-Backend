@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -54,67 +55,72 @@ public class TentativeScheduleService {
         Page<TentativeScheduleDTO> tentativeScheduleDTOS = new PageImpl<>(listTentativeScheduleDTOS);
 
         // return page of tentative schedules
-        if(tentativeScheduleDTOS.getSize() != 0){
-            answer.put("message", tentativeScheduleDTOS);
-        }else {
-            answer.put("error", "No tentative schedule found");
-        }
+        answer.put("message", tentativeScheduleDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findTentativeScheduleById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         TentativeSchedule tentativeSchedule = iTentativeScheduleRepository.findById(id).orElse(null);
-        TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
-        if(tentativeScheduleDTO != null){
+        if(tentativeSchedule != null){
+            TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
             answer.put("message", tentativeScheduleDTO);
         }else{
-            answer.put("error", "Tentative schedule not found");
+            throw new NotFoundException("Tentative schedule not found");
         }
         return answer;
     }
 
     public Map<String, Object> saveTentativeSchedule(TentativeScheduleDTO tentativeScheduleDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(tentativeScheduleDTO != null){
+
+        if(tentativeScheduleDTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else{
             // get appointment
             Appointment appointment = iAppointmentRepository.findById(tentativeScheduleDTO.getAppointment_id()).orElse(null);
 
             // save schedule
             TentativeSchedule tentativeSchedule = tentativeScheduleMapper.tentativeScheduleDTOToTentativeSchedule(tentativeScheduleDTO);
             tentativeSchedule.setAppointment(appointment);
+
             iTentativeScheduleRepository.save(tentativeSchedule);
             answer.put("message", "Tentative schedule saved successfully");
-        }else{
-            answer.put("error", "Tentative schedule not saved");
         }
         return answer;
     }
 
     public Map<String, Object> editTentativeSchedule(TentativeScheduleDTO tentativeScheduleDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(tentativeScheduleDTO.getId() != null && iTentativeScheduleRepository.existsById(tentativeScheduleDTO.getId())){
-            // get appointment
-            Appointment appointment = iAppointmentRepository.findById(tentativeScheduleDTO.getAppointment_id()).orElse(null);
 
-            // update schedule
-            TentativeSchedule tentativeSchedule = tentativeScheduleMapper.tentativeScheduleDTOToTentativeSchedule(tentativeScheduleDTO);
-            tentativeSchedule.setAppointment(appointment);
-            iTentativeScheduleRepository.save(tentativeSchedule);
-            answer.put("message", "Tentative schedule updated successfully");
+        if(tentativeScheduleDTO == null) {
+            throw new IllegalStateException("Request data missing");
         }else{
-            answer.put("error", "Tentative schedule not found");
+            TentativeSchedule tentativeSchedule = iTentativeScheduleRepository.findById(tentativeScheduleDTO.getId()).orElse(null);
+            if(tentativeSchedule == null) {
+                throw new NotFoundException("Tentative schedule not found");
+            }else{
+                // update schedule
+                tentativeSchedule.setStart_time(tentativeScheduleDTO.getStart_time());
+                tentativeSchedule.setEnd_time(tentativeScheduleDTO.getEnd_time());
+
+                iTentativeScheduleRepository.save(tentativeSchedule);
+                answer.put("message", "Tentative schedule updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String, Object> deleteTentativeSchedule(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iTentativeScheduleRepository.existsById(id)){
             iTentativeScheduleRepository.deleteById(id);
             answer.put("message", "Tentative schedule deleted successfully");
         }else{
-            answer.put("error", "Tentative schedule not found");
+            throw new NotFoundException("Tentative schedule not found");
         }
         return answer;
     }

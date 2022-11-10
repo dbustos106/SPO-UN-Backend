@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -65,29 +66,30 @@ public class RoomService {
         }
 
         // return page of rooms
-        if(listFullRoomDTOS.size() != 0){
-            answer.put("message", listFullRoomDTOS);
-        }else {
-            answer.put("error", "No room found");
-        }
+        answer.put("message", listFullRoomDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findRoomById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Room room = iRoomRepository.findById(id).orElse(null);
-        RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
-        if(roomDTO != null){
+        if(room != null){
+            RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
             answer.put("message", roomDTO);
         }else{
-            answer.put("error", "Room not found");
+            throw new NotFoundException("Room not found");
         }
         return answer;
     }
 
     public Map<String, Object> saveRoom(RoomDTO roomDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(roomDTO != null){
+
+        if(roomDTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else{
             // get building
             Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
 
@@ -98,36 +100,38 @@ public class RoomService {
 
             iRoomRepository.save(room);
             answer.put("message", "Room saved successfully");
-        }else{
-            answer.put("error", "Room not saved");
         }
         return answer;
     }
 
     public Map<String, Object> editRoom(RoomDTO roomDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(roomDTO.getId() != null && iRoomRepository.existsById(roomDTO.getId())){
-            // get building
-            Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
 
-            // update room
-            Room room = roomMapper.roomDTOToRoom(roomDTO);
-            room.setBuilding(building);
-            iRoomRepository.save(room);
-            answer.put("message", "Room updated successfully");
+        if(roomDTO == null){
+            throw new IllegalStateException("Request data missing");
         }else{
-            answer.put("error", "Room not found");
+            Room room = iRoomRepository.findById(roomDTO.getId()).orElse(null);
+            if(room == null) {
+                throw new NotFoundException("Room not found");
+            }else{
+                // update room
+                room.setName(roomDTO.getName());
+
+                iRoomRepository.save(room);
+                answer.put("message", "Room updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String, Object> deleteRoom(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iRoomRepository.existsById(id)){
             iRoomRepository.deleteById(id);
             answer.put("message", "Room deleted successfully");
         }else{
-            answer.put("error", "Room not found");
+            throw new NotFoundException("Room not found");
         }
         return answer;
     }

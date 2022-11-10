@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -54,67 +55,72 @@ public class ScheduleService {
         Page<ScheduleDTO> scheduleDTOS = new PageImpl<>(listScheduleDTOS);
 
         // return page of schedules
-        if(scheduleDTOS.getSize() != 0){
-            answer.put("message", scheduleDTOS);
-        }else {
-            answer.put("error", "No schedule found");
-        }
+        answer.put("message", scheduleDTOS);
+
         return answer;
     }
 
     public Map<String, Object> findScheduleById(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         Schedule schedule = iScheduleRepository.findById(id).orElse(null);
-        ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
-        if(scheduleDTO != null){
+        if(schedule != null){
+            ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
             answer.put("message", scheduleDTO);
         }else{
-            answer.put("error", "Schedule not found");
+            throw new NotFoundException("Schedule not found");
         }
         return answer;
     }
 
     public Map<String, Object> saveSchedule(ScheduleDTO scheduleDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(scheduleDTO != null){
+
+        if(scheduleDTO == null){
+            throw new IllegalStateException("Request data missing");
+        }else{
             // get room
             Room room = iRoomRepository.findById(scheduleDTO.getRoom_id()).orElse(null);
 
             // save schedule
             Schedule schedule = scheduleMapper.scheduleDTOToSchedule(scheduleDTO);
             schedule.setRoom(room);
+
             iScheduleRepository.save(schedule);
             answer.put("message", "Schedule saved successfully");
-        }else{
-            answer.put("error", "Schedule not saved");
         }
         return answer;
     }
 
     public Map<String, Object> editSchedule(ScheduleDTO scheduleDTO){
         Map<String, Object> answer = new TreeMap<>();
-        if(scheduleDTO.getId() != null && iScheduleRepository.existsById(scheduleDTO.getId())){
-            // get room
-            Room room = iRoomRepository.findById(scheduleDTO.getRoom_id()).orElse(null);
 
-            // update schedule
-            Schedule schedule = scheduleMapper.scheduleDTOToSchedule(scheduleDTO);
-            schedule.setRoom(room);
-            iScheduleRepository.save(schedule);
-            answer.put("message", "Schedule updated successfully");
+        if(scheduleDTO == null){
+            throw new IllegalStateException("Request data missing");
         }else{
-            answer.put("error", "Schedule not found");
+            Schedule schedule = iScheduleRepository.findById(scheduleDTO.getId()).orElse(null);
+            if(schedule == null) {
+                throw new NotFoundException("Schedule not found");
+            }else{
+                // update schedule
+                schedule.setStart_time(scheduleDTO.getStart_time());
+                schedule.setEnd_time(scheduleDTO.getEnd_time());
+
+                iScheduleRepository.save(schedule);
+                answer.put("message", "Schedule updated successfully");
+            }
         }
         return answer;
     }
 
     public Map<String, Object> deleteSchedule(Long id){
         Map<String, Object> answer = new TreeMap<>();
+
         if(iScheduleRepository.existsById(id)){
             iScheduleRepository.deleteById(id);
             answer.put("message", "Schedule deleted successfully");
         }else{
-            answer.put("error", "Schedule not found");
+            throw new NotFoundException("Schedule not found");
         }
         return answer;
     }
