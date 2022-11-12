@@ -13,11 +13,13 @@ public class FullAppointmentDTO {
 
     private AppointmentDTO appointmentDTO;
 
-    private List<TentativeScheduleDTO> tentativeSchedules;
+    private List<TentativeScheduleDTO> tentativeScheduleDTOS;
 
     private List<String> students;
 
     private String professor;
+
+    private String patient;
 
     private String building;
 

@@ -156,7 +156,7 @@ public class AppointmentService {
                     listTentativeScheduleDTOS.add(tentativeScheduleDTO);
                 }
             }
-            fullAppointmentDTO.setTentativeSchedules(listTentativeScheduleDTOS);
+            fullAppointmentDTO.setTentativeScheduleDTOS(listTentativeScheduleDTOS);
 
             // get students
             List<Student> students = iStudentRepository.findByAppointment_id(appointment.getId());
@@ -212,7 +212,7 @@ public class AppointmentService {
                     listTentativeScheduleDTOS.add(tentativeScheduleDTO);
                 }
             }
-            fullAppointmentDTO.setTentativeSchedules(listTentativeScheduleDTOS);
+            fullAppointmentDTO.setTentativeScheduleDTOS(listTentativeScheduleDTOS);
 
             // get students
             List<Student> students = iStudentRepository.findByAppointment_id(id);
@@ -225,6 +225,12 @@ public class AppointmentService {
             // get professor
             Professor professor = appointment.getProfessor();
             fullAppointmentDTO.setProfessor(professor.getName());
+
+            // get patient
+            Patient patient = appointment.getPatient();
+            if(patient != null){
+                fullAppointmentDTO.setPatient(patient.getName());
+            }
 
             // get building
             Building building = appointment.getRoom().getBuilding();
@@ -265,7 +271,7 @@ public class AppointmentService {
         }else{
             // extract objects in Appointment_scheduleDTO
             AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointmentDTO();
-            List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeSchedules();
+            List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeScheduleDTOS();
             List<String> students = fullAppointment_DTO.getStudents();
 
             // get room and professor
@@ -308,7 +314,7 @@ public class AppointmentService {
         }else{
             // extract objects in fullAppointmentDTO
             AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointmentDTO();
-            List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeSchedules();
+            List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeScheduleDTOS();
             List<String> students = fullAppointment_DTO.getStudents();
 
             // get appointment
