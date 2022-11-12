@@ -25,6 +25,9 @@ public class Professor {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "last_name")
+    private String last_name;
+
     @Column(name = "email")
     private String email;
 

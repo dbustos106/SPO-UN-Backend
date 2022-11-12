@@ -17,6 +17,8 @@ public class ProfessorDTO {
 
     private String name;
 
+    private String last_name;
+
     private String email;
 
     private String document_type;
