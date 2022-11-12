@@ -30,6 +30,7 @@ public class AppointmentService {
     private final ITentativeScheduleRepository iTentativeScheduleRepository;
     private final IScheduleRepository iScheduleRepository;
     private final AppointmentMapper appointmentMapper;
+    private final PatientMapper patientMapper;
     private final TentativeScheduleMapper tentativeScheduleMapper;
     private final TentativeScheduleService tentativeScheduleService;
     private final ScheduleService scheduleService;
@@ -42,6 +43,7 @@ public class AppointmentService {
                               ITentativeScheduleRepository iTentativeScheduleRepository,
                               IScheduleRepository iScheduleRepository,
                               AppointmentMapper appointmentMapper,
+                              PatientMapper patientMapper,
                               TentativeScheduleMapper tentativeScheduleMapper,
                               TentativeScheduleService tentativeScheduleService,
                               ScheduleService scheduleService){
@@ -52,6 +54,7 @@ public class AppointmentService {
         this.iTentativeScheduleRepository = iTentativeScheduleRepository;
         this.iScheduleRepository = iScheduleRepository;
         this.appointmentMapper = appointmentMapper;
+        this.patientMapper = patientMapper;
         this.tentativeScheduleMapper = tentativeScheduleMapper;
         this.tentativeScheduleService = tentativeScheduleService;
         this.scheduleService = scheduleService;
@@ -229,7 +232,8 @@ public class AppointmentService {
             // get patient
             Patient patient = appointment.getPatient();
             if(patient != null){
-                fullAppointmentDTO.setPatient(patient.getName());
+                PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
+                fullAppointmentDTO.setPatientDTO(patientDTO);
             }
 
             // get building
