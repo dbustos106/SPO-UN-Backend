@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -37,6 +36,7 @@ public class PatientService{
     private final IProfessorRepository iProfessorRepository;
     private final IAdminRepository iAdminRepository;
     private final IRoleRepository iRoleRepository;
+    private final IScheduleRepository iScheduleRepository;
     private final IAppointmentRepository iAppointmentRepository;
     private final EmailValidatorService emailValidatorService;
     private final EmailSenderService emailSenderService;
@@ -50,6 +50,7 @@ public class PatientService{
                           IProfessorRepository iProfessorRepository,
                           IAdminRepository iAdminRepository,
                           IRoleRepository iRoleRepository,
+                          IScheduleRepository iScheduleRepository,
                           IAppointmentRepository iAppointmentRepository,
                           EmailValidatorService emailValidatorService,
                           EmailSenderService emailSenderService,
@@ -61,6 +62,7 @@ public class PatientService{
         this.iProfessorRepository = iProfessorRepository;
         this.iAdminRepository = iAdminRepository;
         this.iRoleRepository = iRoleRepository;
+        this.iScheduleRepository = iScheduleRepository;
         this.iAppointmentRepository = iAppointmentRepository;
         this.emailValidatorService = emailValidatorService;
         this.emailSenderService = emailSenderService;
@@ -78,19 +80,27 @@ public class PatientService{
         if(appointment == null) {
             throw new NotFoundException("Appointment not found");
         }else{
+            // get professor and patient
+            Professor professor = appointment.getProfessor();
+            Patient patient = appointment.getPatient();
 
+            // delete schedule
+            if(appointment.getStart_time() != null) {
+                iScheduleRepository.deleteByStart_time(appointment.getStart_time());
+            }
+
+            // cancel appointment
             appointment.setState("Canceled");
+            appointment.setStart_time(null);
+            appointment.setEnd_time(null);
+            appointment.setPatient(null);
             iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment canceled successfully");
 
-            // get professor
-            Professor professor = appointment.getProfessor();
             String emailProfessor = "Querid@ [[name]],<br>"
                     + "Su cita número [[id]] ha sido cancelada por el paciente.<br>"
                     + "Si tiene algúna queja o comentario, comuníquese con los estudiantes a cargo:<br>";
 
-            // get patient
-            Patient patient = appointment.getPatient();
             String emailPatient = "Querid@ [[name]],<br>"
                     + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
                     + "Si desea comunicarse con los estudiantes encargados de la cita, comuniquese con:<br>";

@@ -5,7 +5,6 @@ import com.app.spoun.domain.Role;
 import com.app.spoun.dto.AdminDTO;
 import com.app.spoun.mappers.AdminMapper;
 import com.app.spoun.repository.*;
-
 import lombok.extern.slf4j.Slf4j;
 
 import net.bytebuddy.utility.RandomString;

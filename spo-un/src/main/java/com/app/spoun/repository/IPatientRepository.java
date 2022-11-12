@@ -21,7 +21,10 @@ public interface IPatientRepository extends JpaRepository<Patient, Long>{
     boolean existsById(Long id);
     boolean existsByUsername(String username);
 
-    @Query(value = "SELECT * FROM patient WHERE patient.verification_code = ?1", nativeQuery = true)
+    @Query(value = """
+            SELECT *
+            FROM (patient)
+            WHERE (patient.verification_code = ?1)""", nativeQuery = true)
     Optional<Patient> findByVerification_code(String code);
 
 }

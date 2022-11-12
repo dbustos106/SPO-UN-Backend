@@ -21,7 +21,10 @@ public interface IProfessorRepository extends JpaRepository<Professor, Long>{
     boolean existsById(Long id);
     boolean existsByUsername(String username);
 
-    @Query(value = "SELECT * FROM professor WHERE professor.verification_code = ?1", nativeQuery = true)
+    @Query(value = """
+            SELECT *
+            FROM (professor)
+            WHERE (professor.verification_code = ?1)""", nativeQuery = true)
     Optional<Professor> findByVerification_code(String code);
 
 }

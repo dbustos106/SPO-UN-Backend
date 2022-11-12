@@ -21,7 +21,10 @@ public interface IAdminRepository extends JpaRepository<Admin, Long>{
     boolean existsById(Long id);
     boolean existsByUsername(String username);
 
-    @Query(value = "SELECT * FROM admin WHERE admin.verification_code = ?1", nativeQuery = true)
+    @Query(value = """
+            SELECT *
+            FROM (admin)
+            WHERE (admin.verification_code = ?1)""", nativeQuery = true)
     Optional<Admin> findByVerification_code(String code);
 
 }

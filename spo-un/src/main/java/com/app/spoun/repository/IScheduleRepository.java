@@ -5,6 +5,7 @@ import com.app.spoun.dto.ScheduleDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -20,5 +21,12 @@ public interface IScheduleRepository extends JpaRepository<Schedule, Long>{
     void deleteById(Long id);
     boolean existsById(Long id);
     List<Schedule> findByRoom_id(Long id);
+
+    @Modifying
+    @Query(value = """
+            DELETE
+            FROM (schedule)
+            WHERE (start_time = ?1)""", nativeQuery = true)
+    void deleteByStart_time(String start_time);
 
 }

@@ -22,10 +22,11 @@ public interface ITentativeScheduleRepository extends JpaRepository<TentativeSch
     void deleteByAppointment_id(Long id);
     List<TentativeSchedule> findByAppointment_id(Long id);
 
-    @Query(value = "SELECT tentative_schedule.id, tentative_schedule.start_time, tentative_schedule.end_time, tentative_schedule.appointment_id\n" +
-            "FROM ((student_appointment INNER JOIN appointment ON student_appointment.appointment_id = appointment.id) INNER JOIN\n" +
-            "tentative_schedule ON tentative_schedule.appointment_id = appointment.id)\n" +
-            "WHERE student_appointment.student_id = ?1 and appointment.state = 'Available'", nativeQuery = true)
+    @Query(value = """
+            SELECT tentative_schedule.id, tentative_schedule.start_time, tentative_schedule.end_time, tentative_schedule.appointment_id
+            FROM ((student_appointment INNER JOIN appointment ON student_appointment.appointment_id = appointment.id) INNER JOIN
+            tentative_schedule ON tentative_schedule.appointment_id = appointment.id)
+            WHERE (student_appointment.student_id = ?1 and appointment.state = 'Available')""", nativeQuery = true)
     List<TentativeSchedule> getStudentUnconfirmedScheduleByStudentId(Long id);
 
 }

@@ -6,8 +6,6 @@ import com.app.spoun.dto.TentativeScheduleDTO;
 import com.app.spoun.dto.StudentDTO;
 import com.app.spoun.mappers.*;
 import com.app.spoun.repository.*;
-
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.bytebuddy.utility.RandomString;
@@ -37,6 +35,7 @@ public class StudentService {
     private final IPatientRepository iPatientRepository;
     private final IAdminRepository iAdminRepository;
     private final IRoleRepository iRoleRepository;
+    private final IScheduleRepository iScheduleRepository;
     private final ITentativeScheduleRepository iTentativeScheduleRepository;
     private final IAppointmentRepository iAppointmentRepository;
     private final EmailValidatorService emailValidatorService;
@@ -52,6 +51,7 @@ public class StudentService {
                           IPatientRepository iPatientRepository,
                           IAdminRepository iAdminRepository,
                           IRoleRepository iRoleRepository,
+                          IScheduleRepository iScheduleRepository,
                           ITentativeScheduleRepository iTentativeScheduleRepository,
                           IAppointmentRepository iAppointmentRepository,
                           EmailValidatorService emailValidatorService,
@@ -65,6 +65,7 @@ public class StudentService {
         this.iPatientRepository = iPatientRepository;
         this.iAdminRepository = iAdminRepository;
         this.iRoleRepository = iRoleRepository;
+        this.iScheduleRepository = iScheduleRepository;
         this.iTentativeScheduleRepository = iTentativeScheduleRepository;
         this.iAppointmentRepository = iAppointmentRepository;
         this.emailValidatorService = emailValidatorService;
@@ -84,19 +85,27 @@ public class StudentService {
         if(appointment == null){
             throw new NotFoundException("Appointment not found");
         }else{
+            // get professor and patient
+            Professor professor = appointment.getProfessor();
+            Patient patient = appointment.getPatient();
 
+            // delete schedule
+            if(appointment.getStart_time() != null) {
+                iScheduleRepository.deleteByStart_time(appointment.getStart_time());
+            }
+
+            // cancel appointment
             appointment.setState("Canceled");
+            appointment.setStart_time(null);
+            appointment.setEnd_time(null);
+            appointment.setPatient(null);
             iAppointmentRepository.save(appointment);
             answer.put("message", "Appointment canceled successfully");
 
-            // get professor
-            Professor professor = appointment.getProfessor();
             String emailProfessor = "Querid@ [[name]],<br>"
                     + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
                     + "Si tiene algúna queja o comentario, comuníquese con los estudiantes a cargo:<br>";
 
-            // get patient
-            Patient patient = appointment.getPatient();
             String emailPatient = "Querid@ [[name]],<br>"
                     + "Su cita número [[id]] ha sido cancelada por los estudiantes a cargo de atenderl@.<br>"
                     + "Si tiene algúna queja o comentario, comuníquese con ellos:<br>";
@@ -125,11 +134,13 @@ public class StudentService {
             emailSenderService.send(professor.getEmail(), subjectProfessor, emailProfessor);
 
             // send email to patient
-            emailPatient += "Gracias,<br>" + "Spo-un.";
-            String subjectPatient = "Su cita ha sido cancelada";
-            emailPatient = emailPatient.replace("[[name]]", patient.getName());
-            emailPatient = emailPatient.replace("[[id]]", id.toString());
-            emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
+            if(patient != null){
+                emailPatient += "Gracias,<br>" + "Spo-un.";
+                String subjectPatient = "Su cita ha sido cancelada";
+                emailPatient = emailPatient.replace("[[name]]", patient.getName());
+                emailPatient = emailPatient.replace("[[id]]", id.toString());
+                emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
+            }
         }
 
         return answer;
