@@ -43,6 +43,16 @@ public class RoomController {
         }
     }
 
+    @GetMapping(value = "/{id}/schedules")
+    public ResponseEntity<?> getSchedulesByRoomId(@PathVariable("id") Long id){
+        try{
+            Map<String, Object> answer = roomService.getSchedulesByRoomId(id);
+            return ResponseEntity.ok().body(answer);
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveRoom(@RequestBody RoomDTO roomDTO){
         try{

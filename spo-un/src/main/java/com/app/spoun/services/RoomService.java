@@ -2,14 +2,18 @@ package com.app.spoun.services;
 
 import com.app.spoun.domain.Building;
 import com.app.spoun.domain.Room;
+import com.app.spoun.domain.Schedule;
 import com.app.spoun.dto.BuildingDTO;
 import com.app.spoun.dto.FullRoomDTO;
 import com.app.spoun.dto.RoomDTO;
+import com.app.spoun.dto.ScheduleDTO;
 import com.app.spoun.mappers.BuildingMapper;
 import com.app.spoun.mappers.RoomMapper;
+import com.app.spoun.mappers.ScheduleMapper;
 import com.app.spoun.repository.IBuildingRepository;
 import com.app.spoun.repository.IRoomRepository;
 
+import com.app.spoun.repository.IScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,18 +33,24 @@ public class RoomService {
 
     private final IRoomRepository iRoomRepository;
     private final IBuildingRepository iBuildingRepository;
+    private final IScheduleRepository iScheduleRepository;
     private final RoomMapper roomMapper;
     private final BuildingMapper buildingMapper;
+    private final ScheduleMapper scheduleMapper;
 
     @Autowired
     public RoomService(IRoomRepository iRoomRepository,
                        IBuildingRepository iBuildingRepository,
+                       IScheduleRepository iScheduleRepository,
                        RoomMapper roomMapper,
-                       BuildingMapper buildingMapper){
+                       BuildingMapper buildingMapper,
+                       ScheduleMapper scheduleMapper){
         this.iRoomRepository = iRoomRepository;
         this.iBuildingRepository = iBuildingRepository;
+        this.iScheduleRepository = iScheduleRepository;
         this.roomMapper = roomMapper;
         this.buildingMapper = buildingMapper;
+        this.scheduleMapper = scheduleMapper;
     }
 
 
@@ -81,6 +91,25 @@ public class RoomService {
         }else{
             throw new NotFoundException("Room not found");
         }
+        return answer;
+    }
+
+    public Map<String, Object> getSchedulesByRoomId(Long id){
+        Map<String, Object> answer = new TreeMap<>();
+
+        // get page of schedules
+        List<Schedule> schedules = iScheduleRepository.findByRoom_id(id);
+
+        // map all schedules
+        List<ScheduleDTO> listScheduleDTOS = new ArrayList<>();
+        for(Schedule schedule : schedules){
+            ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
+            listScheduleDTOS.add(scheduleDTO);
+        }
+
+        // return schedules
+        answer.put("message", listScheduleDTOS);
+
         return answer;
     }
 
