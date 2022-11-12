@@ -245,6 +245,15 @@ public class AppointmentService {
     public Map<String, Object> qualifyAppointment(Long id, AppointmentRatingDTO appointmentRatingDTO){
         Map<String, Object> answer = new TreeMap<>();
 
+        Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
+        if(appointment != null){
+            appointment.setPatient_feedback(appointmentRatingDTO.getPatient_feedback());
+            appointment.setPatient_rating(appointmentRatingDTO.getPatient_rating());
+            iAppointmentRepository.save(appointment);
+            answer.put("message", "Appointment rated successfully");
+        }else{
+            throw new NotFoundException("No appointment found");
+        }
         return answer;
     }
 
