@@ -1,5 +1,6 @@
 package com.app.spoun.controllers;
 
+import com.app.spoun.dto.AppointmentRatingDTO;
 import com.app.spoun.dto.FullAppointmentDTO;
 import com.app.spoun.dto.ScheduleDTO;
 import com.app.spoun.services.AppointmentService;
@@ -61,6 +62,18 @@ public class AppointmentController{
     public ResponseEntity<?> findAppointmentById(@PathVariable("id") Long id){
         try{
             Map<String, Object> answer = appointmentService.findAppointmentById(id);
+            return ResponseEntity.ok().body(answer);
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @PutMapping(value = "/{id}/qualify")
+    public ResponseEntity<?> qualifyAppointment(
+            @PathVariable("id") Long id,
+            @RequestBody AppointmentRatingDTO appointmentRatingDTO){
+        try{
+            Map<String, Object> answer = appointmentService.qualifyAppointment(id, appointmentRatingDTO);
             return ResponseEntity.ok().body(answer);
         }catch(Exception e){
             return ResponseEntity.badRequest().body(e);

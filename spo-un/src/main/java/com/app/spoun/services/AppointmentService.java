@@ -242,6 +242,12 @@ public class AppointmentService {
 
     }
 
+    public Map<String, Object> qualifyAppointment(Long id, AppointmentRatingDTO appointmentRatingDTO){
+        Map<String, Object> answer = new TreeMap<>();
+
+        return answer;
+    }
+
     public Map<String, Object> saveAppointment(FullAppointmentDTO fullAppointment_DTO){
         Map<String, Object> answer = new TreeMap<>();
 
