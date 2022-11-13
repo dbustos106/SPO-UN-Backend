@@ -15,11 +15,11 @@ public interface IPatientRepository extends JpaRepository<Patient, Long>{
 
     Page<Patient> findAll(Pageable page);
     Optional<Patient> findById(Long id);
-    Optional<Patient> findByUsername(String username);
+    Optional<Patient> findByEmail(String email);
     Patient save(Patient patient);
     void deleteById(Long id);
     boolean existsById(Long id);
-    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 
     @Query(value = """
             SELECT *

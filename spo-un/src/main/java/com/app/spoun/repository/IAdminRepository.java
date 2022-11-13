@@ -15,11 +15,11 @@ public interface IAdminRepository extends JpaRepository<Admin, Long>{
 
     Page<Admin> findAll(Pageable page);
     Optional<Admin> findById(Long id);
-    Optional<Admin> findByUsername(String username);
+    Optional<Admin> findByEmail(String email);
     Admin save(Admin admin);
     void deleteById(Long id);
     boolean existsById(Long id);
-    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 
     @Query(value = """
             SELECT *

@@ -102,10 +102,10 @@ public class AdminService{
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(adminDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByUsername(adminDTO.getUsername()) ||
-                    iPatientRepository.existsByUsername(adminDTO.getUsername()) ||
-                    iStudentRepository.existsByUsername(adminDTO.getUsername())){
-            throw new IllegalStateException("Repeated username");
+        }else if(iProfessorRepository.existsByEmail(adminDTO.getEmail()) ||
+                    iPatientRepository.existsByEmail(adminDTO.getEmail()) ||
+                    iStudentRepository.existsByEmail(adminDTO.getEmail())){
+            throw new IllegalStateException("Repeated email");
         }else{
             // get role
             Role role = iRoleRepository.findByName("Admin").orElse(null);
@@ -163,10 +163,10 @@ public class AdminService{
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(adminDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByUsername(adminDTO.getUsername()) ||
-                    iPatientRepository.existsByUsername(adminDTO.getUsername()) ||
-                    iStudentRepository.existsByUsername(adminDTO.getUsername())){
-            throw new IllegalStateException("Repeated username");
+        }else if(iProfessorRepository.existsByEmail(adminDTO.getEmail()) ||
+                    iPatientRepository.existsByEmail(adminDTO.getEmail()) ||
+                    iStudentRepository.existsByEmail(adminDTO.getEmail())){
+            throw new IllegalStateException("Repeated email");
         }else{
             // get role
             Role role = iRoleRepository.findByName("Admin").orElse(null);

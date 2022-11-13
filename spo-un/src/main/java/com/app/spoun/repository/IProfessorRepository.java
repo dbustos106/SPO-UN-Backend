@@ -15,11 +15,11 @@ public interface IProfessorRepository extends JpaRepository<Professor, Long>{
 
     Page<Professor> findAll(Pageable page);
     Optional<Professor> findById(Long id);
-    Optional<Professor> findByUsername(String username);
+    Optional<Professor> findByEmail(String email);
     Professor save(Professor professor);
     void deleteById(Long id);
     boolean existsById(Long id);
-    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 
     @Query(value = """
             SELECT *

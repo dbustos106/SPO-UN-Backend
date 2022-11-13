@@ -13,14 +13,11 @@ public class Admin {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "password")
     private String password;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "verification_code")
     private String verification_code;
@@ -36,9 +33,8 @@ public class Admin {
     public String toString() {
         return "Admin{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", verification_code='" + verification_code + '\'' +
                 ", enabled='" + enabled + '\'' +
                 ", role=" + role +

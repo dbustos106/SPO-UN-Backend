@@ -183,10 +183,10 @@ public class ProfessorService{
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(professorDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iStudentRepository.existsByUsername(professorDTO.getEmail()) ||
-                    iPatientRepository.existsByUsername(professorDTO.getEmail()) ||
-                    iAdminRepository.existsByUsername(professorDTO.getEmail())){
-            throw new IllegalStateException("Repeated username");
+        }else if(iStudentRepository.existsByEmail(professorDTO.getEmail()) ||
+                    iPatientRepository.existsByEmail(professorDTO.getEmail()) ||
+                    iAdminRepository.existsByEmail(professorDTO.getEmail())){
+            throw new IllegalStateException("Repeated email");
         }else{
             // get role
             Role role = iRoleRepository.findByName("Professor").orElse(null);
@@ -246,10 +246,10 @@ public class ProfessorService{
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(professorDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iStudentRepository.existsByUsername(professorDTO.getEmail()) ||
-                iPatientRepository.existsByUsername(professorDTO.getEmail()) ||
-                iAdminRepository.existsByUsername(professorDTO.getEmail())){
-            throw new IllegalStateException("Repeated username");
+        }else if(iStudentRepository.existsByEmail(professorDTO.getEmail()) ||
+                iPatientRepository.existsByEmail(professorDTO.getEmail()) ||
+                iAdminRepository.existsByEmail(professorDTO.getEmail())){
+            throw new IllegalStateException("Repeated email");
         }else{
             Professor professor = iProfessorRepository.findById(professorDTO.getId()).orElse(null);
             if(professor == null){

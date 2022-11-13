@@ -64,10 +64,10 @@ public class AuthService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        Patient patient = iPatientRepository.findByUsername(username).orElse(null);
+        Patient patient = iPatientRepository.findByEmail(email).orElse(null);
         if(patient != null){
             if(!patient.isEnabled()){
                 throw new UsernameNotFoundException("User not enabled");
@@ -76,7 +76,7 @@ public class AuthService implements UserDetailsService {
             return new ApplicationUser(patient.getId(), patient.getEmail(), patient.getPassword(), authorities,
                     true, true, true, true);
         }else{
-            Student student = iStudentRepository.findByUsername(username).orElse(null);
+            Student student = iStudentRepository.findByEmail(email).orElse(null);
             if(student != null){
                 if(!student.isEnabled()){
                     throw new UsernameNotFoundException("User not enabled");
@@ -85,7 +85,7 @@ public class AuthService implements UserDetailsService {
                 return new ApplicationUser(student.getId(), student.getEmail(), student.getPassword(), authorities,
                         true, true, true, true);
             }else{
-                Professor professor = iProfessorRepository.findByUsername(username).orElse(null);
+                Professor professor = iProfessorRepository.findByEmail(email).orElse(null);
                 if(professor != null){
                     if(!professor.isEnabled()){
                         throw new UsernameNotFoundException("User not enabled");
@@ -94,13 +94,13 @@ public class AuthService implements UserDetailsService {
                     return new ApplicationUser(professor.getId(), professor.getEmail(), professor.getPassword(), authorities,
                             true, true, true, true);
                 }else{
-                    Admin admin = iAdminRepository.findByUsername(username).orElse(null);
+                    Admin admin = iAdminRepository.findByEmail(email).orElse(null);
                     if(admin != null){
                         if(!admin.isEnabled()){
                             throw new UsernameNotFoundException("User not enabled");
                         }
                         authorities.add(new SimpleGrantedAuthority(admin.getRole().getName()));
-                        return new ApplicationUser(admin.getId(), admin.getUsername(), admin.getPassword(), authorities,
+                        return new ApplicationUser(admin.getId(), admin.getEmail(), admin.getPassword(), authorities,
                                 true, true, true, true);
                     }else{
                         throw new UsernameNotFoundException("User not found in the database");
@@ -116,9 +116,9 @@ public class AuthService implements UserDetailsService {
             try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
                 String subject = JWTUtil.verifyToken(refresh_token, jwtIOPropieties.getToken().getSecret()).getSubject();
-                String username = subject.substring(0 , subject.indexOf(","));
+                String email = subject.substring(0 , subject.indexOf(","));
 
-                ApplicationUser user = (ApplicationUser) loadUserByUsername(username);
+                ApplicationUser user = (ApplicationUser) loadUserByUsername(email);
                 String access_token = JWTUtil.createToken(user, jwtIOPropieties.getToken().getSecret(),
                         jwtIOPropieties.getIssuer(), jwtIOPropieties.getToken().getAccess_expires_in());
 

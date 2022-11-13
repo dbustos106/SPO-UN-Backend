@@ -163,11 +163,11 @@ public class AppointmentService {
 
             // get students
             List<Student> students = iStudentRepository.findByAppointment_id(appointment.getId());
-            List<String> usernameStudents = new ArrayList<>();
+            List<String> studentEmails = new ArrayList<>();
             for(Student student : students){
-                usernameStudents.add(student.getEmail());
+                studentEmails.add(student.getEmail());
             }
-            fullAppointmentDTO.setStudents(usernameStudents);
+            fullAppointmentDTO.setStudents(studentEmails);
 
             // get professor
             Professor professor = appointment.getProfessor();
@@ -219,11 +219,11 @@ public class AppointmentService {
 
             // get students
             List<Student> students = iStudentRepository.findByAppointment_id(id);
-            List<String> usernameStudents = new ArrayList<>();
+            List<String> studentEmails = new ArrayList<>();
             for(Student student : students){
-                usernameStudents.add(student.getEmail());
+                studentEmails.add(student.getEmail());
             }
-            fullAppointmentDTO.setStudents(usernameStudents);
+            fullAppointmentDTO.setStudents(studentEmails);
 
             // get professor
             Professor professor = appointment.getProfessor();
@@ -280,7 +280,7 @@ public class AppointmentService {
 
             // get room and professor
             Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
-            Student studentMain = iStudentRepository.findByUsername(students.get(0)).orElse(null);
+            Student studentMain = iStudentRepository.findByEmail(students.get(0)).orElse(null);
             Professor professor = studentMain.getProfessor();
 
             // save appointment
@@ -300,8 +300,8 @@ public class AppointmentService {
             }
 
             // save students
-            for(String studentUsername : students){
-                Student student = iStudentRepository.findByUsername(studentUsername).orElse(null);
+            for(String studentEmail : students){
+                Student student = iStudentRepository.findByEmail(studentEmail).orElse(null);
                 appointment_answer.getStudents().add(student);
             }
 
@@ -328,7 +328,7 @@ public class AppointmentService {
             }else{
                 // get room and professor
                 Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
-                Student studentMain = iStudentRepository.findByUsername(students.get(0)).orElse(null);
+                Student studentMain = iStudentRepository.findByEmail(students.get(0)).orElse(null);
                 Professor professor = studentMain.getProfessor();
 
                 // if patient is null, update procedure type
@@ -353,8 +353,8 @@ public class AppointmentService {
                 }
 
                 // update students
-                for(String usernameStudent : students){
-                    Student student = iStudentRepository.findByUsername(usernameStudent).orElse(null);
+                for(String studentEmail : students){
+                    Student student = iStudentRepository.findByEmail(studentEmail).orElse(null);
                     appointment_answer.getStudents().add(student);
                 }
 
