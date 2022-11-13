@@ -234,6 +234,7 @@ public class PatientService{
 
             // map patient
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+            patient.setUsername(patient.getEmail());
             patient.setAntecedents(new ArrayList<>());
             patient.setAppointments(new ArrayList<>());
             patient.setRole(role);

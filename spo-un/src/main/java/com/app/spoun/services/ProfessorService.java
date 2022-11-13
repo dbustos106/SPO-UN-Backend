@@ -193,6 +193,7 @@ public class ProfessorService{
 
             // map professor
             Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+            professor.setUsername(professor.getEmail());
             professor.setStudents(new ArrayList<>());
             professor.setAppointments(new ArrayList<>());
             professor.setRole(role);

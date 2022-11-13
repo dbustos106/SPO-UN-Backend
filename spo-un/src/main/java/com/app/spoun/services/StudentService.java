@@ -260,9 +260,10 @@ public class StudentService {
 
             // map student
             Student student = studentMapper.studentDTOToStudent(studentDTO);
-            student.setRole(role);
-            student.setProfessor(professor);
+            student.setUsername(student.getEmail());
             student.setAppointments(new ArrayList<>());
+            student.setProfessor(professor);
+            student.setRole(role);
 
             // encrypt password
             student.setPassword(passwordEncoder.encode(student.getPassword()));
