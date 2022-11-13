@@ -227,7 +227,7 @@ public class AppointmentService {
 
             // get professor
             Professor professor = appointment.getProfessor();
-            fullAppointmentDTO.setProfessor(professor.getName());
+            fullAppointmentDTO.setProfessor(professor.getUsername());
 
             // get patient
             Patient patient = appointment.getPatient();
