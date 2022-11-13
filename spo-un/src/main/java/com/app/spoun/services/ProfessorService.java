@@ -257,8 +257,8 @@ public class ProfessorService{
                 throw new NotFoundException("Professor not found");
             }else{
                 // update professor
-                professor.setUsername(professorDTO.getUsername());
                 professor.setName(professorDTO.getName());
+                professor.setLast_name(professorDTO.getLast_name());
                 professor.setDocument_type(professorDTO.getDocument_type());
                 professor.setDocument_number(professorDTO.getDocument_number());
 

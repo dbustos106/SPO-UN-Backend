@@ -298,9 +298,8 @@ public class PatientService{
                 throw new NotFoundException("Patient not found");
             }else{
                 // update patient
-                patient.setUsername(patientDTO.getUsername());
                 patient.setName(patientDTO.getName());
-                patient.setEmail(patientDTO.getEmail());
+                patient.setLast_name(patientDTO.getLast_name());
                 patient.setDocument_type(patientDTO.getDocument_type());
                 patient.setDocument_number(patientDTO.getDocument_number());
                 patient.setBlood_type(patientDTO.getBlood_type());

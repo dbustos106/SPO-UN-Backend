@@ -324,8 +324,8 @@ public class StudentService {
                 throw new NotFoundException("Student not found");
             }else{
                 // update student
-                student.setUsername(studentDTO.getUsername());
                 student.setName(studentDTO.getName());
+                student.setLast_name(studentDTO.getLast_name());
                 student.setDocument_type(studentDTO.getDocument_type());
                 student.setDocument_number(studentDTO.getDocument_number());
 
