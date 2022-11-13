@@ -16,8 +16,8 @@ public class Professor {
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "password")
     private String password;
@@ -27,9 +27,6 @@ public class Professor {
 
     @Column(name = "last_name")
     private String last_name;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "document_type")
     private String document_type;
@@ -57,10 +54,10 @@ public class Professor {
     public String toString() {
         return "Professor{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
+                ", last_name='" + last_name + '\'' +
                 ", document_type='" + document_type + '\'' +
                 ", document_number='" + document_number + '\'' +
                 ", verification_code='" + verification_code + '\'' +

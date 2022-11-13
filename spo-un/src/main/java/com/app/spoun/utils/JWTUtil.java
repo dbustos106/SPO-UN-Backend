@@ -15,8 +15,7 @@ public class JWTUtil {
     public static DecodedJWT verifyToken(String refresh_token, String SECRET){
         Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
         JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verifier.verify(refresh_token);
-        return decodedJWT;
+        return verifier.verify(refresh_token);
     }
 
     public static String createToken(ApplicationUser user, String SECRET, String ISSUER, int EXPIRES_IN){

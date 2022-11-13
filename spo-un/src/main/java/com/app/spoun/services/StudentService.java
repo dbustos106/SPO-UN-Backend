@@ -249,9 +249,9 @@ public class StudentService {
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(studentDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByUsername(studentDTO.getUsername()) ||
-                    iPatientRepository.existsByUsername(studentDTO.getUsername()) ||
-                    iAdminRepository.existsByUsername(studentDTO.getUsername())){
+        }else if(iProfessorRepository.existsByUsername(studentDTO.getEmail()) ||
+                    iPatientRepository.existsByUsername(studentDTO.getEmail()) ||
+                    iAdminRepository.existsByUsername(studentDTO.getEmail())){
             throw new IllegalStateException("Repeated username");
         }else{
             // get role and professor
@@ -260,7 +260,6 @@ public class StudentService {
 
             // map student
             Student student = studentMapper.studentDTOToStudent(studentDTO);
-            student.setUsername(student.getEmail());
             student.setAppointments(new ArrayList<>());
             student.setProfessor(professor);
             student.setRole(role);
@@ -314,9 +313,9 @@ public class StudentService {
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(studentDTO.getEmail())) {
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByUsername(studentDTO.getUsername()) ||
-                iPatientRepository.existsByUsername(studentDTO.getUsername()) ||
-                iAdminRepository.existsByUsername(studentDTO.getUsername())){
+        }else if(iProfessorRepository.existsByUsername(studentDTO.getEmail()) ||
+                iPatientRepository.existsByUsername(studentDTO.getEmail()) ||
+                iAdminRepository.existsByUsername(studentDTO.getEmail())){
             throw new IllegalStateException("Repeated username");
         }else{
             Student student = iStudentRepository.findById(studentDTO.getId()).orElse(null);

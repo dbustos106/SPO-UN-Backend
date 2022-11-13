@@ -73,7 +73,7 @@ public class AuthService implements UserDetailsService {
                 throw new UsernameNotFoundException("User not enabled");
             }
             authorities.add(new SimpleGrantedAuthority(patient.getRole().getName()));
-            return new ApplicationUser(patient.getId(), patient.getUsername(), patient.getPassword(), authorities,
+            return new ApplicationUser(patient.getId(), patient.getEmail(), patient.getPassword(), authorities,
                     true, true, true, true);
         }else{
             Student student = iStudentRepository.findByUsername(username).orElse(null);
@@ -82,7 +82,7 @@ public class AuthService implements UserDetailsService {
                     throw new UsernameNotFoundException("User not enabled");
                 }
                 authorities.add(new SimpleGrantedAuthority(student.getRole().getName()));
-                return new ApplicationUser(student.getId(), student.getUsername(), student.getPassword(), authorities,
+                return new ApplicationUser(student.getId(), student.getEmail(), student.getPassword(), authorities,
                         true, true, true, true);
             }else{
                 Professor professor = iProfessorRepository.findByUsername(username).orElse(null);
@@ -91,7 +91,7 @@ public class AuthService implements UserDetailsService {
                         throw new UsernameNotFoundException("User not enabled");
                     }
                     authorities.add(new SimpleGrantedAuthority(professor.getRole().getName()));
-                    return new ApplicationUser(professor.getId(), professor.getUsername(), professor.getPassword(), authorities,
+                    return new ApplicationUser(professor.getId(), professor.getEmail(), professor.getPassword(), authorities,
                             true, true, true, true);
                 }else{
                     Admin admin = iAdminRepository.findByUsername(username).orElse(null);

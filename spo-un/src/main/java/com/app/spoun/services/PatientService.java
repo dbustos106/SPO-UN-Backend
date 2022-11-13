@@ -224,9 +224,9 @@ public class PatientService{
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(patientDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByUsername(patientDTO.getUsername()) ||
-                    iStudentRepository.existsByUsername(patientDTO.getUsername()) ||
-                    iAdminRepository.existsByUsername(patientDTO.getUsername())){
+        }else if(iProfessorRepository.existsByUsername(patientDTO.getEmail()) ||
+                    iStudentRepository.existsByUsername(patientDTO.getEmail()) ||
+                    iAdminRepository.existsByUsername(patientDTO.getEmail())){
             throw new IllegalStateException("Repeated username");
         }else{
             // get role
@@ -234,7 +234,6 @@ public class PatientService{
 
             // map patient
             Patient patient = patientMapper.patientDTOToPatient(patientDTO);
-            patient.setUsername(patient.getEmail());
             patient.setAntecedents(new ArrayList<>());
             patient.setAppointments(new ArrayList<>());
             patient.setRole(role);
@@ -288,9 +287,9 @@ public class PatientService{
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(patientDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByUsername(patientDTO.getUsername()) ||
-                iStudentRepository.existsByUsername(patientDTO.getUsername()) ||
-                iAdminRepository.existsByUsername(patientDTO.getUsername())){
+        }else if(iProfessorRepository.existsByUsername(patientDTO.getEmail()) ||
+                iStudentRepository.existsByUsername(patientDTO.getEmail()) ||
+                iAdminRepository.existsByUsername(patientDTO.getEmail())){
             throw new IllegalStateException("Repeated username");
         }else{
             Patient patient = iPatientRepository.findById(patientDTO.getId()).orElse(null);

@@ -11,15 +11,13 @@ public class ProfessorDTO {
 
     private Long id;
 
-    private String username;
+    private String email;
 
     private String password;
 
     private String name;
 
     private String last_name;
-
-    private String email;
 
     private String document_type;
 

@@ -183,9 +183,9 @@ public class ProfessorService{
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(professorDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iStudentRepository.existsByUsername(professorDTO.getUsername()) ||
-                    iPatientRepository.existsByUsername(professorDTO.getUsername()) ||
-                    iAdminRepository.existsByUsername(professorDTO.getUsername())){
+        }else if(iStudentRepository.existsByUsername(professorDTO.getEmail()) ||
+                    iPatientRepository.existsByUsername(professorDTO.getEmail()) ||
+                    iAdminRepository.existsByUsername(professorDTO.getEmail())){
             throw new IllegalStateException("Repeated username");
         }else{
             // get role
@@ -193,7 +193,6 @@ public class ProfessorService{
 
             // map professor
             Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
-            professor.setUsername(professor.getEmail());
             professor.setStudents(new ArrayList<>());
             professor.setAppointments(new ArrayList<>());
             professor.setRole(role);
@@ -247,9 +246,9 @@ public class ProfessorService{
             throw new IllegalStateException("Request data missing");
         }else if(!emailValidatorService.test(professorDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iStudentRepository.existsByUsername(professorDTO.getUsername()) ||
-                iPatientRepository.existsByUsername(professorDTO.getUsername()) ||
-                iAdminRepository.existsByUsername(professorDTO.getUsername())){
+        }else if(iStudentRepository.existsByUsername(professorDTO.getEmail()) ||
+                iPatientRepository.existsByUsername(professorDTO.getEmail()) ||
+                iAdminRepository.existsByUsername(professorDTO.getEmail())){
             throw new IllegalStateException("Repeated username");
         }else{
             Professor professor = iProfessorRepository.findById(professorDTO.getId()).orElse(null);

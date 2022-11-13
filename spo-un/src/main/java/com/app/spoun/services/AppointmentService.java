@@ -165,7 +165,7 @@ public class AppointmentService {
             List<Student> students = iStudentRepository.findByAppointment_id(appointment.getId());
             List<String> usernameStudents = new ArrayList<>();
             for(Student student : students){
-                usernameStudents.add(student.getUsername());
+                usernameStudents.add(student.getEmail());
             }
             fullAppointmentDTO.setStudents(usernameStudents);
 
@@ -221,13 +221,13 @@ public class AppointmentService {
             List<Student> students = iStudentRepository.findByAppointment_id(id);
             List<String> usernameStudents = new ArrayList<>();
             for(Student student : students){
-                usernameStudents.add(student.getUsername());
+                usernameStudents.add(student.getEmail());
             }
             fullAppointmentDTO.setStudents(usernameStudents);
 
             // get professor
             Professor professor = appointment.getProfessor();
-            fullAppointmentDTO.setProfessor(professor.getUsername());
+            fullAppointmentDTO.setProfessor(professor.getEmail());
 
             // get patient
             Patient patient = appointment.getPatient();
