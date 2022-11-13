@@ -25,8 +25,9 @@ public interface IScheduleRepository extends JpaRepository<Schedule, Long>{
     @Modifying
     @Query(value = """
             DELETE
-            FROM (schedule)
-            WHERE (start_time = ?1)""", nativeQuery = true)
+            FROM schedule
+            WHERE (start_time = ?1);
+            """, nativeQuery = true)
     void deleteByStart_time(String start_time);
 
 }
