@@ -38,7 +38,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         if(request.getServletPath().equals("/auth/login") || request.getServletPath().equals("/auth/tokenRefresh") ||
                 request.getServletPath().equals("/register/patient") || request.getServletPath().equals("/register/verifyAccount/admin") ||
                 request.getServletPath().equals("/register/verifyAccount/professor") || request.getServletPath().equals("/register/verifyAccount/student") ||
-                request.getServletPath().equals("/register/verifyAccount/patient")){
+                request.getServletPath().equals("/register/verifyAccount/patient") || request.getServletPath().equals("/auth/emailToChangePassword") ||
+                request.getServletPath().equals("/patient/changePassword") || request.getServletPath().equals("/student/changePassword") ||
+                request.getServletPath().equals("/professor/changePassword") || request.getServletPath().equals("/admin/changePassword")){
             filterChain.doFilter(request, response);
         }else{
             String authorizationHeader = request.getHeader(AUTHORIZATION);

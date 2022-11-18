@@ -61,6 +61,21 @@ public class AdminService{
     }
 
 
+    public Map<String, Object> changePassword(String code, String password){
+        Map<String, Object> answer = new TreeMap<>();
+
+        Admin admin = iAdminRepository.findByVerification_code(code).orElse(null);
+        if(admin == null){
+            throw new IllegalStateException("Invalid code");
+        }else{
+            admin.setVerification_code(null);
+            admin.setPassword(password);
+            iAdminRepository.save(admin);
+            answer.put("message", "Successful password change");
+        }
+        return answer;
+    }
+
     public Map<String, Object> getAllAdmin(Integer idPage, Integer size){
         Map<String, Object> answer = new TreeMap<>();
 

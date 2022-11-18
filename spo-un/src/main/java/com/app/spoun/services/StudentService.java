@@ -77,6 +77,21 @@ public class StudentService {
     }
 
 
+    public Map<String, Object> changePassword(String code, String password){
+        Map<String, Object> answer = new TreeMap<>();
+
+        Student student = iStudentRepository.findByVerification_code(code).orElse(null);
+        if(student == null){
+            throw new IllegalStateException("Invalid code");
+        }else{
+            student.setVerification_code(null);
+            student.setPassword(password);
+            iStudentRepository.save(student);
+            answer.put("message", "Successful password change");
+        }
+        return answer;
+    }
+
     public Map<String, Object> cancelAppointmentByAppointmentId(Long id) throws UnsupportedEncodingException {
         Map<String, Object> answer = new TreeMap<>();
 

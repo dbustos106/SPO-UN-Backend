@@ -1,9 +1,6 @@
 package com.app.spoun.services;
 
-import com.app.spoun.domain.Appointment;
-import com.app.spoun.domain.Professor;
-import com.app.spoun.domain.Role;
-import com.app.spoun.domain.Student;
+import com.app.spoun.domain.*;
 import com.app.spoun.dto.AppointmentDTO;
 import com.app.spoun.dto.ProfessorDTO;
 import com.app.spoun.dto.StudentDTO;
@@ -76,6 +73,21 @@ public class ProfessorService{
         this.passwordEncoder = passwordEncoder;
     }
 
+
+    public Map<String, Object> changePassword(String code, String password){
+        Map<String, Object> answer = new TreeMap<>();
+
+        Professor professor = iProfessorRepository.findByVerification_code(code).orElse(null);
+        if(professor == null){
+            throw new IllegalStateException("Invalid code");
+        }else{
+            professor.setVerification_code(null);
+            professor.setPassword(password);
+            iProfessorRepository.save(professor);
+            answer.put("message", "Successful password change");
+        }
+        return answer;
+    }
 
     public Map<String, Object> getProfessorScheduleByProfessorId(Long id){
         Map<String, Object> answer = new TreeMap<>();
