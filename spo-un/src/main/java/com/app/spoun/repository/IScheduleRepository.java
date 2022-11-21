@@ -26,8 +26,8 @@ public interface IScheduleRepository extends JpaRepository<Schedule, Long>{
     @Query(value = """
             DELETE
             FROM schedule
-            WHERE (start_time = ?1);
+            WHERE (start_time = ?1 and room_id = ?2);
             """, nativeQuery = true)
-    void deleteByStart_time(String start_time);
+    void deleteByStart_timeAndRoom_id(String start_time, Long room_id);
 
 }

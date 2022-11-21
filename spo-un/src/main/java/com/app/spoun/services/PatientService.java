@@ -101,7 +101,7 @@ public class PatientService{
 
             // delete schedule
             if(appointment.getStart_time() != null) {
-                iScheduleRepository.deleteByStart_time(appointment.getStart_time());
+                iScheduleRepository.deleteByStart_timeAndRoom_id(appointment.getStart_time(), appointment.getRoom().getId());
             }
 
             // cancel appointment
