@@ -85,7 +85,7 @@ public class StudentService {
             throw new IllegalStateException("Invalid code");
         }else{
             student.setVerification_code(null);
-            student.setPassword(password);
+            student.setPassword(passwordEncoder.encode(password));
             iStudentRepository.save(student);
             answer.put("message", "Successful password change");
         }

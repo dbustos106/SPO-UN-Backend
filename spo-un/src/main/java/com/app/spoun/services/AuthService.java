@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -47,21 +45,18 @@ public class AuthService implements UserDetailsService {
     private IPatientRepository iPatientRepository;
     private IAdminRepository iAdminRepository;
     private JwtIOPropieties jwtIOPropieties;
-    private EmailSenderService emailSenderService;
 
     @Autowired
     public AuthService(IStudentRepository iStudentRepository,
                        IProfessorRepository iProfessorRepository,
                        IPatientRepository iPatientRepository,
                        IAdminRepository iAdminRepository,
-                       JwtIOPropieties jwtIOPropieties,
-                       EmailSenderService emailSenderService){
+                       JwtIOPropieties jwtIOPropieties){
         this.iStudentRepository = iStudentRepository;
         this.iProfessorRepository = iProfessorRepository;
         this.iPatientRepository = iPatientRepository;
         this.iAdminRepository = iAdminRepository;
         this.jwtIOPropieties = jwtIOPropieties;
-        this.emailSenderService = emailSenderService;
     }
 
 
@@ -140,71 +135,6 @@ public class AuthService implements UserDetailsService {
         }else{
             throw new RuntimeException("Refresh token is missing");
         }
-    }
-
-    public Map<String, Object> emailToChangePassword(String email) throws UnsupportedEncodingException {
-        Map<String, Object> answer = new TreeMap<>();
-
-        String randomCode = "";
-        String role = "";
-
-        Patient patient = iPatientRepository.findByEmail(email).orElse(null);
-        if(patient != null){
-            if(!patient.isEnabled()){
-                throw new UsernameNotFoundException("User not enabled");
-            }
-            role = "patient";
-            randomCode = RandomString.make(64);
-            patient.setVerification_code(randomCode);
-            iPatientRepository.save(patient);
-        }else{
-            Student student = iStudentRepository.findByEmail(email).orElse(null);
-            if(student != null){
-                if(!student.isEnabled()){
-                    throw new UsernameNotFoundException("User not enabled");
-                }
-                role = "student";
-                randomCode = RandomString.make(64);
-                student.setVerification_code(randomCode);
-                iStudentRepository.save(student);
-            }else{
-                Professor professor = iProfessorRepository.findByEmail(email).orElse(null);
-                if(professor != null){
-                    if(!professor.isEnabled()){
-                        throw new UsernameNotFoundException("User not enabled");
-                    }
-                    role = "professor";
-                    randomCode = RandomString.make(64);
-                    professor.setVerification_code(randomCode);
-                    iProfessorRepository.save(professor);
-                }else{
-                    Admin admin = iAdminRepository.findByEmail(email).orElse(null);
-                    if(admin != null){
-                        if(!admin.isEnabled()){
-                            throw new UsernameNotFoundException("User not enabled");
-                        }
-                        role = "admin";
-                        randomCode = RandomString.make(64);
-                        admin.setVerification_code(randomCode);
-                        iAdminRepository.save(admin);
-                    }else{
-                        throw new UsernameNotFoundException("User not found in the database");
-                    }
-                }
-            }
-        }
-
-        String content = "Haga click en el siguiente link para cambiar su contraseña:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Gracias,<br>"
-                + "Spo-un.";
-        String subject = "Cambio de contraseña";
-        String verifyURL = "http://localhost:8080/" + role + "/changePassword/" + randomCode;
-        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/" + role + "/changePassword/" + randomCode;
-        content = content.replace("[[URL]]", verifyURL);
-        emailSenderService.send(email, subject, content);
-
-        return answer;
     }
 
 }

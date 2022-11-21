@@ -69,7 +69,7 @@ public class AdminService{
             throw new IllegalStateException("Invalid code");
         }else{
             admin.setVerification_code(null);
-            admin.setPassword(password);
+            admin.setPassword(passwordEncoder.encode(password));
             iAdminRepository.save(admin);
             answer.put("message", "Successful password change");
         }

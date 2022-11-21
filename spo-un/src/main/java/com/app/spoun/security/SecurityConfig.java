@@ -51,12 +51,8 @@ public class SecurityConfig {
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/auth/login/**",
-                "/auth/emailToChangePassword/**",
-                "/patient/changePassword/**",
-                "/student/changePassword/**",
-                "/professor/changePassword/**",
-                "/admin/changePassword/**",
                 "/auth/tokenRefresh/**",
+                "/changePassword/**",
                 "/register/patient/**",
                 "/register/verifyAccount/**").permitAll();
 

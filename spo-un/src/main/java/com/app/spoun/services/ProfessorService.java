@@ -82,7 +82,7 @@ public class ProfessorService{
             throw new IllegalStateException("Invalid code");
         }else{
             professor.setVerification_code(null);
-            professor.setPassword(password);
+            professor.setPassword(passwordEncoder.encode(password));
             iProfessorRepository.save(professor);
             answer.put("message", "Successful password change");
         }

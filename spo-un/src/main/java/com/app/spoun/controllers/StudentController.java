@@ -3,7 +3,6 @@ package com.app.spoun.controllers;
 import com.app.spoun.dto.StudentDTO;
 import com.app.spoun.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,18 +19,6 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-
-    @PutMapping(value = "/changePassword")
-    public ResponseEntity<?> changePassword(
-            @Param("code") String code,
-            @RequestParam String password){
-        try{
-            Map<String, Object> answer = studentService.changePassword(code, password);
-            return ResponseEntity.ok().body(answer);
-        }catch(Exception e){
-            return ResponseEntity.badRequest().body(e);
-        }
-    }
 
     @GetMapping(value = "/all")
     public ResponseEntity<?> getAllStudent(

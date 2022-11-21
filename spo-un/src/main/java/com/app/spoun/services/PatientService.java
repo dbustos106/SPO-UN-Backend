@@ -80,7 +80,7 @@ public class PatientService{
             throw new IllegalStateException("Invalid code");
         }else{
             patient.setVerification_code(null);
-            patient.setPassword(password);
+            patient.setPassword(passwordEncoder.encode(password));
             iPatientRepository.save(patient);
             answer.put("message", "Successful password change");
         }
