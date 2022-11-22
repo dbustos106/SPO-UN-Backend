@@ -4,6 +4,7 @@ import com.app.spoun.domain.Room;
 import com.app.spoun.domain.Schedule;
 import com.app.spoun.dto.ScheduleDTO;
 import com.app.spoun.mappers.ScheduleMapper;
+import com.app.spoun.repository.IAppointmentRepository;
 import com.app.spoun.repository.IRoomRepository;
 import com.app.spoun.repository.IScheduleRepository;
 
@@ -26,14 +27,17 @@ import java.util.TreeMap;
 public class ScheduleService {
 
     private final IScheduleRepository iScheduleRepository;
+    private final IAppointmentRepository iAppointmentRepository;
     private final IRoomRepository iRoomRepository;
     private final ScheduleMapper scheduleMapper;
 
     @Autowired
     public ScheduleService(IScheduleRepository iScheduleRepository,
+                           IAppointmentRepository iAppointmentRepository,
                            IRoomRepository iRoomRepository,
                            ScheduleMapper scheduleMapper){
         this.iScheduleRepository = iScheduleRepository;
+        this.iAppointmentRepository = iAppointmentRepository;
         this.iRoomRepository = iRoomRepository;
         this.scheduleMapper = scheduleMapper;
     }
@@ -116,11 +120,18 @@ public class ScheduleService {
     public Map<String, Object> deleteSchedule(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iScheduleRepository.existsById(id)){
-            iScheduleRepository.deleteById(id);
-            answer.put("message", "Schedule deleted successfully");
-        }else{
+        Schedule schedule = iScheduleRepository.findById(id).orElse(null);
+        if(schedule == null){
             throw new NotFoundException("Schedule not found");
+        }else{
+            String start_time = schedule.getStart_time();
+            Long room_id = schedule.getRoom().getId();
+            if(iAppointmentRepository.findByStart_timeAndRoom_id(start_time, room_id).size() != 0){
+                throw new NotFoundException("Schedule cannot be delete");
+            }else{
+                iScheduleRepository.deleteById(id);
+                answer.put("message", "Schedule deleted successfully");
+            }
         }
         return answer;
     }

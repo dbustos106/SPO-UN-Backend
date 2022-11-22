@@ -27,6 +27,12 @@ public interface IAppointmentRepository extends JpaRepository<Appointment, Long>
     List<Appointment> findAllAvailable();
 
     @Query(value = """
+            SELECT *
+            FROM (appointment)
+            WHERE (appointment.start_time = ?1 and appointment.room_id = ?2)""", nativeQuery = true)
+    List<Appointment> findByStart_timeAndRoom_id(String start_time, Long room_id);
+
+    @Query(value = """
             SELECT id, start_time, end_time, procedure_type, state, cancel_reason, patient_rating, patient_feedback, room_id, patient_id, professor_id
             FROM (appointment INNER JOIN student_appointment ON appointment.id = student_appointment.appointment_id)
             WHERE (student_appointment.student_id = ?1 and appointment.state <> 'Canceled')""", nativeQuery = true)
