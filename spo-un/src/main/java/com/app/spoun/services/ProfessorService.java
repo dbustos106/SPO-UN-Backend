@@ -80,12 +80,12 @@ public class ProfessorService{
         Professor professor = iProfessorRepository.findByVerification_code(code).orElse(null);
         if(professor == null){
             throw new IllegalStateException("Invalid code");
-        }else{
-            professor.setVerification_code(null);
-            professor.setPassword(passwordEncoder.encode(password));
-            iProfessorRepository.save(professor);
-            answer.put("message", "Successful password change");
         }
+        professor.setVerification_code(null);
+        professor.setPassword(passwordEncoder.encode(password));
+        iProfessorRepository.save(professor);
+        answer.put("message", "Successful password change");
+
         return answer;
     }
 
@@ -158,12 +158,12 @@ public class ProfessorService{
         Map<String, Object> answer = new TreeMap<>();
 
         Professor professor = iProfessorRepository.findById(id).orElse(null);
-        if(professor != null){
-            ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
-            answer.put("message", professorDTO);
-        }else{
+        if(professor == null){
             throw new NotFoundException("Professor not found");
         }
+        ProfessorDTO professorDTO = professorMapper.professorToProfessorDTO(professor);
+        answer.put("message", professorDTO);
+
         return answer;
     }
 
@@ -193,46 +193,49 @@ public class ProfessorService{
 
         if(professorDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else if(!emailValidatorService.test(professorDTO.getEmail())){
-            throw new IllegalStateException("Email not valid");
-        }else if(iStudentRepository.existsByEmail(professorDTO.getEmail()) ||
-                    iPatientRepository.existsByEmail(professorDTO.getEmail()) ||
-                    iAdminRepository.existsByEmail(professorDTO.getEmail())){
-            throw new IllegalStateException("Repeated email");
-        }else{
-            // get role
-            Role role = iRoleRepository.findByName("Professor").orElse(null);
-
-            // map professor
-            Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
-            professor.setStudents(new ArrayList<>());
-            professor.setAppointments(new ArrayList<>());
-            professor.setRole(role);
-
-            // encrypt password
-            professor.setPassword(passwordEncoder.encode(professor.getPassword()));
-
-            // create verification code and disable account
-            String randomCode = RandomString.make(64);
-            professor.setVerification_code(randomCode);
-            professor.setEnabled(false);
-
-            // save professor
-            iProfessorRepository.save(professor);
-            answer.put("message", "Professor saved successfully");
-
-            String content = "Querid@ [[name]],<br>"
-                    + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                    + "Gracias,<br>"
-                    + "Spo-un.";
-            String subject = "Verifique su registro";
-            String verifyURL = "http://localhost:8080/verifyAccount/professor/" + professor.getVerification_code();
-            //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/professor/" + professor.getVerification_code();
-            content = content.replace("[[name]]", professor.getName());
-            content = content.replace("[[URL]]", verifyURL);
-            emailSenderService.send(professor.getEmail(), subject, content);
         }
+        if(!emailValidatorService.test(professorDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
+        }
+        if(iStudentRepository.existsByEmail(professorDTO.getEmail()) ||
+                iPatientRepository.existsByEmail(professorDTO.getEmail()) ||
+                iAdminRepository.existsByEmail(professorDTO.getEmail())){
+            throw new IllegalStateException("Repeated email");
+        }
+
+        // get role
+        Role role = iRoleRepository.findByName("Professor").orElse(null);
+
+        // map professor
+        Professor professor = professorMapper.professorDTOToProfessor(professorDTO);
+        professor.setStudents(new ArrayList<>());
+        professor.setAppointments(new ArrayList<>());
+        professor.setRole(role);
+
+        // encrypt password
+        professor.setPassword(passwordEncoder.encode(professor.getPassword()));
+
+        // create verification code and disable account
+        String randomCode = RandomString.make(64);
+        professor.setVerification_code(randomCode);
+        professor.setEnabled(false);
+
+        // save professor
+        iProfessorRepository.save(professor);
+        answer.put("message", "Professor saved successfully");
+
+        String content = "Querid@ [[name]],<br>"
+                + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Gracias,<br>"
+                + "Spo-un.";
+        String subject = "Verifique su registro";
+        String verifyURL = "http://localhost:8080/verifyAccount/professor/" + professor.getVerification_code();
+        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/professor/" + professor.getVerification_code();
+        content = content.replace("[[name]]", professor.getName());
+        content = content.replace("[[URL]]", verifyURL);
+        emailSenderService.send(professor.getEmail(), subject, content);
+
         return answer;
     }
 
@@ -242,12 +245,12 @@ public class ProfessorService{
         Professor professor = iProfessorRepository.findByVerification_code(code).orElse(null);
         if(professor == null){
             throw new IllegalStateException("Invalid code");
-        }else{
-            professor.setVerification_code(null);
-            professor.setEnabled(true);
-            iProfessorRepository.save(professor);
-            answer.put("message", "Successful verification");
         }
+        professor.setVerification_code(null);
+        professor.setEnabled(true);
+        iProfessorRepository.save(professor);
+        answer.put("message", "Successful verification");
+
         return answer;
     }
 
@@ -256,39 +259,41 @@ public class ProfessorService{
 
         if(professorDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else if(!emailValidatorService.test(professorDTO.getEmail())){
+        }
+        if(!emailValidatorService.test(professorDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iStudentRepository.existsByEmail(professorDTO.getEmail()) ||
+        }
+        if(iStudentRepository.existsByEmail(professorDTO.getEmail()) ||
                 iPatientRepository.existsByEmail(professorDTO.getEmail()) ||
                 iAdminRepository.existsByEmail(professorDTO.getEmail())){
             throw new IllegalStateException("Repeated email");
-        }else{
-            Professor professor = iProfessorRepository.findById(professorDTO.getId()).orElse(null);
-            if(professor == null){
-                throw new NotFoundException("Professor not found");
-            }else{
-                // update professor
-                professor.setName(professorDTO.getName());
-                professor.setLast_name(professorDTO.getLast_name());
-                professor.setDocument_type(professorDTO.getDocument_type());
-                professor.setDocument_number(professorDTO.getDocument_number());
-
-                iProfessorRepository.save(professor);
-                answer.put("message", "Professor updated successfully");
-            }
         }
+
+        Professor professor = iProfessorRepository.findById(professorDTO.getId()).orElse(null);
+        if(professor == null){
+            throw new NotFoundException("Professor not found");
+        }
+        // update professor
+        professor.setName(professorDTO.getName());
+        professor.setLast_name(professorDTO.getLast_name());
+        professor.setDocument_type(professorDTO.getDocument_type());
+        professor.setDocument_number(professorDTO.getDocument_number());
+
+        iProfessorRepository.save(professor);
+        answer.put("message", "Professor updated successfully");
+
         return answer;
     }
 
     public Map<String, Object> deleteProfessor(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iProfessorRepository.existsById(id)){
-            iProfessorRepository.deleteById(id);
-            answer.put("message", "Professor deleted successfully");
-        }else{
+        if(!iProfessorRepository.existsById(id)){
             throw new NotFoundException("Professor not found");
         }
+        iProfessorRepository.deleteById(id);
+        answer.put("message", "Professor deleted successfully");
+
         return answer;
     }
 

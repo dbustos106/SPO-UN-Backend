@@ -56,12 +56,12 @@ public class BuildingService{
         Map<String, Object> answer = new TreeMap<>();
 
         Building building = iBuildingRepository.findById(id).orElse(null);
-        if(building != null){
-            BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
-            answer.put("message", buildingDTO);
-        }else{
+        if(building == null){
             throw new NotFoundException("Building not found");
         }
+        BuildingDTO buildingDTO = buildingMapper.buildingToBuildingDTO(building);
+        answer.put("message", buildingDTO);
+
         return answer;
     }
 
@@ -70,13 +70,13 @@ public class BuildingService{
 
         if(buildingDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            // save building
-            Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
-            building.setRooms(new ArrayList<>());
-            iBuildingRepository.save(building);
-            answer.put("message", "Building saved successfully");
         }
+        // save building
+        Building building = buildingMapper.buildingDTOToBuilding(buildingDTO);
+        building.setRooms(new ArrayList<>());
+        iBuildingRepository.save(building);
+        answer.put("message", "Building saved successfully");
+
         return answer;
     }
 
@@ -85,30 +85,30 @@ public class BuildingService{
 
         if(buildingDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else {
-            Building building = iBuildingRepository.findById(buildingDTO.getId()).orElse(null);
-            if(building == null){
-                throw new NotFoundException("Building not found");
-            }else{
-                // update building
-                building.setName(buildingDTO.getName());
-
-                iBuildingRepository.save(building);
-                answer.put("message", "Building updated successfully");
-            }
         }
+
+        Building building = iBuildingRepository.findById(buildingDTO.getId()).orElse(null);
+        if(building == null){
+            throw new NotFoundException("Building not found");
+        }
+        // update building
+        building.setName(buildingDTO.getName());
+
+        iBuildingRepository.save(building);
+        answer.put("message", "Building updated successfully");
+
         return answer;
     }
 
     public Map<String, Object> deleteBuilding(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iBuildingRepository.existsById(id)){
-            iBuildingRepository.deleteById(id);
-            answer.put("message", "Building deleted successfully");
-        }else{
+        if(!iBuildingRepository.existsById(id)){
             throw new NotFoundException("Building not found");
         }
+        iBuildingRepository.deleteById(id);
+        answer.put("message", "Building deleted successfully");
+
         return answer;
     }
 

@@ -67,12 +67,12 @@ public class AdminService{
         Admin admin = iAdminRepository.findByVerification_code(code).orElse(null);
         if(admin == null){
             throw new IllegalStateException("Invalid code");
-        }else{
-            admin.setVerification_code(null);
-            admin.setPassword(passwordEncoder.encode(password));
-            iAdminRepository.save(admin);
-            answer.put("message", "Successful password change");
         }
+        admin.setVerification_code(null);
+        admin.setPassword(passwordEncoder.encode(password));
+        iAdminRepository.save(admin);
+        answer.put("message", "Successful password change");
+
         return answer;
     }
 
@@ -101,12 +101,12 @@ public class AdminService{
         Map<String, Object> answer = new TreeMap<>();
 
         Admin admin = iAdminRepository.findById(id).orElse(null);
-        if(admin != null){
-            AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
-            answer.put("message", adminDTO);
-        }else{
+        if(admin == null){
             throw new NotFoundException("Admin not found");
         }
+        AdminDTO adminDTO = adminMapper.adminToAdminDTO(admin);
+        answer.put("message", adminDTO);
+
         return answer;
     }
 
@@ -115,44 +115,47 @@ public class AdminService{
 
         if(adminDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else if(!emailValidatorService.test(adminDTO.getEmail())){
+        }
+        if(!emailValidatorService.test(adminDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByEmail(adminDTO.getEmail()) ||
-                    iPatientRepository.existsByEmail(adminDTO.getEmail()) ||
-                    iStudentRepository.existsByEmail(adminDTO.getEmail())){
+        }
+        if(iProfessorRepository.existsByEmail(adminDTO.getEmail()) ||
+                iPatientRepository.existsByEmail(adminDTO.getEmail()) ||
+                iStudentRepository.existsByEmail(adminDTO.getEmail())){
             throw new IllegalStateException("Repeated email");
-        }else{
-            // get role
-            Role role = iRoleRepository.findByName("Admin").orElse(null);
+        }
 
-            // map admin
-            Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
-            admin.setRole(role);
+        // get role
+        Role role = iRoleRepository.findByName("Admin").orElse(null);
 
-            // encrypt password
-            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        // map admin
+        Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
+        admin.setRole(role);
 
-            // create verification code and disable account
-            String randomCode = RandomString.make(64);
-            admin.setVerification_code(randomCode);
-            admin.setEnabled(false);
+        // encrypt password
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 
-            // save admin
-            iAdminRepository.save(admin);
-            answer.put("message", "Admin saved successfully");
+        // create verification code and disable account
+        String randomCode = RandomString.make(64);
+        admin.setVerification_code(randomCode);
+        admin.setEnabled(false);
 
-            String content = "Querid@ [[name]],<br>"
+        // save admin
+        iAdminRepository.save(admin);
+        answer.put("message", "Admin saved successfully");
+
+        String content = "Querid@ [[name]],<br>"
                     + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
                     + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
                     + "Gracias,<br>"
                     + "Spo-un.";
-            String subject = "Verifique su registro";
-            String verifyURL = "http://localhost:8080/verifyAccount/admin/" + admin.getVerification_code();
-            //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/admin/" + admin.getVerification_code();
-            content = content.replace("[[name]]", admin.getEmail());
-            content = content.replace("[[URL]]", verifyURL);
-            emailSenderService.send(admin.getEmail(), subject, content);
-        }
+        String subject = "Verifique su registro";
+        String verifyURL = "http://localhost:8080/verifyAccount/admin/" + admin.getVerification_code();
+        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/admin/" + admin.getVerification_code();
+        content = content.replace("[[name]]", admin.getEmail());
+        content = content.replace("[[URL]]", verifyURL);
+        emailSenderService.send(admin.getEmail(), subject, content);
+
         return answer;
     }
 
@@ -162,12 +165,12 @@ public class AdminService{
         Admin admin = iAdminRepository.findByVerification_code(code).orElse(null);
         if(admin == null){
             throw new IllegalStateException("Invalid code");
-        }else{
-            admin.setVerification_code(null);
-            admin.setEnabled(true);
-            iAdminRepository.save(admin);
-            answer.put("message", "Successful verification");
         }
+        admin.setEnabled(true);
+        admin.setVerification_code(null);
+        iAdminRepository.save(admin);
+        answer.put("message", "Successful verification");
+
         return answer;
     }
 
@@ -176,38 +179,41 @@ public class AdminService{
 
         if(adminDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else if(!emailValidatorService.test(adminDTO.getEmail())){
-            throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByEmail(adminDTO.getEmail()) ||
-                    iPatientRepository.existsByEmail(adminDTO.getEmail()) ||
-                    iStudentRepository.existsByEmail(adminDTO.getEmail())){
-            throw new IllegalStateException("Repeated email");
-        }else{
-            // get role
-            Role role = iRoleRepository.findByName("Admin").orElse(null);
-
-            // update admin
-            Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
-            admin.setRole(role);
-
-            // encrypt password
-            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-
-            iAdminRepository.save(admin);
-            answer.put("message", "Admin updated successfully");
         }
+        if(!emailValidatorService.test(adminDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
+        }
+        if(iProfessorRepository.existsByEmail(adminDTO.getEmail()) ||
+                iPatientRepository.existsByEmail(adminDTO.getEmail()) ||
+                iStudentRepository.existsByEmail(adminDTO.getEmail())){
+            throw new IllegalStateException("Repeated email");
+        }
+
+        // get role
+        Role role = iRoleRepository.findByName("Admin").orElse(null);
+
+        // update admin
+        Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
+        admin.setRole(role);
+
+        // encrypt password
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+
+        iAdminRepository.save(admin);
+        answer.put("message", "Admin updated successfully");
+
         return answer;
     }
 
     public Map<String, Object> deleteAdmin(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iAdminRepository.existsById(id)){
-            iAdminRepository.deleteById(id);
-            answer.put("message", "Admin deleted successfully");
-        }else{
+        if(!iAdminRepository.existsById(id)){
             throw new NotFoundException("Admin not found");
         }
+        iAdminRepository.deleteById(id);
+        answer.put("message", "Admin deleted successfully");
+
         return answer;
     }
 

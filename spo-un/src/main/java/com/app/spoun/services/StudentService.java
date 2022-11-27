@@ -83,12 +83,12 @@ public class StudentService {
         Student student = iStudentRepository.findByVerification_code(code).orElse(null);
         if(student == null){
             throw new IllegalStateException("Invalid code");
-        }else{
-            student.setVerification_code(null);
-            student.setPassword(passwordEncoder.encode(password));
-            iStudentRepository.save(student);
-            answer.put("message", "Successful password change");
         }
+        student.setVerification_code(null);
+        student.setPassword(passwordEncoder.encode(password));
+        iStudentRepository.save(student);
+        answer.put("message", "Successful password change");
+
         return answer;
     }
 
@@ -99,63 +99,63 @@ public class StudentService {
         Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
         if(appointment == null){
             throw new NotFoundException("Appointment not found");
-        }else{
-            // get professor and patient
-            Professor professor = appointment.getProfessor();
-            Patient patient = appointment.getPatient();
+        }
 
-            // delete schedule
-            if(appointment.getStart_time() != null) {
-                iScheduleRepository.deleteByStart_timeAndRoom_id(appointment.getStart_time(), appointment.getRoom().getId());
-            }
+        // get professor and patient
+        Professor professor = appointment.getProfessor();
+        Patient patient = appointment.getPatient();
 
-            // cancel appointment
-            appointment.setState("Canceled");
-            appointment.setStart_time(null);
-            appointment.setEnd_time(null);
-            appointment.setPatient(null);
-            iAppointmentRepository.save(appointment);
-            answer.put("message", "Appointment canceled successfully");
+        // delete schedule
+        if(appointment.getStart_time() != null) {
+            iScheduleRepository.deleteByStart_timeAndRoom_id(appointment.getStart_time(), appointment.getRoom().getId());
+        }
 
-            String emailProfessor = "Querid@ [[name]],<br>"
+        // cancel appointment
+        appointment.setState("Canceled");
+        appointment.setStart_time(null);
+        appointment.setEnd_time(null);
+        appointment.setPatient(null);
+        iAppointmentRepository.save(appointment);
+        answer.put("message", "Appointment canceled successfully");
+
+        String emailProfessor = "Querid@ [[name]],<br>"
+                + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
+                + "Si tiene algúna queja o comentario, comuníquese con los estudiantes a cargo:<br>";
+
+        String emailPatient = "Querid@ [[name]],<br>"
+                + "Su cita número [[id]] ha sido cancelada por los estudiantes a cargo de atenderl@.<br>"
+                + "Si tiene algúna queja o comentario, comuníquese con ellos:<br>";
+
+        // get students
+        List<Student> students = iStudentRepository.findByAppointment_id(id);
+        for(Student student : students){
+            String emailStudent = "Querid@ [[name]],<br>"
                     + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
-                    + "Si tiene algúna queja o comentario, comuníquese con los estudiantes a cargo:<br>";
+                    + "Gracias,<br>"
+                    + "Spo-un.";
+            String subjectStudent = "Su cita ha sido cancelada";
+            emailStudent = emailStudent.replace("[[name]]", student.getName());
+            emailStudent = emailStudent.replace("[[id]]", id.toString());
+            emailSenderService.send(student.getEmail(), subjectStudent, emailStudent);
 
-            String emailPatient = "Querid@ [[name]],<br>"
-                    + "Su cita número [[id]] ha sido cancelada por los estudiantes a cargo de atenderl@.<br>"
-                    + "Si tiene algúna queja o comentario, comuníquese con ellos:<br>";
+            emailProfessor += student.getName() + ":" + student.getEmail() + ".<br>";
+            emailPatient += student.getName() + ":" + student.getEmail() + ".<br>";
+        }
 
-            // get students
-            List<Student> students = iStudentRepository.findByAppointment_id(id);
-            for(Student student : students){
-                String emailStudent = "Querid@ [[name]],<br>"
-                        + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
-                        + "Gracias,<br>"
-                        + "Spo-un.";
-                String subjectStudent = "Su cita ha sido cancelada";
-                emailStudent = emailStudent.replace("[[name]]", student.getName());
-                emailStudent = emailStudent.replace("[[id]]", id.toString());
-                emailSenderService.send(student.getEmail(), subjectStudent, emailStudent);
+        // send email to professor
+        emailProfessor += "Gracias,<br>" + "Spo-un.";
+        String subjectProfessor = "Su cita ha sido cancelada";
+        emailProfessor = emailProfessor.replace("[[name]]", professor.getName());
+        emailProfessor = emailProfessor.replace("[[id]]", id.toString());
+        emailSenderService.send(professor.getEmail(), subjectProfessor, emailProfessor);
 
-                emailProfessor += student.getName() + ":" + student.getEmail() + ".<br>";
-                emailPatient += student.getName() + ":" + student.getEmail() + ".<br>";
-            }
-
-            // send email to professor
-            emailProfessor += "Gracias,<br>" + "Spo-un.";
-            String subjectProfessor = "Su cita ha sido cancelada";
-            emailProfessor = emailProfessor.replace("[[name]]", professor.getName());
-            emailProfessor = emailProfessor.replace("[[id]]", id.toString());
-            emailSenderService.send(professor.getEmail(), subjectProfessor, emailProfessor);
-
-            // send email to patient
-            if(patient != null){
-                emailPatient += "Gracias,<br>" + "Spo-un.";
-                String subjectPatient = "Su cita ha sido cancelada";
-                emailPatient = emailPatient.replace("[[name]]", patient.getName());
-                emailPatient = emailPatient.replace("[[id]]", id.toString());
-                emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
-            }
+        // send email to patient
+        if(patient != null){
+            emailPatient += "Gracias,<br>" + "Spo-un.";
+            String subjectPatient = "Su cita ha sido cancelada";
+            emailPatient = emailPatient.replace("[[name]]", patient.getName());
+            emailPatient = emailPatient.replace("[[id]]", id.toString());
+            emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
         }
 
         return answer;
@@ -248,12 +248,12 @@ public class StudentService {
         Map<String, Object> answer = new TreeMap<>();
 
         Student student = iStudentRepository.findById(id).orElse(null);
-        if(student != null){
-            StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
-            answer.put("message", studentDTO);
-        }else{
+        if(student == null){
             throw new NotFoundException("Student not found");
         }
+        StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
+        answer.put("message", studentDTO);
+
         return answer;
     }
 
@@ -262,47 +262,50 @@ public class StudentService {
 
         if(studentDTO == null) {
             throw new IllegalStateException("Request data missing");
-        }else if(!emailValidatorService.test(studentDTO.getEmail())){
-            throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByEmail(studentDTO.getEmail()) ||
-                    iPatientRepository.existsByEmail(studentDTO.getEmail()) ||
-                    iAdminRepository.existsByEmail(studentDTO.getEmail())){
-            throw new IllegalStateException("Repeated email");
-        }else{
-            // get role and professor
-            Role role = iRoleRepository.findByName("Student").orElse(null);
-            Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
-
-            // map student
-            Student student = studentMapper.studentDTOToStudent(studentDTO);
-            student.setAppointments(new ArrayList<>());
-            student.setProfessor(professor);
-            student.setRole(role);
-
-            // encrypt password
-            student.setPassword(passwordEncoder.encode(student.getPassword()));
-
-            // create verification code and disable account
-            String randomCode = RandomString.make(64);
-            student.setVerification_code(randomCode);
-            student.setEnabled(false);
-
-            // save student
-            iStudentRepository.save(student);
-            answer.put("message", "Student saved successfully");
-
-            String content = "Querid@ [[name]],<br>"
-                    + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                    + "Gracias,<br>"
-                    + "Spo-un.";
-            String subject = "Verifique su registro";
-            String verifyURL = "http://localhost:8080/verifyAccount/student/" + student.getVerification_code();
-            //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/student/" + student.getVerification_code();
-            content = content.replace("[[name]]", student.getName());
-            content = content.replace("[[URL]]", verifyURL);
-            emailSenderService.send(student.getEmail(), subject, content);
         }
+        if(!emailValidatorService.test(studentDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
+        }
+        if(iProfessorRepository.existsByEmail(studentDTO.getEmail()) ||
+                iPatientRepository.existsByEmail(studentDTO.getEmail()) ||
+                iAdminRepository.existsByEmail(studentDTO.getEmail())){
+            throw new IllegalStateException("Repeated email");
+        }
+
+        // get role and professor
+        Role role = iRoleRepository.findByName("Student").orElse(null);
+        Professor professor = iProfessorRepository.findById(studentDTO.getProfessor_id()).orElse(null);
+
+        // map student
+        Student student = studentMapper.studentDTOToStudent(studentDTO);
+        student.setAppointments(new ArrayList<>());
+        student.setProfessor(professor);
+        student.setRole(role);
+
+        // encrypt password
+        student.setPassword(passwordEncoder.encode(student.getPassword()));
+
+        // create verification code and disable account
+        String randomCode = RandomString.make(64);
+        student.setVerification_code(randomCode);
+        student.setEnabled(false);
+
+        // save student
+        iStudentRepository.save(student);
+        answer.put("message", "Student saved successfully");
+
+        String content = "Querid@ [[name]],<br>"
+                + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Gracias,<br>"
+                + "Spo-un.";
+        String subject = "Verifique su registro";
+        String verifyURL = "http://localhost:8080/verifyAccount/student/" + student.getVerification_code();
+        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/student/" + student.getVerification_code();
+        content = content.replace("[[name]]", student.getName());
+        content = content.replace("[[URL]]", verifyURL);
+        emailSenderService.send(student.getEmail(), subject, content);
+
         return answer;
     }
 
@@ -312,12 +315,12 @@ public class StudentService {
         Student student = iStudentRepository.findByVerification_code(code).orElse(null);
         if(student == null) {
             throw new IllegalStateException("Invalid code");
-        }else{
-            student.setVerification_code(null);
-            student.setEnabled(true);
-            iStudentRepository.save(student);
-            answer.put("message", "Successful verification");
         }
+        student.setVerification_code(null);
+        student.setEnabled(true);
+        iStudentRepository.save(student);
+        answer.put("message", "Successful verification");
+
         return answer;
     }
 
@@ -326,39 +329,41 @@ public class StudentService {
 
         if(studentDTO == null) {
             throw new IllegalStateException("Request data missing");
-        }else if(!emailValidatorService.test(studentDTO.getEmail())) {
+        }
+        if(!emailValidatorService.test(studentDTO.getEmail())) {
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByEmail(studentDTO.getEmail()) ||
+        }
+        if(iProfessorRepository.existsByEmail(studentDTO.getEmail()) ||
                 iPatientRepository.existsByEmail(studentDTO.getEmail()) ||
                 iAdminRepository.existsByEmail(studentDTO.getEmail())){
             throw new IllegalStateException("Repeated email");
-        }else{
-            Student student = iStudentRepository.findById(studentDTO.getId()).orElse(null);
-            if(student == null) {
-                throw new NotFoundException("Student not found");
-            }else{
-                // update student
-                student.setName(studentDTO.getName());
-                student.setLast_name(studentDTO.getLast_name());
-                student.setDocument_type(studentDTO.getDocument_type());
-                student.setDocument_number(studentDTO.getDocument_number());
-
-                iStudentRepository.save(student);
-                answer.put("message", "Student updated successfully");
-            }
         }
+
+        Student student = iStudentRepository.findById(studentDTO.getId()).orElse(null);
+        if(student == null) {
+            throw new NotFoundException("Student not found");
+        }
+        // update student
+        student.setName(studentDTO.getName());
+        student.setLast_name(studentDTO.getLast_name());
+        student.setDocument_type(studentDTO.getDocument_type());
+        student.setDocument_number(studentDTO.getDocument_number());
+
+        iStudentRepository.save(student);
+        answer.put("message", "Student updated successfully");
+
         return answer;
     }
 
     public Map<String, Object> deleteStudent(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iStudentRepository.existsById(id)){
-            iStudentRepository.deleteById(id);
-            answer.put("message", "Student deleted successfully");
-        }else{
+        if(!iStudentRepository.existsById(id)){
             throw new NotFoundException("Student not found");
         }
+        iStudentRepository.deleteById(id);
+        answer.put("message", "Student deleted successfully");
+
         return answer;
     }
 

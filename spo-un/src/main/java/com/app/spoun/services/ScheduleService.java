@@ -68,12 +68,12 @@ public class ScheduleService {
         Map<String, Object> answer = new TreeMap<>();
 
         Schedule schedule = iScheduleRepository.findById(id).orElse(null);
-        if(schedule != null){
-            ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
-            answer.put("message", scheduleDTO);
-        }else{
+        if(schedule == null){
             throw new NotFoundException("Schedule not found");
         }
+        ScheduleDTO scheduleDTO = scheduleMapper.scheduleToScheduleDTO(schedule);
+        answer.put("message", scheduleDTO);
+
         return answer;
     }
 
@@ -82,17 +82,17 @@ public class ScheduleService {
 
         if(scheduleDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            // get room
-            Room room = iRoomRepository.findById(scheduleDTO.getRoom_id()).orElse(null);
-
-            // save schedule
-            Schedule schedule = scheduleMapper.scheduleDTOToSchedule(scheduleDTO);
-            schedule.setRoom(room);
-
-            iScheduleRepository.save(schedule);
-            answer.put("message", "Schedule saved successfully");
         }
+        // get room
+        Room room = iRoomRepository.findById(scheduleDTO.getRoom_id()).orElse(null);
+
+        // save schedule
+        Schedule schedule = scheduleMapper.scheduleDTOToSchedule(scheduleDTO);
+        schedule.setRoom(room);
+
+        iScheduleRepository.save(schedule);
+        answer.put("message", "Schedule saved successfully");
+
         return answer;
     }
 
@@ -101,19 +101,19 @@ public class ScheduleService {
 
         if(scheduleDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            Schedule schedule = iScheduleRepository.findById(scheduleDTO.getId()).orElse(null);
-            if(schedule == null) {
-                throw new NotFoundException("Schedule not found");
-            }else{
-                // update schedule
-                schedule.setStart_time(scheduleDTO.getStart_time());
-                schedule.setEnd_time(scheduleDTO.getEnd_time());
-
-                iScheduleRepository.save(schedule);
-                answer.put("message", "Schedule updated successfully");
-            }
         }
+
+        Schedule schedule = iScheduleRepository.findById(scheduleDTO.getId()).orElse(null);
+        if(schedule == null) {
+            throw new NotFoundException("Schedule not found");
+        }
+        // update schedule
+        schedule.setStart_time(scheduleDTO.getStart_time());
+        schedule.setEnd_time(scheduleDTO.getEnd_time());
+
+        iScheduleRepository.save(schedule);
+        answer.put("message", "Schedule updated successfully");
+
         return answer;
     }
 
@@ -123,16 +123,16 @@ public class ScheduleService {
         Schedule schedule = iScheduleRepository.findById(id).orElse(null);
         if(schedule == null){
             throw new NotFoundException("Schedule not found");
-        }else{
-            String start_time = schedule.getStart_time();
-            Long room_id = schedule.getRoom().getId();
-            if(iAppointmentRepository.findByStart_timeAndRoom_id(start_time, room_id).size() != 0){
-                throw new NotFoundException("Schedule cannot be delete");
-            }else{
-                iScheduleRepository.deleteById(id);
-                answer.put("message", "Schedule deleted successfully");
-            }
         }
+
+        String start_time = schedule.getStart_time();
+        Long room_id = schedule.getRoom().getId();
+        if(iAppointmentRepository.findByStart_timeAndRoom_id(start_time, room_id).size() != 0){
+            throw new NotFoundException("Schedule cannot be delete");
+        }
+        iScheduleRepository.deleteById(id);
+        answer.put("message", "Schedule deleted successfully");
+
         return answer;
     }
 

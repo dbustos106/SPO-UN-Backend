@@ -85,12 +85,12 @@ public class RoomService {
         Map<String, Object> answer = new TreeMap<>();
 
         Room room = iRoomRepository.findById(id).orElse(null);
-        if(room != null){
-            RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
-            answer.put("message", roomDTO);
-        }else{
+        if(room == null){
             throw new NotFoundException("Room not found");
         }
+        RoomDTO roomDTO = roomMapper.roomToRoomDTO(room);
+        answer.put("message", roomDTO);
+
         return answer;
     }
 
@@ -118,18 +118,18 @@ public class RoomService {
 
         if(roomDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            // get building
-            Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
-
-            // save room
-            Room room = roomMapper.roomDTOToRoom(roomDTO);
-            room.setBuilding(building);
-            room.setAppointments(new ArrayList<>());
-
-            iRoomRepository.save(room);
-            answer.put("message", "Room saved successfully");
         }
+        // get building
+        Building building = iBuildingRepository.findById(roomDTO.getBuilding_id()).orElse(null);
+
+        // save room
+        Room room = roomMapper.roomDTOToRoom(roomDTO);
+        room.setBuilding(building);
+        room.setAppointments(new ArrayList<>());
+
+        iRoomRepository.save(room);
+        answer.put("message", "Room saved successfully");
+
         return answer;
     }
 
@@ -138,30 +138,30 @@ public class RoomService {
 
         if(roomDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            Room room = iRoomRepository.findById(roomDTO.getId()).orElse(null);
-            if(room == null) {
-                throw new NotFoundException("Room not found");
-            }else{
-                // update room
-                room.setName(roomDTO.getName());
-
-                iRoomRepository.save(room);
-                answer.put("message", "Room updated successfully");
-            }
         }
+
+        Room room = iRoomRepository.findById(roomDTO.getId()).orElse(null);
+        if(room == null) {
+            throw new NotFoundException("Room not found");
+        }
+        // update room
+        room.setName(roomDTO.getName());
+
+        iRoomRepository.save(room);
+        answer.put("message", "Room updated successfully");
+
         return answer;
     }
 
     public Map<String, Object> deleteRoom(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iRoomRepository.existsById(id)){
-            iRoomRepository.deleteById(id);
-            answer.put("message", "Room deleted successfully");
-        }else{
+        if(!iRoomRepository.existsById(id)){
             throw new NotFoundException("Room not found");
         }
+        iRoomRepository.deleteById(id);
+        answer.put("message", "Room deleted successfully");
+
         return answer;
     }
 

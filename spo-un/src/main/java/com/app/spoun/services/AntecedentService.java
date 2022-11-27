@@ -64,12 +64,12 @@ public class AntecedentService{
         Map<String, Object> answer = new TreeMap<>();
 
         Antecedent antecedent = iAntecedentRepository.findById(id).orElse(null);
-        if(antecedent != null){
-            AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
-            answer.put("message", antecedentDTO);
-        }else{
+        if(antecedent == null){
             throw new NotFoundException("Antecedent not found");
         }
+        AntecedentDTO antecedentDTO = antecedentMapper.antecedentToAntecedentDTO(antecedent);
+        answer.put("message", antecedentDTO);
+
         return answer;
     }
 
@@ -78,16 +78,17 @@ public class AntecedentService{
 
         if(antecedentDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            // get patient
-            Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
-
-            // save antecedent
-            Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
-            antecedent.setPatient(patient);
-            iAntecedentRepository.save(antecedent);
-            answer.put("message", "Antecedent saved successfully");
         }
+
+        // get patient
+        Patient patient = iPatientRepository.findById(antecedentDTO.getPatient_id()).orElse(null);
+
+        // save antecedent
+        Antecedent antecedent = antecedentMapper.antecedentDTOToAntecedent(antecedentDTO);
+        antecedent.setPatient(patient);
+        iAntecedentRepository.save(antecedent);
+        answer.put("message", "Antecedent saved successfully");
+
         return answer;
     }
 
@@ -96,31 +97,31 @@ public class AntecedentService{
 
         if(antecedentDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            Antecedent antecedent = iAntecedentRepository.findById(antecedentDTO.getId()).orElse(null);
-            if(antecedent == null){
-                throw new NotFoundException("Antecedent not found");
-            }else {
-                // update antecedent
-                antecedent.setType(antecedentDTO.getType());
-                antecedent.setDescription(antecedentDTO.getDescription());
-
-                iAntecedentRepository.save(antecedent);
-                answer.put("message", "Antecedent updated successfully");
-            }
         }
+
+        Antecedent antecedent = iAntecedentRepository.findById(antecedentDTO.getId()).orElse(null);
+        if(antecedent == null){
+            throw new NotFoundException("Antecedent not found");
+        }
+        // update antecedent
+        antecedent.setType(antecedentDTO.getType());
+        antecedent.setDescription(antecedentDTO.getDescription());
+
+        iAntecedentRepository.save(antecedent);
+        answer.put("message", "Antecedent updated successfully");
+
         return answer;
     }
 
     public Map<String,Object> deleteAntecedent(Long id){
         Map<String,Object> answer = new TreeMap<>();
 
-        if(iAntecedentRepository.existsById(id)){
-            iAntecedentRepository.deleteById(id);
-            answer.put("message", "Successful");
-        }else{
+        if(!iAntecedentRepository.existsById(id)){
             throw new NotFoundException("Antecedent not found");
         }
+        iAntecedentRepository.deleteById(id);
+        answer.put("message", "Successful");
+
         return answer;
     }
 

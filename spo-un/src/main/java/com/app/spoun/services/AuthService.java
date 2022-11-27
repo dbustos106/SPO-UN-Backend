@@ -72,39 +72,39 @@ public class AuthService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(patient.getRole().getName()));
             return new ApplicationUser(patient.getId(), patient.getEmail(), patient.getPassword(), authorities,
                     true, true, true, true);
-        }else{
-            Student student = iStudentRepository.findByEmail(email).orElse(null);
-            if(student != null){
-                if(!student.isEnabled()){
-                    throw new UsernameNotFoundException("User not enabled");
-                }
-                authorities.add(new SimpleGrantedAuthority(student.getRole().getName()));
-                return new ApplicationUser(student.getId(), student.getEmail(), student.getPassword(), authorities,
-                        true, true, true, true);
-            }else{
-                Professor professor = iProfessorRepository.findByEmail(email).orElse(null);
-                if(professor != null){
-                    if(!professor.isEnabled()){
-                        throw new UsernameNotFoundException("User not enabled");
-                    }
-                    authorities.add(new SimpleGrantedAuthority(professor.getRole().getName()));
-                    return new ApplicationUser(professor.getId(), professor.getEmail(), professor.getPassword(), authorities,
-                            true, true, true, true);
-                }else{
-                    Admin admin = iAdminRepository.findByEmail(email).orElse(null);
-                    if(admin != null){
-                        if(!admin.isEnabled()){
-                            throw new UsernameNotFoundException("User not enabled");
-                        }
-                        authorities.add(new SimpleGrantedAuthority(admin.getRole().getName()));
-                        return new ApplicationUser(admin.getId(), admin.getEmail(), admin.getPassword(), authorities,
-                                true, true, true, true);
-                    }else{
-                        throw new UsernameNotFoundException("User not found in the database");
-                    }
-                }
-            }
         }
+
+        Student student = iStudentRepository.findByEmail(email).orElse(null);
+        if(student != null){
+            if(!student.isEnabled()){
+                throw new UsernameNotFoundException("User not enabled");
+            }
+            authorities.add(new SimpleGrantedAuthority(student.getRole().getName()));
+            return new ApplicationUser(student.getId(), student.getEmail(), student.getPassword(), authorities,
+                    true, true, true, true);
+        }
+
+        Professor professor = iProfessorRepository.findByEmail(email).orElse(null);
+        if(professor != null){
+            if(!professor.isEnabled()){
+                throw new UsernameNotFoundException("User not enabled");
+            }
+            authorities.add(new SimpleGrantedAuthority(professor.getRole().getName()));
+            return new ApplicationUser(professor.getId(), professor.getEmail(), professor.getPassword(), authorities,
+                    true, true, true, true);
+        }
+
+        Admin admin = iAdminRepository.findByEmail(email).orElse(null);
+        if(admin != null){
+            if(!admin.isEnabled()){
+                throw new UsernameNotFoundException("User not enabled");
+            }
+            authorities.add(new SimpleGrantedAuthority(admin.getRole().getName()));
+            return new ApplicationUser(admin.getId(), admin.getEmail(), admin.getPassword(), authorities,
+                    true, true, true, true);
+        }
+
+        throw new UsernameNotFoundException("User not found in the database");
     }
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {

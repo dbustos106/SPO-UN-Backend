@@ -64,12 +64,12 @@ public class TentativeScheduleService {
         Map<String, Object> answer = new TreeMap<>();
 
         TentativeSchedule tentativeSchedule = iTentativeScheduleRepository.findById(id).orElse(null);
-        if(tentativeSchedule != null){
-            TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
-            answer.put("message", tentativeScheduleDTO);
-        }else{
+        if(tentativeSchedule == null){
             throw new NotFoundException("Tentative schedule not found");
         }
+        TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
+        answer.put("message", tentativeScheduleDTO);
+
         return answer;
     }
 
@@ -78,17 +78,17 @@ public class TentativeScheduleService {
 
         if(tentativeScheduleDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            // get appointment
-            Appointment appointment = iAppointmentRepository.findById(tentativeScheduleDTO.getAppointment_id()).orElse(null);
-
-            // save schedule
-            TentativeSchedule tentativeSchedule = tentativeScheduleMapper.tentativeScheduleDTOToTentativeSchedule(tentativeScheduleDTO);
-            tentativeSchedule.setAppointment(appointment);
-
-            iTentativeScheduleRepository.save(tentativeSchedule);
-            answer.put("message", "Tentative schedule saved successfully");
         }
+        // get appointment
+        Appointment appointment = iAppointmentRepository.findById(tentativeScheduleDTO.getAppointment_id()).orElse(null);
+
+        // save schedule
+        TentativeSchedule tentativeSchedule = tentativeScheduleMapper.tentativeScheduleDTOToTentativeSchedule(tentativeScheduleDTO);
+        tentativeSchedule.setAppointment(appointment);
+
+        iTentativeScheduleRepository.save(tentativeSchedule);
+        answer.put("message", "Tentative schedule saved successfully");
+
         return answer;
     }
 
@@ -97,31 +97,31 @@ public class TentativeScheduleService {
 
         if(tentativeScheduleDTO == null) {
             throw new IllegalStateException("Request data missing");
-        }else{
-            TentativeSchedule tentativeSchedule = iTentativeScheduleRepository.findById(tentativeScheduleDTO.getId()).orElse(null);
-            if(tentativeSchedule == null) {
-                throw new NotFoundException("Tentative schedule not found");
-            }else{
-                // update schedule
-                tentativeSchedule.setStart_time(tentativeScheduleDTO.getStart_time());
-                tentativeSchedule.setEnd_time(tentativeScheduleDTO.getEnd_time());
-
-                iTentativeScheduleRepository.save(tentativeSchedule);
-                answer.put("message", "Tentative schedule updated successfully");
-            }
         }
+
+        TentativeSchedule tentativeSchedule = iTentativeScheduleRepository.findById(tentativeScheduleDTO.getId()).orElse(null);
+        if(tentativeSchedule == null) {
+            throw new NotFoundException("Tentative schedule not found");
+        }
+        // update schedule
+        tentativeSchedule.setStart_time(tentativeScheduleDTO.getStart_time());
+        tentativeSchedule.setEnd_time(tentativeScheduleDTO.getEnd_time());
+
+        iTentativeScheduleRepository.save(tentativeSchedule);
+        answer.put("message", "Tentative schedule updated successfully");
+
         return answer;
     }
 
     public Map<String, Object> deleteTentativeSchedule(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iTentativeScheduleRepository.existsById(id)){
-            iTentativeScheduleRepository.deleteById(id);
-            answer.put("message", "Tentative schedule deleted successfully");
-        }else{
+        if(!iTentativeScheduleRepository.existsById(id)){
             throw new NotFoundException("Tentative schedule not found");
         }
+        iTentativeScheduleRepository.deleteById(id);
+        answer.put("message", "Tentative schedule deleted successfully");
+
         return answer;
     }
 

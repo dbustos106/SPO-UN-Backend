@@ -62,12 +62,12 @@ public class RoleService {
         Map<String, Object> answer = new TreeMap<>();
 
         Role role = iRoleRepository.findById(id).orElse(null);
-        if(role != null){
-            RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
-            answer.put("message", roleDTO);
-        }else{
+        if(role == null){
             throw new NotFoundException("Role not found");
         }
+        RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
+        answer.put("message", roleDTO);
+
         return answer;
     }
 
@@ -76,17 +76,17 @@ public class RoleService {
 
         if(roleDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            // save role
-            Role role = roleMapper.roleDTOToRole(roleDTO);
-            role.setStudents(new ArrayList<>());
-            role.setProfessors(new ArrayList<>());
-            role.setPatients(new ArrayList<>());
-            role.setAdmins(new ArrayList<>());
-
-            iRoleRepository.save(role);
-            answer.put("message", "Role saved successfully");
         }
+        // save role
+        Role role = roleMapper.roleDTOToRole(roleDTO);
+        role.setStudents(new ArrayList<>());
+        role.setProfessors(new ArrayList<>());
+        role.setPatients(new ArrayList<>());
+        role.setAdmins(new ArrayList<>());
+
+        iRoleRepository.save(role);
+        answer.put("message", "Role saved successfully");
+
         return answer;
     }
 
@@ -95,30 +95,30 @@ public class RoleService {
 
         if(roleDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else{
-            Role role = iRoleRepository.findById(roleDTO.getId()).orElse(null);
-            if(role == null){
-                throw new NotFoundException("Role not found");
-            }else{
-                // update role
-                role.setName(roleDTO.getName());
-
-                iRoleRepository.save(role);
-                answer.put("message", "Role updated successfully");
-            }
         }
+
+        Role role = iRoleRepository.findById(roleDTO.getId()).orElse(null);
+        if(role == null){
+            throw new NotFoundException("Role not found");
+        }
+        // update role
+        role.setName(roleDTO.getName());
+
+        iRoleRepository.save(role);
+        answer.put("message", "Role updated successfully");
+
         return answer;
     }
 
     public Map<String, Object> deleteRole(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iRoleRepository.existsById(id)){
-            iRoleRepository.deleteById(id);
-            answer.put("message", "Role deleted successfully");
-        }else{
+        if(!iRoleRepository.existsById(id)){
             throw new NotFoundException("Role not found");
         }
+        iRoleRepository.deleteById(id);
+        answer.put("message", "Role deleted successfully");
+
         return answer;
     }
 

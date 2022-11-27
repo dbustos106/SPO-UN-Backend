@@ -78,12 +78,12 @@ public class PatientService{
         Patient patient = iPatientRepository.findByVerification_code(code).orElse(null);
         if(patient == null){
             throw new IllegalStateException("Invalid code");
-        }else{
-            patient.setVerification_code(null);
-            patient.setPassword(passwordEncoder.encode(password));
-            iPatientRepository.save(patient);
-            answer.put("message", "Successful password change");
         }
+        patient.setVerification_code(null);
+        patient.setPassword(passwordEncoder.encode(password));
+        iPatientRepository.save(patient);
+        answer.put("message", "Successful password change");
+
         return answer;
     }
 
@@ -94,63 +94,62 @@ public class PatientService{
         Appointment appointment = iAppointmentRepository.findById(id).orElse(null);
         if(appointment == null) {
             throw new NotFoundException("Appointment not found");
-        }else{
-            // get professor and patient
-            Professor professor = appointment.getProfessor();
-            Patient patient = appointment.getPatient();
-
-            // delete schedule
-            if(appointment.getStart_time() != null) {
-                iScheduleRepository.deleteByStart_timeAndRoom_id(appointment.getStart_time(), appointment.getRoom().getId());
-            }
-
-            // cancel appointment
-            appointment.setState("Canceled");
-            appointment.setStart_time(null);
-            appointment.setEnd_time(null);
-            appointment.setPatient(null);
-            iAppointmentRepository.save(appointment);
-            answer.put("message", "Appointment canceled successfully");
-
-            String emailProfessor = "Querid@ [[name]],<br>"
-                    + "Su cita número [[id]] ha sido cancelada por el paciente.<br>"
-                    + "Si tiene algúna queja o comentario, comuníquese con los estudiantes a cargo:<br>";
-
-            String emailPatient = "Querid@ [[name]],<br>"
-                    + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
-                    + "Si desea comunicarse con los estudiantes encargados de la cita, comuniquese con:<br>";
-
-            // get students
-            List<Student> students = iStudentRepository.findByAppointment_id(id);
-            for(Student student : students){
-                String emailStudent = "Querid@ [[name]],<br>"
-                        + "Su cita número [[id]] ha sido cancelada por el paciente.<br>"
-                        + "Gracias,<br>"
-                        + "Spo-un.";
-                String subjectStudent = "Su cita ha sido cancelada";
-                emailStudent = emailStudent.replace("[[name]]", student.getName());
-                emailStudent = emailStudent.replace("[[id]]", id.toString());
-                emailSenderService.send(student.getEmail(), subjectStudent, emailStudent);
-
-                emailProfessor += student.getName() + ":" + student.getEmail() + ".<br>";
-                emailPatient += student.getName() + ":" + student.getEmail() + ".<br>";
-            }
-
-            // send email to professor
-            emailProfessor += "Gracias,<br>" + "Spo-un.";
-            String subjectProfessor = "Su cita ha sido cancelada";
-            emailProfessor = emailProfessor.replace("[[name]]", professor.getName());
-            emailProfessor = emailProfessor.replace("[[id]]", id.toString());
-            emailSenderService.send(professor.getEmail(), subjectProfessor, emailProfessor);
-
-            // send email to patient
-            emailPatient += "Gracias,<br>" + "Spo-un.";
-            String subjectPatient = "Su cita ha sido cancelada";
-            emailPatient = emailPatient.replace("[[name]]", patient.getName());
-            emailPatient = emailPatient.replace("[[id]]", id.toString());
-            emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
-
         }
+
+        // get professor and patient
+        Professor professor = appointment.getProfessor();
+        Patient patient = appointment.getPatient();
+
+        // delete schedule
+        if(appointment.getStart_time() != null) {
+            iScheduleRepository.deleteByStart_timeAndRoom_id(appointment.getStart_time(), appointment.getRoom().getId());
+        }
+
+        // cancel appointment
+        appointment.setState("Canceled");
+        appointment.setStart_time(null);
+        appointment.setEnd_time(null);
+        appointment.setPatient(null);
+        iAppointmentRepository.save(appointment);
+        answer.put("message", "Appointment canceled successfully");
+
+        String emailProfessor = "Querid@ [[name]],<br>"
+                + "Su cita número [[id]] ha sido cancelada por el paciente.<br>"
+                + "Si tiene algúna queja o comentario, comuníquese con los estudiantes a cargo:<br>";
+
+        String emailPatient = "Querid@ [[name]],<br>"
+                + "Su cita número [[id]] ha sido cancelada con éxito.<br>"
+                + "Si desea comunicarse con los estudiantes encargados de la cita, comuniquese con:<br>";
+
+        // get students
+        List<Student> students = iStudentRepository.findByAppointment_id(id);
+        for(Student student : students){
+            String emailStudent = "Querid@ [[name]],<br>"
+                    + "Su cita número [[id]] ha sido cancelada por el paciente.<br>"
+                    + "Gracias,<br>"
+                    + "Spo-un.";
+            String subjectStudent = "Su cita ha sido cancelada";
+            emailStudent = emailStudent.replace("[[name]]", student.getName());
+            emailStudent = emailStudent.replace("[[id]]", id.toString());
+            emailSenderService.send(student.getEmail(), subjectStudent, emailStudent);
+
+            emailProfessor += student.getName() + ":" + student.getEmail() + ".<br>";
+            emailPatient += student.getName() + ":" + student.getEmail() + ".<br>";
+        }
+
+        // send email to professor
+        emailProfessor += "Gracias,<br>" + "Spo-un.";
+        String subjectProfessor = "Su cita ha sido cancelada";
+        emailProfessor = emailProfessor.replace("[[name]]", professor.getName());
+        emailProfessor = emailProfessor.replace("[[id]]", id.toString());
+        emailSenderService.send(professor.getEmail(), subjectProfessor, emailProfessor);
+
+        // send email to patient
+        emailPatient += "Gracias,<br>" + "Spo-un.";
+        String subjectPatient = "Su cita ha sido cancelada";
+        emailPatient = emailPatient.replace("[[name]]", patient.getName());
+        emailPatient = emailPatient.replace("[[id]]", id.toString());
+        emailSenderService.send(patient.getEmail(), subjectPatient, emailPatient);
 
         return answer;
     }
@@ -223,12 +222,12 @@ public class PatientService{
         Map<String, Object> answer = new TreeMap<>();
 
         Patient patient = iPatientRepository.findById(id).orElse(null);
-        if(patient != null){
-            PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
-            answer.put("message", patientDTO);
-        }else{
+        if(patient == null){
             throw new NotFoundException("Patient not found");
         }
+        PatientDTO patientDTO = patientMapper.patientToPatientDTO(patient);
+        answer.put("message", patientDTO);
+
         return answer;
     }
 
@@ -237,46 +236,49 @@ public class PatientService{
 
         if(patientDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else if(!emailValidatorService.test(patientDTO.getEmail())){
-            throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByEmail(patientDTO.getEmail()) ||
-                    iStudentRepository.existsByEmail(patientDTO.getEmail()) ||
-                    iAdminRepository.existsByEmail(patientDTO.getEmail())){
-            throw new IllegalStateException("Repeated email");
-        }else{
-            // get role
-            Role role = iRoleRepository.findByName("Patient").orElse(null);
-
-            // map patient
-            Patient patient = patientMapper.patientDTOToPatient(patientDTO);
-            patient.setAntecedents(new ArrayList<>());
-            patient.setAppointments(new ArrayList<>());
-            patient.setRole(role);
-
-            // encrypt password
-            patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-
-            // create verification code and disable account
-            String randomCode = RandomString.make(64);
-            patient.setVerification_code(randomCode);
-            patient.setEnabled(false);
-
-            // save patient
-            iPatientRepository.save(patient);
-            answer.put("message", "Patient saved successfully");
-
-            String content = "Querid@ [[name]],<br>"
-                    + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
-                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                    + "Gracias,<br>"
-                    + "Spo-un.";
-            String subject = "Verifique su registro";
-            String verifyURL = "http://localhost:8080/verifyAccount/patient/" + patient.getVerification_code();
-            //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/patient/" + patient.getVerification_code();
-            content = content.replace("[[name]]", patient.getName());
-            content = content.replace("[[URL]]", verifyURL);
-            emailSenderService.send(patient.getEmail(), subject, content);
         }
+        if(!emailValidatorService.test(patientDTO.getEmail())){
+            throw new IllegalStateException("Email not valid");
+        }
+        if(iProfessorRepository.existsByEmail(patientDTO.getEmail()) ||
+                iStudentRepository.existsByEmail(patientDTO.getEmail()) ||
+                iAdminRepository.existsByEmail(patientDTO.getEmail())){
+            throw new IllegalStateException("Repeated email");
+        }
+
+        // get role
+        Role role = iRoleRepository.findByName("Patient").orElse(null);
+
+        // map patient
+        Patient patient = patientMapper.patientDTOToPatient(patientDTO);
+        patient.setAntecedents(new ArrayList<>());
+        patient.setAppointments(new ArrayList<>());
+        patient.setRole(role);
+
+        // encrypt password
+        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+
+        // create verification code and disable account
+        String randomCode = RandomString.make(64);
+        patient.setVerification_code(randomCode);
+        patient.setEnabled(false);
+
+        // save patient
+        iPatientRepository.save(patient);
+        answer.put("message", "Patient saved successfully");
+
+        String content = "Querid@ [[name]],<br>"
+                + "Por favor haga click en el siguiente link para verificar su cuenta:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Gracias,<br>"
+                + "Spo-un.";
+        String subject = "Verifique su registro";
+        String verifyURL = "http://localhost:8080/verifyAccount/patient/" + patient.getVerification_code();
+        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/patient/" + patient.getVerification_code();
+        content = content.replace("[[name]]", patient.getName());
+        content = content.replace("[[URL]]", verifyURL);
+        emailSenderService.send(patient.getEmail(), subject, content);
+
         return answer;
     }
 
@@ -286,12 +288,12 @@ public class PatientService{
         Patient patient = iPatientRepository.findByVerification_code(code).orElse(null);
         if(patient == null){
             throw new IllegalStateException("Invalid code");
-        }else{
-            patient.setVerification_code(null);
-            patient.setEnabled(true);
-            iPatientRepository.save(patient);
-            answer.put("message", "Successful verification");
         }
+        patient.setVerification_code(null);
+        patient.setEnabled(true);
+        iPatientRepository.save(patient);
+        answer.put("message", "Successful verification");
+
         return answer;
     }
 
@@ -300,42 +302,44 @@ public class PatientService{
 
         if(patientDTO == null){
             throw new IllegalStateException("Request data missing");
-        }else if(!emailValidatorService.test(patientDTO.getEmail())){
+        }
+        if(!emailValidatorService.test(patientDTO.getEmail())){
             throw new IllegalStateException("Email not valid");
-        }else if(iProfessorRepository.existsByEmail(patientDTO.getEmail()) ||
+        }
+        if(iProfessorRepository.existsByEmail(patientDTO.getEmail()) ||
                 iStudentRepository.existsByEmail(patientDTO.getEmail()) ||
                 iAdminRepository.existsByEmail(patientDTO.getEmail())){
             throw new IllegalStateException("Repeated email");
-        }else{
-            Patient patient = iPatientRepository.findById(patientDTO.getId()).orElse(null);
-            if(patient == null) {
-                throw new NotFoundException("Patient not found");
-            }else{
-                // update patient
-                patient.setName(patientDTO.getName());
-                patient.setLast_name(patientDTO.getLast_name());
-                patient.setDocument_type(patientDTO.getDocument_type());
-                patient.setDocument_number(patientDTO.getDocument_number());
-                patient.setBlood_type(patientDTO.getBlood_type());
-                patient.setGender(patientDTO.getGender());
-                patient.setAge(patientDTO.getAge());
-
-                iPatientRepository.save(patient);
-                answer.put("message", "Patient updated successfully");
-            }
         }
+
+        Patient patient = iPatientRepository.findById(patientDTO.getId()).orElse(null);
+        if(patient == null) {
+            throw new NotFoundException("Patient not found");
+        }
+        // update patient
+        patient.setName(patientDTO.getName());
+        patient.setLast_name(patientDTO.getLast_name());
+        patient.setDocument_type(patientDTO.getDocument_type());
+        patient.setDocument_number(patientDTO.getDocument_number());
+        patient.setBlood_type(patientDTO.getBlood_type());
+        patient.setGender(patientDTO.getGender());
+        patient.setAge(patientDTO.getAge());
+
+        iPatientRepository.save(patient);
+        answer.put("message", "Patient updated successfully");
+
         return answer;
     }
 
     public Map<String, Object> deletePatient(Long id){
         Map<String, Object> answer = new TreeMap<>();
 
-        if(iPatientRepository.existsById(id)){
-            iPatientRepository.deleteById(id);
-            answer.put("message", "Patient deleted successfully");
-        }else{
+        if(!iPatientRepository.existsById(id)){
             throw new NotFoundException("Patient not found");
         }
+        iPatientRepository.deleteById(id);
+        answer.put("message", "Patient deleted successfully");
+
         return answer;
     }
 
