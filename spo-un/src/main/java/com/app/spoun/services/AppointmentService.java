@@ -327,7 +327,6 @@ public class AppointmentService {
 
         // update appointment
         appointment.setRoom(room);
-        appointment.setStudents(new ArrayList<>());
         appointment.setTentativeSchedules(new ArrayList<>());
         Appointment appointment_answer = iAppointmentRepository.save(appointment);
 
