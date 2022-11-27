@@ -289,8 +289,8 @@ public class PatientService{
         if(patient == null){
             throw new IllegalStateException("Invalid code");
         }
-        patient.setVerification_code(null);
         patient.setEnabled(true);
+        patient.setVerification_code(null);
         iPatientRepository.save(patient);
         answer.put("message", "Successful verification");
 

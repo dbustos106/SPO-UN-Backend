@@ -246,8 +246,8 @@ public class ProfessorService{
         if(professor == null){
             throw new IllegalStateException("Invalid code");
         }
-        professor.setVerification_code(null);
         professor.setEnabled(true);
+        professor.setVerification_code(null);
         iProfessorRepository.save(professor);
         answer.put("message", "Successful verification");
 

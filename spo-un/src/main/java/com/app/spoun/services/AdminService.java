@@ -189,15 +189,12 @@ public class AdminService{
             throw new IllegalStateException("Repeated email");
         }
 
-        // get role
-        Role role = iRoleRepository.findByName("Admin").orElse(null);
-
+        Admin admin = iAdminRepository.findById(adminDTO.getId()).orElse(null);
+        if(admin == null){
+            throw new NotFoundException("Admin not found");
+        }
         // update admin
-        Admin admin = adminMapper.adminDTOToAdmin(adminDTO);
-        admin.setRole(role);
-
-        // encrypt password
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        admin.setEmail(adminDTO.getEmail());
 
         iAdminRepository.save(admin);
         answer.put("message", "Admin updated successfully");

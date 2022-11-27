@@ -316,8 +316,8 @@ public class StudentService {
         if(student == null) {
             throw new IllegalStateException("Invalid code");
         }
-        student.setVerification_code(null);
         student.setEnabled(true);
+        student.setVerification_code(null);
         iStudentRepository.save(student);
         answer.put("message", "Successful verification");
 
