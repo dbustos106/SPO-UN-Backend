@@ -16,7 +16,6 @@ import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Transactional
@@ -61,21 +60,6 @@ public class AppointmentService {
     }
 
 
-    public boolean isAvailableSchedule(List<Schedule> schedules, String start_time, String end_time) throws ParseException{
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        for(Schedule schedule : schedules){
-            Date start_schedule = new Date(sdf.parse(schedule.getStart_time()).getTime());
-            Date end_schedule = new Date(sdf.parse(schedule.getEnd_time()).getTime());
-            Date start_tentative = new Date(sdf.parse(start_time).getTime());
-            Date end_tentative = new Date(sdf.parse(end_time).getTime());
-            if(!((start_tentative.before(start_schedule) && end_tentative.before(start_schedule)) ||
-                    (start_schedule.before(start_tentative) && end_schedule.before(start_tentative)))){
-                return false;
-            }
-        }
-        return true;
-    }
-
     public Map<String, Object> confirmAppointmentByAppointmentId(Long appointmentId, Long patientId, ScheduleDTO scheduleDTO) throws ParseException{
         Map<String, Object> answer = new TreeMap<>();
 
@@ -86,7 +70,7 @@ public class AppointmentService {
         }
 
         List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
-        if(!isAvailableSchedule(schedules, scheduleDTO.getStart_time(), scheduleDTO.getEnd_time())){
+        if(!scheduleService.isAvailableSchedule(schedules, scheduleDTO.getStart_time(), scheduleDTO.getEnd_time())){
             throw new IllegalStateException("Schedule not available");
         }
         // set start_time and end_time
@@ -153,7 +137,7 @@ public class AppointmentService {
             List<TentativeScheduleDTO> listTentativeScheduleDTOS = new ArrayList<>();
             List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
             for(TentativeSchedule tentativeSchedule : tentativeSchedules){
-                if(isAvailableSchedule(schedules, tentativeSchedule.getStart_time(), tentativeSchedule.getEnd_time())){
+                if(scheduleService.isAvailableSchedule(schedules, tentativeSchedule.getStart_time(), tentativeSchedule.getEnd_time())){
                     TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
                     listTentativeScheduleDTOS.add(tentativeScheduleDTO);
                 }
@@ -211,7 +195,7 @@ public class AppointmentService {
         List<TentativeScheduleDTO> listTentativeScheduleDTOS = new ArrayList<>();
         List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
         for(TentativeSchedule tentativeSchedule : tentativeSchedules){
-            if(isAvailableSchedule(schedules, tentativeSchedule.getStart_time(), tentativeSchedule.getEnd_time())){
+            if(scheduleService.isAvailableSchedule(schedules, tentativeSchedule.getStart_time(), tentativeSchedule.getEnd_time())){
                 TentativeScheduleDTO tentativeScheduleDTO = tentativeScheduleMapper.tentativeScheduleToTentativeScheduleDTO(tentativeSchedule);
                 listTentativeScheduleDTOS.add(tentativeScheduleDTO);
             }
@@ -266,7 +250,7 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String, Object> saveAppointment(FullAppointmentDTO fullAppointment_DTO){
+    public Map<String, Object> saveAppointment(FullAppointmentDTO fullAppointment_DTO) throws ParseException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(fullAppointment_DTO == null){
@@ -293,9 +277,19 @@ public class AppointmentService {
         Appointment appointment_answer = iAppointmentRepository.save(appointment);
 
         // save tentative schedule
+        int tentativeSchedulesAvailable = 0;
+        List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
         for(TentativeScheduleDTO tentativeScheduleDTO : tentativeScheduleDTOS){
-            tentativeScheduleDTO.setAppointment_id(appointment_answer.getId());
-            tentativeScheduleService.saveTentativeSchedule(tentativeScheduleDTO);
+            if(scheduleService.isAvailableSchedule(schedules, tentativeScheduleDTO.getStart_time(), tentativeScheduleDTO.getEnd_time())) {
+                tentativeScheduleDTO.setAppointment_id(appointment_answer.getId());
+                tentativeScheduleService.saveTentativeSchedule(tentativeScheduleDTO);
+                tentativeSchedulesAvailable += 1;
+            }
+        }
+
+        // check the number of schedule available
+        if(tentativeSchedulesAvailable == 0){
+            throw new IllegalStateException("No schedule is available");
         }
 
         // save students
@@ -317,7 +311,6 @@ public class AppointmentService {
         // extract objects in fullAppointmentDTO
         AppointmentDTO appointmentDTO = fullAppointment_DTO.getAppointmentDTO();
         List<TentativeScheduleDTO> tentativeScheduleDTOS = fullAppointment_DTO.getTentativeScheduleDTOS();
-        List<String> students = fullAppointment_DTO.getStudents();
 
         // get appointment
         Appointment appointment = iAppointmentRepository.findById(appointmentDTO.getId()).orElse(null);
@@ -326,8 +319,6 @@ public class AppointmentService {
         }
         // get room and professor
         Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
-        Student studentMain = iStudentRepository.findByEmail(students.get(0)).orElse(null);
-        Professor professor = studentMain.getProfessor();
 
         // if patient is null, update procedure type
         if(appointment.getPatient() == null){
@@ -336,7 +327,6 @@ public class AppointmentService {
 
         // update appointment
         appointment.setRoom(room);
-        appointment.setProfessor(professor);
         appointment.setStudents(new ArrayList<>());
         appointment.setTentativeSchedules(new ArrayList<>());
         Appointment appointment_answer = iAppointmentRepository.save(appointment);
@@ -348,12 +338,6 @@ public class AppointmentService {
         for(TentativeScheduleDTO tentativeScheduleDTO : tentativeScheduleDTOS){
             tentativeScheduleDTO.setAppointment_id(appointment_answer.getId());
             tentativeScheduleService.saveTentativeSchedule(tentativeScheduleDTO);
-        }
-
-        // update students
-        for(String studentEmail : students){
-            Student student = iStudentRepository.findByEmail(studentEmail).orElse(null);
-            appointment_answer.getStudents().add(student);
         }
         answer.put("message", "Appointment updated successfully");
 

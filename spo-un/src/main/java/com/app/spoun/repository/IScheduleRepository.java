@@ -15,6 +15,7 @@ import java.util.Optional;
 @Repository
 public interface IScheduleRepository extends JpaRepository<Schedule, Long>{
 
+    List<Schedule> findAll();
     Page<Schedule> findAll(Pageable page);
     Optional<Schedule> findById(Long id);
     Schedule save(ScheduleDTO scheduleDTO);

@@ -17,10 +17,9 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Transactional
 @Service
@@ -42,6 +41,21 @@ public class ScheduleService {
         this.scheduleMapper = scheduleMapper;
     }
 
+
+    public boolean isAvailableSchedule(List<Schedule> schedules, String start_time, String end_time) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        for(Schedule schedule : schedules){
+            Date start_schedule = new Date(sdf.parse(schedule.getStart_time()).getTime());
+            Date end_schedule = new Date(sdf.parse(schedule.getEnd_time()).getTime());
+            Date start_tentative = new Date(sdf.parse(start_time).getTime());
+            Date end_tentative = new Date(sdf.parse(end_time).getTime());
+            if(!((start_tentative.before(start_schedule) && !end_tentative.after(start_schedule)) ||
+                    (start_schedule.before(start_tentative) && !end_schedule.after(start_tentative)))){
+                return false;
+            }
+        }
+        return true;
+    }
 
     public Map<String, Object> getAllSchedule(Integer idPage, Integer size){
         Map<String, Object> answer = new TreeMap<>();
@@ -77,12 +91,18 @@ public class ScheduleService {
         return answer;
     }
 
-    public Map<String, Object> saveSchedule(ScheduleDTO scheduleDTO){
+    public Map<String, Object> saveSchedule(ScheduleDTO scheduleDTO) throws ParseException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(scheduleDTO == null){
             throw new IllegalStateException("Request data missing");
         }
+
+        List<Schedule> schedules = iScheduleRepository.findAll();
+        if(!isAvailableSchedule(schedules, scheduleDTO.getStart_time(), scheduleDTO.getEnd_time())){
+            throw new IllegalStateException("Schedule not available");
+        }
+
         // get room
         Room room = iRoomRepository.findById(scheduleDTO.getRoom_id()).orElse(null);
 
