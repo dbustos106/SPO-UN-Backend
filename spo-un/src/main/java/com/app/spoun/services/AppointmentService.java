@@ -302,7 +302,7 @@ public class AppointmentService {
         return answer;
     }
 
-    public Map<String, Object> editAppointment(FullAppointmentDTO fullAppointment_DTO){
+    public Map<String, Object> editAppointment(FullAppointmentDTO fullAppointment_DTO) throws ParseException {
         Map<String, Object> answer = new TreeMap<>();
 
         if(fullAppointment_DTO == null){
@@ -334,10 +334,21 @@ public class AppointmentService {
         iTentativeScheduleRepository.deleteByAppointment_id(appointment_answer.getId());
 
         // update tentative schedule
+        int tentativeSchedulesAvailable = 0;
+        List<Schedule> schedules = iScheduleRepository.findByRoom_id(appointment.getRoom().getId());
         for(TentativeScheduleDTO tentativeScheduleDTO : tentativeScheduleDTOS){
-            tentativeScheduleDTO.setAppointment_id(appointment_answer.getId());
-            tentativeScheduleService.saveTentativeSchedule(tentativeScheduleDTO);
+            if(scheduleService.isAvailableSchedule(schedules, tentativeScheduleDTO.getStart_time(), tentativeScheduleDTO.getEnd_time())) {
+                tentativeScheduleDTO.setAppointment_id(appointment_answer.getId());
+                tentativeScheduleService.saveTentativeSchedule(tentativeScheduleDTO);
+                tentativeSchedulesAvailable += 1;
+            }
         }
+
+        // check the number of schedule available
+        if(tentativeSchedulesAvailable == 0){
+            throw new IllegalStateException("No schedule is available");
+        }
+
         answer.put("message", "Appointment updated successfully");
 
         return answer;
