@@ -289,7 +289,7 @@ public class AppointmentService {
 
         // check the number of schedule available
         if(tentativeSchedulesAvailable == 0){
-            throw new IllegalStateException("No schedule is available");
+            throw new IllegalStateException("None of the schedules are available");
         }
 
         // save students
@@ -346,7 +346,7 @@ public class AppointmentService {
 
         // check the number of schedule available
         if(tentativeSchedulesAvailable == 0){
-            throw new IllegalStateException("No schedule is available");
+            throw new IllegalStateException("None of the schedules are available");
         }
 
         answer.put("message", "Appointment updated successfully");
