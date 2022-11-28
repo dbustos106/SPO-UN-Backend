@@ -5,6 +5,8 @@ import com.app.spoun.domain.Patient;
 import com.app.spoun.domain.Professor;
 import com.app.spoun.domain.Student;
 
+import com.app.spoun.dto.GoogleTokenDTO;
+import com.app.spoun.dto.PatientDTO;
 import com.app.spoun.repository.IAdminRepository;
 import com.app.spoun.repository.IPatientRepository;
 import com.app.spoun.repository.IProfessorRepository;
@@ -14,10 +16,15 @@ import com.app.spoun.security.ApplicationUser;
 import com.app.spoun.security.JwtIOPropieties;
 import com.app.spoun.utils.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,17 +41,23 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Service
-@RequiredArgsConstructor
 @Transactional
+@Service
 @Slf4j
 public class AuthService implements UserDetailsService {
 
-    private IStudentRepository iStudentRepository;
-    private IProfessorRepository iProfessorRepository;
-    private IPatientRepository iPatientRepository;
-    private IAdminRepository iAdminRepository;
-    private JwtIOPropieties jwtIOPropieties;
+    @Lazy
+    @Autowired
+    private PatientService patientService;
+
+    @Value("${google.clientId}")
+    private String googleClientId;
+
+    private final IStudentRepository iStudentRepository;
+    private final IProfessorRepository iProfessorRepository;
+    private final IPatientRepository iPatientRepository;
+    private final IAdminRepository iAdminRepository;
+    private final JwtIOPropieties jwtIOPropieties;
 
     @Autowired
     public AuthService(IStudentRepository iStudentRepository,
@@ -134,6 +147,79 @@ public class AuthService implements UserDetailsService {
             }
         }else{
             throw new RuntimeException("Refresh token is missing");
+        }
+    }
+
+    public void loginPatientWithGoogle(GoogleTokenDTO googleTokenDTO, HttpServletResponse response) throws IOException {
+        final NetHttpTransport netHttpTransport = new NetHttpTransport();
+        final GsonFactory gsonFactory = GsonFactory.getDefaultInstance();
+        GoogleIdTokenVerifier.Builder verifier =
+                new GoogleIdTokenVerifier.Builder(netHttpTransport, gsonFactory)
+                        .setAudience(Collections.singletonList(googleClientId));
+        final GoogleIdToken googleIdToken = GoogleIdToken.parse(verifier.getJsonFactory(), googleTokenDTO.getValue());
+        final GoogleIdToken.Payload payload = googleIdToken.getPayload();
+
+        Long userId = -1L;
+        String userEmail = "";
+        String access_token = "";
+        String refresh_token = "";
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        if(iPatientRepository.existsByEmail(payload.getEmail())) {
+            Patient patient = iPatientRepository.findByEmail(payload.getEmail()).orElse(null);
+            authorities.add(new SimpleGrantedAuthority(patient.getRole().getName()));
+            userEmail = patient.getEmail();
+            userId = patient.getId();
+        }
+
+        if(iProfessorRepository.existsByEmail(payload.getEmail())) {
+            Professor professor = iProfessorRepository.findByEmail(payload.getEmail()).orElse(null);
+            authorities.add(new SimpleGrantedAuthority(professor.getRole().getName()));
+            userEmail = professor.getEmail();
+            userId = professor.getId();
+        }
+
+        if(iStudentRepository.existsByEmail(payload.getEmail())) {
+            Student student = iStudentRepository.findByEmail(payload.getEmail()).orElse(null);
+            authorities.add(new SimpleGrantedAuthority(student.getRole().getName()));
+            userEmail = student.getEmail();
+            userId = student.getId();
+        }
+
+        if(iAdminRepository.existsByEmail(payload.getEmail())) {
+            Admin admin = iAdminRepository.findByEmail(payload.getEmail()).orElse(null);
+            authorities.add(new SimpleGrantedAuthority(admin.getRole().getName()));
+            userEmail = admin.getEmail();
+            userId = admin.getId();
+        }
+
+        if(userId != -1) {
+            ApplicationUser user = new ApplicationUser(userId, userEmail, "", authorities,
+                    true, true, true, true);
+
+            access_token = JWTUtil.createToken(user, jwtIOPropieties.getToken().getSecret(),
+                    jwtIOPropieties.getIssuer(), jwtIOPropieties.getToken().getAccess_expires_in());
+            refresh_token = JWTUtil.createToken(user, jwtIOPropieties.getToken().getSecret(),
+                    jwtIOPropieties.getIssuer(), jwtIOPropieties.getToken().getRefresh_expires_in());
+
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("access_token", access_token);
+            tokens.put("refresh_token", refresh_token);
+
+            response.setContentType(APPLICATION_JSON_VALUE);
+            new ObjectMapper().writer().writeValue(response.getOutputStream(), tokens);
+
+        }else {
+            PatientDTO patientDTO = new PatientDTO();
+            patientDTO.setEmail(payload.getEmail());
+            patientDTO.setName("");
+            patientDTO.setLast_name("");
+            patientDTO.setPassword("pass");
+            patientDTO.setAge(0);
+            patientDTO.setBlood_type("");
+            patientDTO.setDocument_type("");
+            patientDTO.setGender("");
+            patientService.savePatient(patientDTO);
         }
     }
 

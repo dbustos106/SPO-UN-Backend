@@ -16,7 +16,6 @@ public class ApplicationUser implements UserDetails{
     private final boolean isCredentialsNonExpired;
     private final boolean isEnabled;
 
-
     public ApplicationUser(Long id, String username, String password, Collection<? extends GrantedAuthority> grantedAuthorities,
                            boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled) {
         this.id = id;

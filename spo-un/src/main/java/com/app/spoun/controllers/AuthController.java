@@ -1,5 +1,6 @@
 package com.app.spoun.controllers;
 
+import com.app.spoun.dto.GoogleTokenDTO;
 import com.app.spoun.services.AuthService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,13 @@ public class AuthController {
     @GetMapping(value = "/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authService.refreshToken(request, response);
+    }
+
+    @PostMapping(value = "/loginWithGoogle")
+    public void loginWithGoogle(
+            @RequestBody GoogleTokenDTO googleTokenDTO,
+            HttpServletResponse response) throws IOException {
+        authService.loginPatientWithGoogle(googleTokenDTO, response);
     }
 
 }

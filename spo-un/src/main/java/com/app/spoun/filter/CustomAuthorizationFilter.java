@@ -35,7 +35,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals("/auth/login") || request.getServletPath().equals("/auth/tokenRefresh") ||
+        if(request.getServletPath().equals("/auth/login") || request.getServletPath().equals("/auth/tokenRefresh") || request.getServletPath().equals("/auth/loginWithGoogle") ||
                 request.getServletPath().equals("/register/patient") || request.getServletPath().equals("/changePassword/email") ||
                 request.getServletPath().equals("/register/verifyAccount/professor") || request.getServletPath().equals("/register/verifyAccount/student") ||
                 request.getServletPath().equals("/register/verifyAccount/patient") || request.getServletPath().equals("/register/verifyAccount/admin") ||
