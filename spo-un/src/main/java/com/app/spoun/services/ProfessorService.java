@@ -230,8 +230,8 @@ public class ProfessorService{
                 + "Gracias,<br>"
                 + "Spo-un.";
         String subject = "Verifique su registro";
-        String verifyURL = "http://localhost:8080/verifyAccount/professor/" + professor.getVerification_code();
-        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/professor/" + professor.getVerification_code();
+        //String verifyURL = "http://localhost:8080/verifyAccount/professor/" + professor.getVerification_code();
+        String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/professor/" + professor.getVerification_code();
         content = content.replace("[[name]]", professor.getName());
         content = content.replace("[[URL]]", verifyURL);
         emailSenderService.send(professor.getEmail(), subject, content);

@@ -300,8 +300,8 @@ public class StudentService {
                 + "Gracias,<br>"
                 + "Spo-un.";
         String subject = "Verifique su registro";
-        String verifyURL = "http://localhost:8080/verifyAccount/student/" + student.getVerification_code();
-        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/student/" + student.getVerification_code();
+        //String verifyURL = "http://localhost:8080/verifyAccount/student/" + student.getVerification_code();
+        String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/student/" + student.getVerification_code();
         content = content.replace("[[name]]", student.getName());
         content = content.replace("[[URL]]", verifyURL);
         emailSenderService.send(student.getEmail(), subject, content);

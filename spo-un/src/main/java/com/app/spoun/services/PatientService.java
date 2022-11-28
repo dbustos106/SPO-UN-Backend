@@ -270,8 +270,8 @@ public class PatientService{
                 + "Gracias,<br>"
                 + "Spo-un.";
         String subject = "Verifique su registro";
-        String verifyURL = "http://localhost:8080/verifyAccount/patient/" + patient.getVerification_code();
-        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/patient/" + patient.getVerification_code();
+        //String verifyURL = "http://localhost:8080/verifyAccount/patient/" + patient.getVerification_code();
+        String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/verifyAccount/patient/" + patient.getVerification_code();
         content = content.replace("[[name]]", patient.getName());
         content = content.replace("[[URL]]", verifyURL);
         emailSenderService.send(patient.getEmail(), subject, content);

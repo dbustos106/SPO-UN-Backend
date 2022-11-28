@@ -101,8 +101,8 @@ public class ChangePasswordService {
                 + "Gracias,<br>"
                 + "Spo-un.";
         String subject = "Cambio de contraseña";
-        String verifyURL = "http://localhost:8080/changePassword/" + role + "/" + randomCode;
-        //String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/changePassword/" + role + "/" + randomCode;
+        //String verifyURL = "http://localhost:8080/changePassword/" + role + "/" + randomCode;
+        String verifyURL = "http://spoun.app.s3-website-us-east-1.amazonaws.com/changePassword/" + role + "/" + randomCode;
         content = content.replace("[[URL]]", verifyURL);
         emailSenderService.send(email, subject, content);
 
