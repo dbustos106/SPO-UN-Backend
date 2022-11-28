@@ -64,7 +64,7 @@ class PatientServiceTest {
         role.setName("Student");
 
         patient = new Patient();
-        patient.setUsername("Laura");
+        patient.setEmail("Correo");
         patient.setPassword("pass");
         patient.setName("Laura Jimenez");
         patient.setAge(34);

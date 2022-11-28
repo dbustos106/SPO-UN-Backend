@@ -53,14 +53,14 @@ class AuthServiceTest {
 
         admin = new Admin();
         admin.setId(1L);
-        admin.setUsername("Admin");
+        admin.setEmail("correo");
         admin.setPassword("pass");
         role.setName("Admin");
         admin.setRole(role);
 
         patient = new Patient();
         patient.setId(1L);
-        patient.setUsername("Laura");
+        patient.setEmail("correo");
         patient.setPassword("pass");
         patient.setName("Laura Jimenez");
         patient.setAge(34);

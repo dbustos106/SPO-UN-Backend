@@ -131,7 +131,7 @@ class AppointmentServiceTest {
         fullAppointmentDTO = new FullAppointmentDTO();
         fullAppointmentDTO.setAppointmentDTO(appointmentDTO);
         fullAppointmentDTO.setStudents(students);
-        fullAppointmentDTO.setTentativeSchedules(tentativeSchedules);
+        fullAppointmentDTO.setTentativeScheduleDTOS(tentativeSchedules);
 
         students = new ArrayList<String>();
         students = fullAppointmentDTO.getStudents();
@@ -142,7 +142,7 @@ class AppointmentServiceTest {
         student = new Student();
         student.setAppointments(appointments);
         student.setName("Juanito");
-        student.setUsername("usr21");
+        student.setEmail("correo");
         student.setRole(role);
         student.setPassword("f456");
         student.setDocument_type("C.C.");

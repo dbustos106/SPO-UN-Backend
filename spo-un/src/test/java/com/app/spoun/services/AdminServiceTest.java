@@ -60,7 +60,7 @@ class AdminServiceTest {
         role.setName("Professor");
 
         admin = new Admin();
-        admin.setUsername("Admin");
+        admin.setEmail("spoun.app@gmail.com");
         admin.setPassword("pass");
         admin.setRole(role);
 
