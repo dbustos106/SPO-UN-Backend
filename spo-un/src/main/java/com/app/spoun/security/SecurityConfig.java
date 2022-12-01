@@ -20,8 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -57,9 +56,43 @@ public class SecurityConfig {
                 "/register/patient/**",
                 "/register/verifyAccount/**").permitAll();
 
-        //http.authorizeRequests().antMatchers(POST, "/register/admin/**").hasAnyAuthority("Admin");
-        //http.authorizeRequests().antMatchers(POST, "/register/professor/**").hasAnyAuthority("Admin");
-        //http.authorizeRequests().antMatchers(POST, "/register/student/**").hasAnyAuthority("Professor");
+        http.authorizeRequests().antMatchers(GET, "/building/all/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(POST, "/building/save/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(DELETE, "/building/**/delete/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(POST, "/room/save/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(DELETE, "/room/**/delete/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(POST, "/register/professor/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(POST, "/schedule/save/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(GET, "/room/**/schedules/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(DELETE, "/schedule/**/delete/**").hasAnyAuthority("Admin");
+
+        http.authorizeRequests().antMatchers(POST, "/register/student/**").hasAnyAuthority("Professor");
+        http.authorizeRequests().antMatchers(GET, "/professor/**/schedule/**").hasAnyAuthority("Professor");
+        http.authorizeRequests().antMatchers(GET, "/professor/**/appointments/**").hasAnyAuthority("Professor");
+        http.authorizeRequests().antMatchers(GET, "/professor/**").hasAnyAuthority("Professor");
+        http.authorizeRequests().antMatchers(PUT, "/professor/edit/**").hasAnyAuthority("Professor");
+        http.authorizeRequests().antMatchers(GET, "/professor/**/students/**").hasAnyAuthority("Professor");
+
+        http.authorizeRequests().antMatchers(POST, "/appointment/save/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers(PUT, "/appointment/edit/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers(PUT, "/student/cancelAppointment/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers(GET, "/student/**/schedule/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers(GET, "/student/**/unconfirmedSchedule/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers(GET, "/student/**/appointments/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers(GET, "/student/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers(PUT, "/student/edit/**").hasAnyAuthority("Student");
+
+        http.authorizeRequests().antMatchers(PUT, "/appointment/**/qualify/**").hasAnyAuthority("Patient");
+        http.authorizeRequests().antMatchers(PUT, "/patient/cancelAppointment/**").hasAnyAuthority("Patient");
+        http.authorizeRequests().antMatchers(GET, "/patient/**/schedule/**").hasAnyAuthority("Patient");
+        http.authorizeRequests().antMatchers(GET, "/patient/**/appointments/**").hasAnyAuthority("Patient");
+        http.authorizeRequests().antMatchers(PUT, "/appointment/**/confirmPatient/**").hasAnyAuthority("Patient");
+        http.authorizeRequests().antMatchers(GET, "/appointment/allAvailable/**").hasAnyAuthority("Patient");
+        http.authorizeRequests().antMatchers(GET, "/patient/**").hasAnyAuthority("Patient");
+        http.authorizeRequests().antMatchers(PUT, "/patient/edit/**").hasAnyAuthority("Patient");
+
+        http.authorizeRequests().antMatchers(GET, "/appointment/**").hasAnyAuthority("Student", "Professor", "Patient");
+        http.authorizeRequests().antMatchers(GET, "/room/all/**").hasAnyAuthority("Student", "Admin");
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
