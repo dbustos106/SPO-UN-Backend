@@ -151,7 +151,7 @@ public class AdminService{
                     + "Spo-un.";
         String subject = "Verifique su registro";
         //String verifyURL = "http://localhost:8080/verifyAccount/admin/" + admin.getVerification_code();
-        String verifyURL = "https://dc4exmnlbq7fc.cloudfront.net/verifyAccount/admin/" + admin.getVerification_code();
+        String verifyURL = "https://d1x4u79kg2590n.cloudfront.net/verifyAccount/admin/" + admin.getVerification_code();
         content = content.replace("[[name]]", admin.getEmail());
         content = content.replace("[[URL]]", verifyURL);
         emailSenderService.send(admin.getEmail(), subject, content);

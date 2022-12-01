@@ -214,7 +214,7 @@ public class AuthService implements UserDetailsService {
             patientDTO.setEmail(payload.getEmail());
             patientDTO.setName("");
             patientDTO.setLast_name("");
-            patientDTO.setPassword("pass");
+            patientDTO.setPassword("secretPassword");
             patientDTO.setAge(0);
             patientDTO.setBlood_type("");
             patientDTO.setDocument_type("");

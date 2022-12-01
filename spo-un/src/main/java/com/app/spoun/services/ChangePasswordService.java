@@ -102,7 +102,7 @@ public class ChangePasswordService {
                 + "Spo-un.";
         String subject = "Cambio de contraseña";
         //String verifyURL = "http://localhost:8080/changePassword/" + role + "/" + randomCode;
-        String verifyURL = "https://dc4exmnlbq7fc.cloudfront.net/changePassword/" + role + "/" + randomCode;
+        String verifyURL = "https://d1x4u79kg2590n.cloudfront.net/changePassword/" + role + "/" + randomCode;
         content = content.replace("[[URL]]", verifyURL);
         emailSenderService.send(email, subject, content);
 

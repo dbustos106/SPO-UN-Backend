@@ -271,7 +271,7 @@ public class PatientService{
                 + "Spo-un.";
         String subject = "Verifique su registro";
         //String verifyURL = "http://localhost:8080/verifyAccount/patient/" + patient.getVerification_code();
-        String verifyURL = "https://dc4exmnlbq7fc.cloudfront.net/verifyAccount/patient/" + patient.getVerification_code();
+        String verifyURL = "https://d1x4u79kg2590n.cloudfront.net/verifyAccount/patient/" + patient.getVerification_code();
         content = content.replace("[[name]]", patient.getName());
         content = content.replace("[[URL]]", verifyURL);
         emailSenderService.send(patient.getEmail(), subject, content);
