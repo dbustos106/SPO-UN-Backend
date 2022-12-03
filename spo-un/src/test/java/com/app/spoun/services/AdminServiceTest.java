@@ -17,7 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,7 +51,6 @@ class AdminServiceTest {
     private AdminService adminService;
 
     private Admin admin;
-
     private Role role;
 
     @BeforeEach
@@ -60,19 +61,28 @@ class AdminServiceTest {
         role.setName("Professor");
 
         admin = new Admin();
+        admin.setId(1L);
+        admin.setVerification_code("");
+        admin.setEnabled(false);
         admin.setEmail("spoun.app@gmail.com");
-        admin.setPassword("pass");
+        admin.setPassword("password");
         admin.setRole(role);
 
     }
 
     /*@Test
     void getAllAdmin(){
-        Page<Admin> admins = new PageImpl<>(Arrays.asList(admin));
-        Mockito.when(iAdminRepository.findAll(any(Pageable.class))).thenReturn(admins);
-        assertNotNull(adminService.getAllAdmin(0, 10));
-    }
+        List<Admin> listAdmins = new ArrayList<>();
+        listAdmins.add(admin);
+        Page<Admin> admins = new PageImpl<>(listAdmins);
+        System.out.println(admins.getContent().size());
+        //Mockito.when(iAdminRepository.findAll(any(Pageable.class))).thenReturn(admins);
 
+
+        Mockito.doReturn(admins).when(iAdminRepository).findAll(any(Pageable.class));
+        assertNotNull(adminService.getAllAdmin(0, 10));
+    }*/
+/*
     @Test
     void findByAdminId(){
         Mockito.when(iAdminRepository.findById(any(Long.class))).thenReturn(Optional.of(admin));
