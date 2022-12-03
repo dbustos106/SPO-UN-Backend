@@ -20,17 +20,17 @@ jobs:
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
-          path: ~/spo-un/.sonar/cache
+          path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Gradle packages
         uses: actions/cache@v1
         with:
-          path: ~/spo-un/.gradle/caches
+          path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./spo-un/gradlew build sonarqube --info
+        run: ./gradlew build sonarqube --info

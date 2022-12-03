@@ -12,5 +12,10 @@
         <module name="spo-un.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="17">
+      <module name="com.app.spo-un" target="17" />
+      <module name="com.app.spo-un.main" target="17" />
+      <module name="com.app.spo-un.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
