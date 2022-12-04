@@ -264,6 +264,10 @@ public class AppointmentService {
         // get room and professor
         Room room = iRoomRepository.findById(appointmentDTO.getRoom_id()).orElse(null);
         Student studentMain = iStudentRepository.findByEmail(students.get(0)).orElse(null);
+        if(studentMain == null) {
+            throw new IllegalStateException("No student has been associated");
+        }
+
         Professor professor = studentMain.getProfessor();
 
         // save appointment

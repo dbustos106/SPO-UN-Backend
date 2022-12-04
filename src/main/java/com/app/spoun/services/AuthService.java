@@ -165,29 +165,29 @@ public class AuthService implements UserDetailsService {
         String refresh_token = "";
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        if(iPatientRepository.existsByEmail(payload.getEmail())) {
-            Patient patient = iPatientRepository.findByEmail(payload.getEmail()).orElse(null);
+        Patient patient = iPatientRepository.findByEmail(payload.getEmail()).orElse(null);
+        if(patient != null){
             authorities.add(new SimpleGrantedAuthority(patient.getRole().getName()));
             userEmail = patient.getEmail();
             userId = patient.getId();
         }
 
-        if(iProfessorRepository.existsByEmail(payload.getEmail())) {
-            Professor professor = iProfessorRepository.findByEmail(payload.getEmail()).orElse(null);
+        Professor professor = iProfessorRepository.findByEmail(payload.getEmail()).orElse(null);
+        if(professor != null){
             authorities.add(new SimpleGrantedAuthority(professor.getRole().getName()));
             userEmail = professor.getEmail();
             userId = professor.getId();
         }
 
-        if(iStudentRepository.existsByEmail(payload.getEmail())) {
-            Student student = iStudentRepository.findByEmail(payload.getEmail()).orElse(null);
+        Student student = iStudentRepository.findByEmail(payload.getEmail()).orElse(null);
+        if(student != null) {
             authorities.add(new SimpleGrantedAuthority(student.getRole().getName()));
             userEmail = student.getEmail();
             userId = student.getId();
         }
 
-        if(iAdminRepository.existsByEmail(payload.getEmail())) {
-            Admin admin = iAdminRepository.findByEmail(payload.getEmail()).orElse(null);
+        Admin admin = iAdminRepository.findByEmail(payload.getEmail()).orElse(null);
+        if(admin != null) {
             authorities.add(new SimpleGrantedAuthority(admin.getRole().getName()));
             userEmail = admin.getEmail();
             userId = admin.getId();
